@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Projects</title>
+</head>
+<body>
+<h1><%= project.name %> <span style="font-size: 16px;"><a href="/">Index</a></span></h1>
+<ul>
+    <% project.files.forEach(function(file){ %>
+        <li><a href="<%= '/' + project.name + '/' + file %>"><%= file %></a></li>
+    <% }); %>
+</ul>
+<style type="text/css">
+    ul li {
+        font-size: 30px;
+    }
+</style>
+</body>
+</html>

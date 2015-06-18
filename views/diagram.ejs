@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:xlink="http://www.w3.org/1999/xlink">
+<head>
+    <title>Diagrams: <%= dir %> - <%= file %></title>
+    <script type="text/javascript" src="/vendors/lodash/lodash.js"></script>
+    <script type="text/javascript" src="/vendors/d3/d3.js"></script>
+    <script type="text/javascript" src="/vendors/diagrams-collections/diagrams.js"></script>
+    <link rel="stylesheet" type="text/css" href="/vendors/diagrams-collections/diagrams.css">
+    
+    <% if (sharedExists === true) { %>
+        <script type="text/javascript" src="/projects/<%= dir %>/shared.js"></script>
+    <% } %>
+    <script type="text/javascript" src="/projects/<%= dir + '/' + file%>.js"></script>
+</head>
+<body>
+<h1 style="margin: 5px 0 0 20px"><%= dir + ' - ' + file%> <span style="font-size: 15px;"><a href="/<%= dir %>"><%= dir %></a> | <a href="/">index</a></span></h1>
+</body>
+</html>
