@@ -15,6 +15,7 @@
   "dependencies": {
     "d3": "~3.5.5",
     "lodash": "~3.8.0",
-    "diagrams-collections": "*"
+    "diagrams-collections": "*",
+    "bootstrap": "~3.3.5"
   }
 }

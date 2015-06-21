@@ -2,14 +2,17 @@
 <html>
 <head>
     <title>Projects</title>
+    <%- include partials/_common_dependencies.ejs %>
 </head>
 <body>
-<h1><%= project.name %> <span style="font-size: 16px;"><a href="/">Index</a></span></h1>
+<div class="col-lg-offset-1 col-lg-10">
+<h1><%= project.name %> <span style="font-size: 16px;"><a href="/">index</a></span></h1>
 <ul>
     <% project.files.forEach(function(file){ %>
         <li><a href="<%= '/' + project.name + '/' + file %>"><%= file %></a></li>
     <% }); %>
 </ul>
+</div>
 <style type="text/css">
     ul li {
         font-size: 30px;
