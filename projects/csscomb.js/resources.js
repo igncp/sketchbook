@@ -4,6 +4,7 @@ var d = diagrams.generateBoxDefinition,
 diagrams.box({
     name: 'csscomb resources',
     body: [
-        l('Repo', "https://github.com/csscomb/csscomb.js/")
+        l('Repo', "https://github.com/csscomb/csscomb.js/"),
+        l('Gonzales AST description', "https://github.com/tonyganch/gonzales-pe/blob/master/doc/AST-Description.md")
     ]
 });

@@ -5,9 +5,9 @@
     <%- include partials/_common_dependencies.ejs %>
 </head>
 <body>
+<%- include partials/_header.ejs %>
 <div class="col-lg-offset-1 col-lg-10">
-<h1>Sketchbook</h1>
-<p>Projects:</p>
+<h2>Projects:</h2>
 <ul>
     <% projects.forEach(function(project){ %>
         <li><a href="/<%= project.name %>"><%= project.name %></a></li>

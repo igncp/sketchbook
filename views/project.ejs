@@ -5,8 +5,9 @@
     <%- include partials/_common_dependencies.ejs %>
 </head>
 <body>
+<%- include partials/_header.ejs %>
 <div class="col-lg-offset-1 col-lg-10">
-<h1><%= project.name %> <span style="font-size: 16px;"><a href="/">index</a></span></h1>
+<h1><strong><%= project.name %></strong> sketches:</h1>
 <ul>
     <% project.files.forEach(function(file){ %>
         <li><a href="<%= '/' + project.name + '/' + file %>"><%= file %></a></li>
