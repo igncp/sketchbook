@@ -2,7 +2,7 @@ var nl = diagrams.layer.newLayer,
     nlc = diagrams.layer.newLayerConnectedToNext;
 
 diagrams.layer(nl('git-extras make installation flow', [
-    nl('sudo make install # without options and without environment variables', [
+    nl('sudo make install # without options and without environment variables', 'sn', [
         nlc('Setup the following variables: PREFIX, BINPREFIX, MANPREFIX, BINS, MANS, MAN_HTML, MAN_PAGES, LIB, COMMANDS_USED_WITHOUT_GIT_REPO and COMMANDS_USED_WITH_GIT_REPO'),
         nlc('Creates the "/usr/local/bin" and "/usr/local/share/man/man1" dirs if necessary, always echoing messages.'),
         nlc('Creates a temporal directory in ~ with `mktemp` and a temporal file'),

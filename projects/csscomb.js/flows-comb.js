@@ -1,7 +1,7 @@
 var nl = diagrams.layer.newLayer,
     nlc = diagrams.layer.newLayerConnectedToNext;
 
-diagrams.layer(nl('csscomb.js dev branch comb flows', [
+diagrams.layer(nl('csscomb.js dev branch comb flows', 'sna', [
     nl('csscomb FILE.css - Without any options', [
         nlc('Creates the comb: var comb = new Comb();', [
             nl("Gets and requires all the options: options = fs.readdirSync(__dirname + '/options')...")
@@ -13,7 +13,7 @@ diagrams.layer(nl('csscomb.js dev branch comb flows', [
         ]),
         nlc("Configures the comb: comb.configure(config);"),
         nl("Processes the combed files: processFiles(options._, config);", [
-          nl("Uses vow to process the files: vow.all(files.map(comb.processPath.bind(comb))).then(..")
+            nl("Uses vow to process the files: vow.all(files.map(comb.processPath.bind(comb))).then(..")
         ])
     ])
 ]));
