@@ -1,5 +1,5 @@
-var d = diagrams.generateBoxDefinition,
-    c = diagrams.generateBoxContainer,
+var d = diagrams.box.generateDefinition,
+    c = diagrams.box.generateContainer,
     s = diagrams.shared.get;
 
 diagrams.box({

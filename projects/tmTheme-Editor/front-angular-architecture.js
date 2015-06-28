@@ -1,4 +1,4 @@
-var d = diagrams.generateBoxDefinition,
+var d = diagrams.box.generateDefinition,
     s = diagrams.shared.get,
     getDFnWithSAndProp = function(prop) {
         return function() {
@@ -8,7 +8,7 @@ var d = diagrams.generateBoxDefinition,
     ds = getDFnWithSAndProp('services'),
     dc = getDFnWithSAndProp('controllers'),
     dd = getDFnWithSAndProp('directives'),
-    c = diagrams.generateBoxContainer;
+    c = diagrams.box.generateContainer;
 
 diagrams.box({
     name: 'tmTheme-Editor angular architecture',

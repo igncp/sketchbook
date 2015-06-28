@@ -4,8 +4,8 @@
     <title>Diagrams: <%= dir %> - <%= file %></title>
     <script type="text/javascript" src="/vendors/lodash/lodash.js"></script>
     <script type="text/javascript" src="/vendors/d3/d3.js"></script>
-    <script type="text/javascript" src="/vendors/diagrams-collections/diagrams.js"></script>
-    <link rel="stylesheet" type="text/css" href="/vendors/diagrams-collections/diagrams.css">
+    <script type="text/javascript" src="/vendors/diagrams-collections/dist/<%= diagramsFile %>.js"></script>
+    <link rel="stylesheet" type="text/css" href="/vendors/diagrams-collections/dist/diagrams.css">
     <%- include partials/_common_dependencies.ejs %>
     
     <% if (sharedExists === true) { %>

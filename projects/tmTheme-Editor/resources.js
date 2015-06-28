@@ -1,5 +1,5 @@
-var d = diagrams.generateBoxDefinition,
-    l = diagrams.generateBoxLink;
+var d = diagrams.box.generateDefinition,
+    l = diagrams.box.generateLink;
 
 diagrams.box({
     name: 'tmTheme-Editor resources',

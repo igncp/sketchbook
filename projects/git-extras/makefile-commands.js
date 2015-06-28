@@ -1,4 +1,4 @@
-var d = diagrams.generateBoxDefinition;
+var d = diagrams.box.generateDefinition;
 
 diagrams.box({
     name: 'Makefile',

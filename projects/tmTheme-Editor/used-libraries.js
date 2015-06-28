@@ -1,8 +1,8 @@
-var d = diagrams.generateBoxDefinition,
+var d = diagrams.box.generateDefinition,
     ds = function(lib) {
         return d(lib, s('libraries-' + lib));
     },
-    c = diagrams.generateBoxContainer,
+    c = diagrams.box.generateContainer,
     s = diagrams.shared.get;
 
 diagrams.box({

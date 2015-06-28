@@ -48,12 +48,14 @@ app.get('/:dir/:file', function(req, res) {
         file = req.params.file,
         project = _.where(projects, {
             name: dir
-        })[0];
+        })[0],
+        env = process.env.NODE_ENV;
 
     res.render('diagram', {
         dir: dir,
         file: file,
-        sharedExists: project.sharedExists
+        sharedExists: project.sharedExists,
+        diagramsFile: (env === 'production') ? 'diagrams.min' : 'diagrams'
     });
 });
 
