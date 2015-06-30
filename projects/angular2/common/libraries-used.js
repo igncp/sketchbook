@@ -16,13 +16,13 @@ diagrams.box({
                 d('gulp-modify'),
                 d('gulp-replace'),
                 d('node-uuid'),
-                d('reflect-metadata'),
+                d('reflect-metadata', "'Polyfill for Metadata Reflection API. Proposal to add Decorators to ES7, along with a prototype for an ES7 Reflection API for Decorator Metadata'"),
                 d('rx', "'Library for composing asynchronous and event-based operations in JavaScript'"),
                 d('selenium-webdriver'),
-                d('systemjs'),
+                d('systemjs', "'System loader extension for flexible AMD & CommonJS support'"),
                 d('traceur'),
                 d('which', "'Locate a program or locally installed node module's executable'"),
-                d('zone.js'),
+                d('zone.js', "'Informs angular.js when to run 'change detection''"),
             ]),
             c('devDependencies', [
                 d('angular'),
@@ -40,8 +40,8 @@ diagrams.box({
                 d('chokidar', "'A neat wrapper around node.js fs.watch / fs.watchFile / fsevents.'"),
                 d('clang-format', "'Node repackaging of the clang-format native binary'"),
                 d('conventional-changelog'),
-                d('css'),
-                d('del'),
+                d('css', "'Require css from npm'"),
+                d('del', "'Delete files/folders using globs'"),
                 d('dgeni', "'Flexible JavaScript documentation generator used by AngularJS'"),
                 d('dgeni-packages'),
                 d('event-stream'),
@@ -68,7 +68,7 @@ diagrams.box({
                 d('indent-string'),
                 d('jasmine'),
                 d('jasmine-core'),
-                d('jpm'),
+                d('jpm', "'Jetpack Mechanic utilities for creating, testing, running and packaging Mozilla Jetpack Addons'"),
                 d('js-beautify'),
                 d('js-yaml'),
                 d('karma'),
@@ -86,17 +86,17 @@ diagrams.box({
                 d('minimist'),
                 d('mock-fs'),
                 d('node-html-encoder'),
-                d('parse5'),
+                d('parse5', "'WHATWG HTML5 specification-compliant, fast and ready for production HTML parsing/serialization toolset for Node and io.js.'"),
                 d('protractor'),
                 d('q'),
                 d('react'),
-                d('rewire'),
+                d('rewire', "'Easy dependency injection for node.js unit testing'"),
                 d('run-sequence'),
                 d('semver'),
                 d('shelljs', "'Portable Unix shell commands for Node.js'"),
                 d('sorted-object'),
                 d('source-map'),
-                d('sprintf-js'),
+                d('sprintf-js', "'sprintf.js is a complete open source JavaScript sprintf implementation for the browser and node.js.' Strings format"),
                 d('string'),
                 d('strip-ansi'),
                 d('symlink-or-copy'),
@@ -115,7 +115,13 @@ diagrams.box({
             ])
         ]),
         c('bower', [
-            d('polymer')
+            c('root', [
+                d('polymer')
+            ]),
+            c('docs', [
+                d('angular-material', "'Material Design is a specification for a unified system of visual, motion, and interaction design that adapts across different devices.'"),
+                d('google-code-prettify'),
+            ])
         ])
     ]
 });

@@ -7,10 +7,10 @@
 <body>
 <%- include partials/_header.ejs %>
 <div class="col-lg-offset-1 col-lg-10">
-<h2>Projects:</h2>
+<h2><strong>Projects</strong></h2>
 <ul>
-    <% projects.forEach(function(project){ %>
-        <li><a href="/<%= project.name %>"><%= project.name %></a></li>
+    <% projects.forEach(function(projectName){ %>
+        <li><a href="/<%= projectName %>"><%= projectName %></a></li>
     <% }); %>
 </ul>
 </div>

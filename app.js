@@ -8,72 +8,83 @@ app.use(express['static']('.'));
 
 var REJECTED_PROJECT_NAMES = ['discontinued', 'private'];
 
-var projectsDirs, projects, files;
+var getProjects = function() {
+    var projects;
 
-var setProjects = function() {
-    projectsDirs = _.chain(fs.readdirSync('projects')).filter(function(project) {
+    projects = _.chain(fs.readdirSync('projects')).filter(function(project) {
         return fs.statSync('projects/' + project).isDirectory() &&
             REJECTED_PROJECT_NAMES.indexOf(project) < 0;
     }).value();
-    projects = [];
-    projectsDirs.forEach(function(projectsDir) {
-        var sharedExists = false;
-        files = fs.readdirSync('projects/' + projectsDir);
 
-        files = _.chain(files).filter(function(file) {
-            if (file === 'shared.js') sharedExists = true;
-            return file.substr(-3) !== 'txt' && (file !== 'shared.js');
-        }).map(function(file) {
-            return file.substr(0, file.length - 3);
-        }).value();
+    return projects;
+};
 
-        projects.push({
-            name: projectsDir,
-            files: files,
-            sharedExists: sharedExists
-        });
+var getPathItems = function(projectName, pathRelativeToProject) {
+    var items, isDiagram;
+
+    if (pathRelativeToProject) pathRelativeToProject = pathRelativeToProject.replace(/^\//, '');
+
+    items = fs.readdirSync('projects/' + projectName + '/' + pathRelativeToProject);
+
+    return _.chain(items).filter(function(item) {
+        return item.substr(-3) !== 'txt' && (item !== 'shared.js');
+    }).map(function(item) {
+        isDiagram = (item.substr(-3) === '.js') ? true : false;
+        return {
+            isDiagram: isDiagram,
+            name: (isDiagram) ? item.substr(0, item.length - 3) : item
+        };
+    }).value();
+};
+
+var sharedOfProjectExists = function(projectName, cb) {
+    fs.stat('projects/' + projectName + '/shared.js', function(err) {
+        cb(!err);
     });
 };
-setProjects();
 
 app.get('/', function(req, res) {
-    setProjects();
+    var projects = getProjects();
+
     res.render('index', {
         projects: projects
     });
 });
 
-app.get('/:dir/:file', function(req, res) {
-    var dir = req.params.dir,
-        file = req.params.file,
-        project = _.where(projects, {
-            name: dir
-        })[0],
-        env = process.env.NODE_ENV;
+app.get('/:urlPath*', function(req, res) {
+    var urlPath = req.originalUrl.replace(/^\//, ''),
+        urlSegments = urlPath.split('/'),
+        projectName = urlSegments[0],
+        projects = getProjects(),
+        pathRelativeToProject = urlPath.replace(projectName, ''),
+        env = process.env.NODE_ENV,
+        isDiagram;
 
-    res.render('diagram', {
-        dir: dir,
-        file: file,
-        sharedExists: project.sharedExists,
-        diagramsFile: (env === 'production') ? 'diagrams.min' : 'diagrams'
-    });
-});
+    if (projects.indexOf(projectName) > -1) {
+        fs.stat('projects/' + urlPath + '.js', function(err) {
+            isDiagram = (err) ? false : true;
 
-app.get('/:dir', function(req, res) {
-    var dir = req.params.dir,
-        originalDir = req.originalUrl.substr(1, req.originalUrl.length - 1),
-        dirProject;
-
-    if (projectsDirs.indexOf(originalDir) > -1) {
-        setProjects();
-        projects.forEach(function(project) {
-            if (project.name === dir) dirProject = project;
+            if (isDiagram) {
+                sharedOfProjectExists(projectName, function(sharedExistsResult) {
+                    res.render('diagram', {
+                        projectName: projectName,
+                        currentPath: pathRelativeToProject,
+                        diagramName: _.last(urlSegments),
+                        sharedExists: sharedExistsResult,
+                        diagramsFile: (env === 'production') ? 'diagrams.min' : 'diagrams'
+                    });
+                });
+            } else {
+                res.render('project', {
+                    projectName: projectName,
+                    currentPath: pathRelativeToProject,
+                    items: getPathItems(projectName, pathRelativeToProject)
+                });
+            }
         });
 
-        res.render('project', {
-            project: dirProject
-        });
-    }
+
+    } else res.send('not found');
 });
 
 app.listen(process.env.PORT || 8080);
