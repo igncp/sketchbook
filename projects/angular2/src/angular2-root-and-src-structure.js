@@ -266,7 +266,7 @@ diagrams.box({
                         d('event_manager.ts'),
                         d('hammer_common.ts'),
                         d('hammer_gestures.dart'),
-                        d('hammer_gestures.ts'),
+                        d('hammer_gestures.ts', "'Using the frontend library Hammer.js'"),
                         d('key_events.ts'),
                     ]),
                     c('shadow_dom', [

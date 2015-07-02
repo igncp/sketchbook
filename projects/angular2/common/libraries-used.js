@@ -122,6 +122,9 @@ diagrams.box({
                 d('angular-material', "'Material Design is a specification for a unified system of visual, motion, and interaction design that adapts across different devices.'"),
                 d('google-code-prettify'),
             ])
+        ]),
+        c('other', [
+            d('hammer.js')
         ])
     ]
 });
