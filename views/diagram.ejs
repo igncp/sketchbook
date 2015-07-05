@@ -2,11 +2,16 @@
 <html xmlns:xlink="http://www.w3.org/1999/xlink">
 <head>
     <title>Diagrams: <%= projectName %> - <%= currentPath %></title>
+    
+    <%- include partials/_common_dependencies.ejs %>
+    
     <script type="text/javascript" src="/vendors/lodash/lodash.js"></script>
     <script type="text/javascript" src="/vendors/d3/d3.js"></script>
+    <script type="text/javascript" src="/vendors/highlightjs/highlight.pack.js"></script>
     <script type="text/javascript" src="/vendors/diagrams-collections/dist/<%= diagramsFile %>.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="/vendors/highlightjs/styles/solarized_light.css">
     <link rel="stylesheet" type="text/css" href="/vendors/diagrams-collections/dist/diagrams.css">
-    <%- include partials/_common_dependencies.ejs %>
     
     <% if (sharedExists === true) { %>
         <script type="text/javascript" src="/projects/<%= projectName %>/shared.js"></script>
