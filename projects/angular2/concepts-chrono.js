@@ -3,10 +3,8 @@ var d = diagrams.box.generateDefinition,
     s = diagrams.shared.get;
 
 diagrams.box({
-    name: s('project') + ' direrctories structure',
+    name: s('project') + ' important concepts (to see definitions, go to the glossary)',
     body: [
-        "Angular's reflectors seem to be related to the concept of decorators",
-        d('Self-Executing (SFX) Bundles', "'To make a bundle that is independent of the SystemJS loader entirely, we can make SFX bundles. This bundle file can then be included with a <script> tag, and no other dependencies would need to be included in the page."),
         c('https://www.youtube.com/watch?v=uD6Okha_Yj0', [
             "Templates syntax: () for events, [] for properties",
             'Shadow DOM replaces transclusion',

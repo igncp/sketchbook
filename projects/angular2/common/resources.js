@@ -1,10 +1,11 @@
 var d = diagrams.box.generateDefinition,
-    l = diagrams.box.generateLink;
+    l = diagrams.box.generateLink,
+    s = diagrams.shared.get;
 
 diagrams.box({
-    name: 'tmTheme-Editor resources',
+    name: s('project') + ' resources',
     body: [
-        l('Repo', "https://github.com/angular/angular"),
+        l('Repository', "https://github.com/angular/angular"),
         l('Website', "https://angular.io/"),
         l('Stack Overflow Questions', 'http://stackoverflow.com/questions/tagged/angular2'),
         l('API documentation', "https://angular.io/docs/js/latest/api/"),

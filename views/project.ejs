@@ -19,9 +19,9 @@
 <ul>
     <% items.forEach(function(item){ %>
         <% if (item.isDiagram === true) { %>
-        <li><a href="<%= '/' + projectName + currentPath + '/' + item.name %>"><%= item.name %></a></li>
+            <li><a href="<%= '/' + projectName + currentPath + '/' + item.name %>"><%= item.name %></a></li>
         <% } else { %>
-        <li><strong><a href="<%= '/' + projectName  +  currentPath + '/' + item.name %>"><%= item.name %>/</a></strong></li>
+            <li><strong><a href="<%= '/' + projectName  +  currentPath + '/' + item.name %>"><%= item.name %>/</a></strong></li>
         <% } %>
     <% }); %>
 </ul>

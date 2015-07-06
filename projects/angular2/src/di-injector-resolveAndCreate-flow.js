@@ -1,0 +1,14 @@
+var nlc = diagrams.layer.newLayerConnectedToNext,
+    nlcc = diagrams.layer.newLayerConnectedToNextWithCode('typescript'),
+    nlcpc = diagrams.layer.newLayerConnectedToNextWithParagraphAndCode('typescript'),
+    tsc = diagrams.utils.codeBlockOfLanguageFn('typescript', '//');
+
+diagrams.layer(nlc("'Angular2 Injector#resolveAndCreate flow' (@/src/di/injector.ts)", 'sna', [
+    nlcpc("'Resolves bindings and creates an injector based on those bindings. This function is slower than the corresponding `fromResolvedBindings` because it needs to resolve bindings first. Prefer `fromResolvedBindings` in performance-critical code that creates lots of injectors. " + tsc("import {ResolvedBinding, Binding, BindingBuilder, bind} from './binding';") + "`bindings` can be a list of `Type`, or a recursive list of more bindings. Setting `defaultBindings` to true will auto-create bindings.'", "static resolveAndCreate(bindings: List<Type | Binding | List<any>>,{defaultBindings = false}: any = {}): Injector {", [
+        nlcpc("'Turns a list of binding definitions into an internal resolved list of resolved bindings. A resolution is a process of flattening multiple nested lists and converting individual bindings into a list of ResolvedBindings. The resolution can be cached by `resolve` for the Injector for performance-sensitive code. The returned list is sparse, indexed by `id` for the Key. It is generally not useful to application code other than for passing it to Injector functions that require resolved binding lists, such as `fromResolvedBindings` and `createChildFromResolved`.'", "var resolvedBindings = Injector.resolve(bindings);"),
+        nlcpc("Creates a list of bindings data, which is a really simple class: " + tsc("export class BindingData {\n  constructor(public binding: ResolvedBinding, public visibility: number){};\n  getKeyId(): number { return this.binding.key.id; }\n}"), "var bd = resolvedBindings.map(b => new BindingData(b, PUBLIC));"),
+        nlcpc("Uses the binding datas list to create the Injector's proto" +  tsc("export class ProtoInjector {\n  _strategy: ProtoInjectorStrategy;\n  constructor(public parent: ProtoInjector, rb: any[], public distanceToParent: number) {\n    this._strategy = rb.length > _MAX_CONSTRUCTION_COUNTER ?\n     new ProtoInjectorDynamicStrategy(this, rb) :\n     new ProtoInjectorInlineStrategy(this, rb);\n  }\n  getBindingAtIndex(index: number): any { return this._strategy.getBindingAtIndex(index); }\n}") + "where `rb` probably refers to resolved bindings", "var proto = new ProtoInjector(null, bd, 0);"),
+        nlcpc("Creates the instance, which also creates the strategy using the proto" + tsc("constructor(public _proto: ProtoInjector) {\n  this._strategy = _proto._strategy.createInjectorStrategy(this);\n}", null, true),  "var inj = new Injector(proto);"),
+        nlcc("return inj;"),
+    ]),
+]));

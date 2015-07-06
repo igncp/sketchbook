@@ -34,6 +34,9 @@ var getPathItems = function(projectName, pathRelativeToProject) {
             isDiagram: isDiagram,
             name: (isDiagram) ? item.substr(0, item.length - 3) : item
         };
+    }).sort(function(itemA, itemB) {
+        if (itemA.isDiagram !== itemB.isDiagram) return itemA.isDiagram;
+        return itemA.name > itemB.name;
     }).value();
 };
 
@@ -58,7 +61,7 @@ app.get('/:urlPath*', function(req, res) {
         projects = getProjects(),
         pathRelativeToProject = urlPath.replace(projectName, ''),
         env = process.env.NODE_ENV,
-        isDiagram;
+        isDiagram, items;
 
     if (projects.indexOf(projectName) > -1) {
         fs.stat('projects/' + urlPath + '.js', function(err) {
@@ -75,10 +78,11 @@ app.get('/:urlPath*', function(req, res) {
                     });
                 });
             } else {
+                items = getPathItems(projectName, pathRelativeToProject);
                 res.render('project', {
                     projectName: projectName,
                     currentPath: pathRelativeToProject,
-                    items: getPathItems(projectName, pathRelativeToProject)
+                    items: items
                 });
             }
         });
