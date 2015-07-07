@@ -17,6 +17,7 @@
     </strong> sketches:
 </h1>
 <ul>
+    <% if (items.length) { %>
     <% items.forEach(function(item){ %>
         <% if (item.isDiagram === true) { %>
             <li><a href="<%= '/' + projectName + currentPath + '/' + item.name %>"><%= item.name %></a></li>
@@ -24,6 +25,9 @@
             <li><strong><a href="<%= '/' + projectName  +  currentPath + '/' + item.name %>"><%= item.name %>/</a></strong></li>
         <% } %>
     <% }); %>
+    <% } else { %>
+        <li>No items found</li>
+    <% } %>
 </ul>
 </div>
 <style type="text/css">

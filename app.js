@@ -24,7 +24,11 @@ var getPathItems = function(projectName, pathRelativeToProject) {
 
     if (pathRelativeToProject) pathRelativeToProject = pathRelativeToProject.replace(/^\//, '');
 
-    items = fs.readdirSync('projects/' + projectName + '/' + pathRelativeToProject);
+    try {
+      items = fs.readdirSync('projects/' + projectName + '/' + pathRelativeToProject);
+    } catch (e) {
+      return [];
+    }
 
     return _.chain(items).filter(function(item) {
         return item.substr(-3) !== 'txt' && (item !== 'shared.js');
@@ -61,7 +65,7 @@ app.get('/:urlPath*', function(req, res) {
         projects = getProjects(),
         pathRelativeToProject = urlPath.replace(projectName, ''),
         env = process.env.NODE_ENV,
-        isDiagram, items;
+        isDiagram;
 
     if (projects.indexOf(projectName) > -1) {
         fs.stat('projects/' + urlPath + '.js', function(err) {
@@ -78,11 +82,10 @@ app.get('/:urlPath*', function(req, res) {
                     });
                 });
             } else {
-                items = getPathItems(projectName, pathRelativeToProject);
                 res.render('project', {
                     projectName: projectName,
                     currentPath: pathRelativeToProject,
-                    items: items
+                    items: getPathItems(projectName, pathRelativeToProject)
                 });
             }
         });
