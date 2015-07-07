@@ -6,6 +6,7 @@
     <%- include partials/_common_dependencies.ejs %>
     
     <script type="text/javascript" src="/vendors/lodash/lodash.js"></script>
+    <script type="text/javascript" src="/vendors/rxjs/dist/rx.all.min.js"></script>
     <script type="text/javascript" src="/vendors/d3/d3.js"></script>
     <script type="text/javascript" src="/vendors/highlightjs/highlight.pack.js"></script>
     <script type="text/javascript" src="/vendors/diagrams-collections/dist/<%= diagramsFile %>.js"></script>
@@ -13,6 +14,7 @@
     <link rel="stylesheet" type="text/css" href="/vendors/highlightjs/styles/solarized_light.css">
     <link rel="stylesheet" type="text/css" href="/vendors/diagrams-collections/dist/diagrams.css">
     
+    <script type="text/javascript" src="/assets/js/diagram.js"></script>
     <% if (sharedExists === true) { %>
         <script type="text/javascript" src="/projects/<%= projectName %>/shared.js"></script>
     <% } %>

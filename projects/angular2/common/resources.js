@@ -13,5 +13,6 @@ diagrams.box({
         l('TypeScript website', 'http://www.typescriptlang.org/'),
         l('Dart website', 'https://www.dartlang.org/'),
         l('Curated list of Angular2 resources', 'http://angular2.com/'),
+        l('Routing post', 'http://blog.thoughtram.io/angular/2015/06/16/routing-in-angular-2.html'),
     ]
 });
