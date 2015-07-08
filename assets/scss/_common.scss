@@ -34,3 +34,61 @@ li {
     }
   }
 }
+
+#diagrams-tooltip {
+  background: #FFFFFF;
+  border: solid 2px #CCCCCC;
+  box-shadow: 0 0 10px 1px #AAAAAA;
+  font-size: 30px;
+  left: 1%;
+  opacity: .9;
+  padding: 20px;
+  position: absolute;
+  width: 95%;
+  word-wrap: break-word;
+}
+
+#diagrams-banner {
+  border: 1px solid #CCCCCC;
+  cursor: pointer;
+  font-size: 25px;
+  margin-bottom: 0;
+  margin-bottom: 15px;
+  margin-left: 20px;
+  margin-top: 10px;
+  padding: 20px;
+
+  @include border-radius(10px);
+  &:hover {
+    border-width: 2px;
+    .diagrams-banner-cross {
+      opacity: 1;
+    }
+  }
+  .diagrams-banner-cross {
+    background-color: #F5FCFF;
+    color: #777777;
+    opacity: 0;
+    padding: 0 5px;
+    position: absolute;
+    right: 40px;
+
+    @include border-radius(10px);
+    @include box-shadow(0 0 1px .5px #CCCCCC);
+    @include transition(.5s linear all);
+  }
+}
+
+#diagram-configuration-trigger {
+  &:hover, &:focus {
+    text-decoration: none;
+  }
+}
+#diagram-configuration-panel {
+  background-color: #EEEEEE;
+  border: 1px solid #777777;
+  display: none;
+  padding: 30px;
+
+  @include border-radius(10px);
+}

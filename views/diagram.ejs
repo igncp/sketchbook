@@ -21,9 +21,13 @@
     <script type="text/javascript" src="/projects/<%= projectName %><%= currentPath %>.js"></script>
 </head>
 <body>
-<%- include partials/_header.ejs %>
-<div class="row">
-<h2 class="col-lg-10 col-lg-offset-1"><strong><a href="/<%= projectName %>"><%= projectName %></a></strong> <%=currentPath%></h2>
-</div>
+    <%- include partials/_header.ejs %>
+    <div class="row">
+    <h2 class="col-lg-8 col-lg-offset-1"><strong><a href="/<%= projectName %>"><%= projectName %></a></strong> <%=currentPath%></h2>
+    <h3 class="col-lg-3"><a id="diagram-configuration-trigger" href="#"></a></h3>
+    </div>
+    <div class="row" id="diagram-configuration-panel">
+        <p>Configuration</p>    
+    </div>
 </body>
 </html>

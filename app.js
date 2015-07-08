@@ -9,89 +9,89 @@ app.use(express['static']('.'));
 var REJECTED_PROJECT_NAMES = ['discontinued', 'private'];
 
 var getProjects = function() {
-    var projects;
+  var projects;
 
-    projects = _.chain(fs.readdirSync('projects')).filter(function(project) {
-        return fs.statSync('projects/' + project).isDirectory() &&
-            REJECTED_PROJECT_NAMES.indexOf(project) < 0;
-    }).value();
+  projects = _.chain(fs.readdirSync('projects')).filter(function(project) {
+    return fs.statSync('projects/' + project).isDirectory() &&
+      REJECTED_PROJECT_NAMES.indexOf(project) < 0;
+  }).value();
 
-    return projects;
+  return projects;
 };
 
 var getPathItems = function(projectName, pathRelativeToProject) {
-    var items, isDiagram;
+  var items, isDiagram;
 
-    if (pathRelativeToProject) pathRelativeToProject = pathRelativeToProject.replace(/^\//, '');
+  if (pathRelativeToProject) pathRelativeToProject = pathRelativeToProject.replace(/^\//, '');
 
-    try {
-      items = fs.readdirSync('projects/' + projectName + '/' + pathRelativeToProject);
-    } catch (e) {
-      return [];
-    }
+  try {
+    items = fs.readdirSync('projects/' + projectName + '/' + pathRelativeToProject);
+  } catch (e) {
+    items = [];
+  }
 
-    return _.chain(items).filter(function(item) {
-        return item.substr(-3) !== 'txt' && (item !== 'shared.js');
-    }).map(function(item) {
-        isDiagram = (item.substr(-3) === '.js') ? true : false;
-        return {
-            isDiagram: isDiagram,
-            name: (isDiagram) ? item.substr(0, item.length - 3) : item
-        };
-    }).sort(function(itemA, itemB) {
-        if (itemA.isDiagram !== itemB.isDiagram) return itemA.isDiagram;
-        return itemA.name > itemB.name;
-    }).value();
+  return _.chain(items).filter(function(item) {
+    return item.substr(-3) !== 'txt' && (item !== 'shared.js');
+  }).map(function(item) {
+    isDiagram = (item.substr(-3) === '.js') ? true : false;
+    return {
+      isDiagram: isDiagram,
+      name: (isDiagram) ? item.substr(0, item.length - 3) : item
+    };
+  }).sort(function(itemA, itemB) {
+    if (itemA.isDiagram !== itemB.isDiagram) return itemA.isDiagram;
+    return itemA.name > itemB.name;
+  }).value();
 };
 
 var sharedOfProjectExists = function(projectName, cb) {
-    fs.stat('projects/' + projectName + '/shared.js', function(err) {
-        cb(!err);
-    });
+  fs.stat('projects/' + projectName + '/shared.js', function(err) {
+    cb(!err);
+  });
 };
 
 app.get('/', function(req, res) {
-    var projects = getProjects();
+  var projects = getProjects();
 
-    res.render('index', {
-        projects: projects
-    });
+  res.render('index', {
+    projects: projects
+  });
 });
 
 app.get('/:urlPath*', function(req, res) {
-    var urlPath = req.originalUrl.replace(/^\//, ''),
-        urlSegments = urlPath.split('/'),
-        projectName = urlSegments[0],
-        projects = getProjects(),
-        pathRelativeToProject = urlPath.replace(projectName, ''),
-        env = process.env.NODE_ENV,
-        isDiagram;
+  var urlPath = req.originalUrl.replace(/^\//, ''),
+    urlSegments = urlPath.split('/'),
+    projectName = urlSegments[0],
+    projects = getProjects(),
+    pathRelativeToProject = urlPath.replace(projectName, ''),
+    env = process.env.NODE_ENV,
+    isDiagram;
 
-    if (projects.indexOf(projectName) > -1) {
-        fs.stat('projects/' + urlPath + '.js', function(err) {
-            isDiagram = (err) ? false : true;
+  if (projects.indexOf(projectName) > -1) {
+    fs.stat('projects/' + urlPath + '.js', function(err) {
+      isDiagram = (err) ? false : true;
 
-            if (isDiagram) {
-                sharedOfProjectExists(projectName, function(sharedExistsResult) {
-                    res.render('diagram', {
-                        projectName: projectName,
-                        currentPath: pathRelativeToProject,
-                        diagramName: _.last(urlSegments),
-                        sharedExists: sharedExistsResult,
-                        diagramsFile: (env === 'production') ? 'diagrams.min' : 'diagrams'
-                    });
-                });
-            } else {
-                res.render('project', {
-                    projectName: projectName,
-                    currentPath: pathRelativeToProject,
-                    items: getPathItems(projectName, pathRelativeToProject)
-                });
-            }
+      if (isDiagram) {
+        sharedOfProjectExists(projectName, function(sharedExistsResult) {
+          res.render('diagram', {
+            projectName: projectName,
+            currentPath: pathRelativeToProject,
+            diagramName: _.last(urlSegments),
+            sharedExists: sharedExistsResult,
+            diagramsFile: (env === 'production') ? 'diagrams.min' : 'diagrams'
+          });
         });
+      } else {
+        res.render('project', {
+          projectName: projectName,
+          currentPath: pathRelativeToProject,
+          items: getPathItems(projectName, pathRelativeToProject)
+        });
+      }
+    });
 
 
-    } else res.send('not found');
+  } else res.send('not found');
 });
 
 app.listen(process.env.PORT || 8080);
