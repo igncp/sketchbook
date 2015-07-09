@@ -85,10 +85,16 @@ li {
   }
 }
 #diagram-configuration-panel {
-  background-color: #EEEEEE;
+  background-color: #F7F7F7;
   border: 1px solid #777777;
   display: none;
   padding: 30px;
 
   @include border-radius(10px);
+  label {
+    margin-right: 20px;
+    &.checkbox-label {
+      cursor: pointer;
+    }
+  }
 }

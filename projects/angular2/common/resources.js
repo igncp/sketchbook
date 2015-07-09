@@ -16,5 +16,6 @@ diagrams.box({
         l('Curated list of Angular2 resources', 'http://angular2.com/'),
         l('Routing post', 'http://blog.thoughtram.io/angular/2015/06/16/routing-in-angular-2.html'),
         l('Versions Repository', 'http://code.angularjs.org'),
+        l('API design docs', "https://drive.google.com/folderview?id=0BxgtL8yFJbacUnUxc3l5aTZrbVk&usp=drive_web"),
     ]
 });

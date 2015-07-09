@@ -72,7 +72,10 @@
     }
   };
 
-  var setupConfigurationPanel = function() {
+  tooltip.onMouseEnterListenerFn = _.partial(tooltip, 'show');
+  tooltip.onMouseLeaveListenerFn = _.partial(tooltip, 'hide');
+
+  var setupConfigurationPanel = function(diagram) {
     var panel = d3.select('#diagram-configuration-panel'),
       trigger = d3.select('#diagram-configuration-trigger'),
       hidePanel = function() {
@@ -83,32 +86,69 @@
         trigger.html('Hide configuration &#x2191;');
         panel.style('display', 'block');
       },
+      buildPanel = function() {
+        var buildFormItem = function(configKey) {
+            var optionEl = formEl.append('div').attr('class', 'col-lg-6'),
+              configValue = diagram.config(configKey),
+              elId = configKey.replace(/ /g, '-').toLowerCase(),
+              inputEl;
+
+            if (_.isBoolean(configValue)) {
+              optionEl.append('label').attr({
+                'for': elId,
+                'class': 'checkbox-label'
+              }).text(configKey);
+              inputEl = optionEl.append('input').attr({
+                type: 'checkbox',
+                id: elId
+              }).property('checked', configValue);
+              inputEl.on('change', function() {
+                diagram.config(configKey, inputEl.property('checked'));
+              });
+            }
+          },
+          formEl;
+
+        formEl = panel.append('form');
+        for (var configKey in diagram.config()) {
+          buildFormItem(configKey);
+        }
+      },
       panelIsHidden;
 
+    buildPanel();
     trigger.on('click', function() {
-      panelIsHidden = panel.style('display') === 'none';
+      d3.event.preventDefault();
+      panelIsHidden = (panel.style('display') === 'none');
       if (panelIsHidden) showPanel();
       else hidePanel();
     });
-
     hidePanel();
   };
 
-  tooltip.onMouseEnterListenerFn = _.partial(tooltip, 'show');
-  tooltip.onMouseLeaveListenerFn = _.partial(tooltip, 'hide');
+  var SHOW_BANNER = 'Show banner on click',
+    MARK_RELATED = 'Mark related items',
+    SHOW_TOOLTIP = 'Show tooltip';
+
+  var setDefaultConfiguration = function(diagram) {
+    diagram.configCheckingLocalStorage(SHOW_TOOLTIP, true);
+    diagram.configCheckingLocalStorage(SHOW_BANNER, true);
+    diagram.configCheckingLocalStorage(MARK_RELATED, true);
+  };
 
   diagrams.events.listen('diagram-created', function(diagram) {
-    setupConfigurationPanel();
+    setDefaultConfiguration(diagram);
+    setupConfigurationPanel(diagram);
     diagram.listen('mouseenter', function(item) {
-      tooltip.onMouseEnterListenerFn(item.el, item.data.fullText);
-      diagram.markRelatedItems(item.data);
+      if (diagram.config(SHOW_TOOLTIP)) tooltip.onMouseEnterListenerFn(item.el, item.data.fullText);
+      if (diagram.config(MARK_RELATED)) diagram.markRelatedItems(item.data);
     });
     diagram.listen('mouseleave', function() {
       tooltip.onMouseLeaveListenerFn();
-      if (diagram.unmarkAllItems) diagram.unmarkAllItems();
+      if (diagram.unmarkAllItems && diagram.config(MARK_RELATED)) diagram.unmarkAllItems();
     });
     diagram.listen('itemclick', function(item) {
-      fillBannerWithText(item.data.fullText);
+      if (diagram.config(SHOW_BANNER) === true) fillBannerWithText(item.data.fullText);
     });
   });
 })();

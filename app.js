@@ -51,10 +51,8 @@ var sharedOfProjectExists = function(projectName, cb) {
 };
 
 app.get('/', function(req, res) {
-  var projects = getProjects();
-
   res.render('index', {
-    projects: projects
+    projects: getProjects()
   });
 });
 
@@ -64,7 +62,6 @@ app.get('/:urlPath*', function(req, res) {
     projectName = urlSegments[0],
     projects = getProjects(),
     pathRelativeToProject = urlPath.replace(projectName, ''),
-    env = process.env.NODE_ENV,
     isDiagram;
 
   if (projects.indexOf(projectName) > -1) {
@@ -78,7 +75,7 @@ app.get('/:urlPath*', function(req, res) {
             currentPath: pathRelativeToProject,
             diagramName: _.last(urlSegments),
             sharedExists: sharedExistsResult,
-            diagramsFile: (env === 'production') ? 'diagrams.min' : 'diagrams'
+            diagramsFile: (process.env.NODE_ENV === 'production') ? 'diagrams.min' : 'diagrams'
           });
         });
       } else {
