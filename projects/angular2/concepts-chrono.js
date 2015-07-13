@@ -5,6 +5,7 @@ var d = diagrams.box.generateDefinition,
 diagrams.box({
   name: s('project') + ' important concepts (to see definitions, go to the glossary)',
   body: [
+    "'In a normal situation Angular installs a zone at the root level and therefore always processes every browser event. It would therefore call OnEventDone every time. If you are running code outside the angular zone (e.g. via NgZone.runOutsideAngular) then, of course, it's up to you, because Angular is not even aware of what you are doing and cannot possibly notify you of anything (that's the idea behind running outside Angular).'",
     "'Data should flow in DAG (Directed acyclic graph: A graph with no possible loops).'",
     "There is a directory in src named transforms where all the files are of the `dart`extension.",
     "'They copy the dart build for each successful travis run to a google cloud storage (GCS) bucket. They only upload for submitted changes, not PRs. They can use this to fetch the dart sources for each SHA without having to re-build them, which is hard to reproduce since the environment might differ (eg. different Dart SDK).'",
