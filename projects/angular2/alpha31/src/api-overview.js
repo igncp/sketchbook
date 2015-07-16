@@ -232,7 +232,6 @@ diagrams.box({
             d("loadNextToLocation(typeOrBinding: Type | Binding, location: ElementRef, bindings: ResolvedBinding[] = null): Promise<ComponentRef>", "Loads a component next to the provided ElementRef. The loaded component receives injection normally as a hosted view."),
           ]),
         ]),
-
         c('element_binder.ts', [
           c('class ElementBinder', [
             "constructor(public index: int, public parent: ElementBinder, public distanceToParent: int, public protoElementInjector: eiModule.ProtoElementInjector, public componentDirective: DirectiveBinding)",
@@ -241,30 +240,30 @@ diagrams.box({
             d("hostListeners: StringMap<string, Map<number, AST>> = null;", "updated later when events are bound"),
             d("nestedProtoView: viewModule.AppProtoView = null;", "updated later, so we are able to resolve cycles"),
           ]),
-          c('element_injector.ts', [
-            c('class StaticKeys', [
-              "changeDetectorRefId: number;",
-              "constructor()",
-              "elementRefId: number;",
-              "pipesKey: Key;",
-              "protoViewId: number;",
-              "static instance(): StaticKeys",
-              "viewContainerId: number;",
-              "viewManagerId: number;",
-            ]),
-            c('class TreeNode<T extends TreeNode<any>>', [
-              "_head: T = null;",
-              "_next: T = null;",
-              "_parent: T;",
-              "_tail: T = null;",
-              "constructor(parent: T)",
-              "get children(): T[]",
-              "get parent()",
-              d("_findPrev()", "Finds a previous sibling or returns null if first child. Assumes the node has a parent."),
-              d("addChild(child: T): void", "Adds a child to the parent node. The child MUST NOT be a part of a tree."),
-              d("addChildAfter(child: T, prevSibling: T): void", "Adds a child to the parent node after a given sibling. The child MUST NOT be a part of a tree and the sibling must be present."),
-              d("remove(): void", "Detaches a node from the parent's tree."),
-            ]),
+        ]),
+        c('element_injector.ts', [
+          c('class StaticKeys', [
+            "changeDetectorRefId: number;",
+            "constructor()",
+            "elementRefId: number;",
+            "pipesKey: Key;",
+            "protoViewId: number;",
+            "static instance(): StaticKeys",
+            "viewContainerId: number;",
+            "viewManagerId: number;",
+          ]),
+          c('class TreeNode<T extends TreeNode<any>>', [
+            "_head: T = null;",
+            "_next: T = null;",
+            "_parent: T;",
+            "_tail: T = null;",
+            "constructor(parent: T)",
+            "get children(): T[]",
+            "get parent()",
+            d("_findPrev()", "Finds a previous sibling or returns null if first child. Assumes the node has a parent."),
+            d("addChild(child: T): void", "Adds a child to the parent node. The child MUST NOT be a part of a tree."),
+            d("addChildAfter(child: T, prevSibling: T): void", "Adds a child to the parent node after a given sibling. The child MUST NOT be a part of a tree and the sibling must be present."),
+            d("remove(): void", "Detaches a node from the parent's tree."),
           ]),
           c('class DirectiveDependency extends Dependency', [
             "_verify(): void",
