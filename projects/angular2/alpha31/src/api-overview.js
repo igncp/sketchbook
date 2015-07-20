@@ -142,8 +142,6 @@ diagrams.box({
           ]),
         ]),
       ]),
-
-
       c('compiler', [
         c('base_query_list.ts', [
           c('class BaseQueryList<T>', "Injectable Objects that contains a live list of child directives in the light Dom of a directive. The directives are kept in depth-first pre-order traversal of the DOM. In the future this class will implement an Observable interface. For now it uses a plain list of observable callbacks.", [
@@ -543,6 +541,47 @@ diagrams.box({
             "_cache: Map<Type, /*node*/ any> = new Map();",
             "_resolve(component: Type): View",
             "resolve(component: Type): View",
+          ]),
+        ]),
+      ]),
+      c('life_cycle', [
+        c('life_cycle.ts', [
+          c('class LifeCycle', "@Injectable(); Provides access to explicitly trigger change detection in an application. By default, `Zone` triggers change detection in Angular on each virtual machine (VM) turn. When testing, or in some limited application use cases, a developer can also trigger change detection with the lifecycle.tick()` method. Each Angular application has a single `LifeCycle` instance. This is a contrived example, since the bootstrap automatically runs inside of the `Zone`, which invokes lifecycle.tick()` on your behalf.", [
+            "_changeDetector: ChangeDetector;",
+            "_enforceNoNewChanges: boolean;",
+            "_errorHandler;",
+            "_runningTick: boolean = false;",
+            "constructor(exceptionHandler: ExceptionHandler, changeDetector: ChangeDetector = null, enforceNoNewChanges: boolean = false)",
+            "registerWith(zone: NgZone, changeDetector: ChangeDetector = null)",
+            d("tick()", "Invoke this method to explicitly process change detection and its side-effects. In development mode, `tick()` also performs a second change detection cycle to ensure that no further changes are detected. If additional changes are picked up during this second cycle, bindings in the app have side-effects that cannot be resolved in a single change detection pass. In this case, Angular throws an error, since an Angular application can only have one change detection pass during which all change detection must complete."),
+          ]),
+        ]),
+      ]),
+
+      c('testability', [
+        c('get_testability.ts', [
+          c('class GetTestability', [
+            "static addToWindow(registry: TestabilityRegistry)",
+          ]),
+        ]),
+
+        c('testability.ts', [
+          c('class Testability', "@Injectable(); The Testability service provides testing hooks that can be accessed from the browser and by services such as Protractor. Each bootstrapped Angular application on the page will have an instance of Testability.", [
+            "_callbacks: List<Function>;",
+            "_pendingCount: number;",
+            "_runCallbacks()",
+            "constructor()",
+            "findBindings(using, binding: string, exactMatch: boolean): List<any>",
+            "getPendingCount(): number",
+            "increaseCount(delta: number = 1)",
+            "whenStable(callback: Function)",
+          ]),
+
+          c('class TestabilityRegistry', '@Injectable()', [
+            "_applications: Map<any, Testability>;",
+            "constructor()",
+            "findTestabilityInTree(elem): Testability",
+            "registerApplication(token, testability: Testability)",
           ]),
         ]),
       ]),
