@@ -617,7 +617,133 @@ diagrams.box({
       ]),
     ]),
     c('debug', []),
-    c('di', []),
+    c('di', [
+      c('annotations_impl', [
+        c('class Inject', "@CONST(); A parameter annotation that specifies a dependency.", [
+          "constructor(public token)",
+          "toString(): string",
+        ]),
+        c('class Optional', "@CONST(); A parameter annotation that marks a dependency as optional. Injector provides `null` if the dependency is not found.", [
+          "toString(): string",
+        ]),
+        c('class DependencyAnnotation', "@CONST(); `DependencyAnnotation` is used by the framework to extend DI. Only annotations implementing `DependencyAnnotation` are added to the list of dependency properties.", [
+          "get token()",
+        ]),
+        d("@CONST()", "A marker annotation that marks a class as available to `Injector` for creation. Used by tooling for generating constructor stubs."),
+        c('class Injectable', [
+          "constructor(public visibility: Visibility = unbounded)",
+        ]),
+        c('class Visibility extends DependencyAnnotation', "@CONST(); Specifies how injector should resolve a dependency. See Self, Parent, Ancestor, Unbounded.", [
+          "constructor(public depth: number, public crossComponentBoundaries: boolean, public _includeSelf: boolean)",
+          "get includeSelf(): boolean",
+          "toString(): string",
+        ]),
+        c('class Self extends Visibility', "@CONST(); Specifies that an injector should retrieve a dependency from itself.", [
+          "constructor()",
+          "toString(): string",
+        ]),
+        "const self = CONST_EXPR(new Self());",
+        c('class Parent extends Visibility', "@CONST(); Specifies that an injector should retrieve a dependency from the direct parent.", [
+          "constructor({self}: {self?: boolean} = {})",
+          "toString(): string",
+        ]),
+
+        c('class Ancestor extends Visibility', "@CONST(); Specifies that an injector should retrieve a dependency from any ancestor from the same boundary.", [
+          "constructor({self}: {self?: boolean} = {})",
+          "toString(): string",
+        ]),
+
+        c('class Unbounded extends Visibility', "@CONST(); Specifies that an injector should retrieve a dependency from any ancestor, crossing boundaries.", [
+          "constructor({self}: {self?: boolean} = {})",
+          "toString(): string",
+        ]),
+        "const unbounded = CONST_EXPR(new Unbounded({self: true}));",
+      ]),
+      c('bindings.ts', [
+        c('class Dependency', [
+          "constructor(public key: Key, public optional: boolean, public visibility: Visibility, public properties: List<any>)",
+          "static fromKey(key: Key)",
+        ]),
+        c('class Binding', "@CONST(); Describes how the Injector should instantiate a given token.", [
+          "constructor(token, {toClass, toValue, toAlias, toFactory, deps}: {toClass?: Type,toValue?: any,toAlias?: any,toFactory?: Function,deps?: List<any>})",
+          d("dependencies: List<any>;", "Used in conjunction with `toFactory` and specifies a set of dependencies (as `token`s) which should be injected into the factory function."),
+          d("resolve(): ResolvedBinding", "Converts the Binding into ResolvedBinding. Injector internally only uses ResolvedBinding, Binding contains convenience binding syntax."),
+          d("toAlias;", "Binds a key to the alias for an existing key. An alias means that Injector returns the same instance as if the alias token was used. This is in contrast to `toClass` where a separate instance of `toClass` is returned."),
+          d("toClass: Type;", "Binds an interface to an implementation / subclass."),
+          d("toFactory: Function;", "Binds a key to a function which computes the value."),
+          d("token;", "Token used when retrieving this binding. Usually the `Type`."),
+          d("toValue;", "Binds a key to a value."),
+        ]),
+
+        c('class ResolvedBinding', "An internal resolved representation of a Binding used by the Injector. A Binding is resolved when it has a factory function. Binding to a class, alias, or value, are just convenience methods, as Injector only operates on calling factory functions.", [
+          "constructor(public key: Key, public factory: Function, public dependencies: List<Dependency>)",
+        ]),
+
+        d("function bind(token): BindingBuilder", "Provides an API for imperatively constructing Bindings. This is only relevant for JavaScript. See BindingBuilder."),
+
+        c('class BindingBuilder', "Helper class for the bind function.", [
+          "constructor(public token)",
+          d("toAlias(aliasToken): Binding", "Binds a key to the alias for an existing key. An alias means that we will return the same instance as if the alias token was used. (This is in contrast to `toClass` where a separet instance of `toClass` will be returned.)"),
+          d("toClass(type: Type): Binding", "Binds an interface to an implementation / subclass."),
+          d("toFactory(factoryFunction: Function, dependencies?: List<any>): Binding", "Binds a key to a function which computes the value."),
+          d("toValue(value): Binding", "Binds a key to a value."),
+        ]),
+      ]),
+
+      c('decorators.ts', [
+        "var Ancestor = makeParamDecorator(AncestorAnnotation);",
+        "var Inject = makeParamDecorator(InjectAnnotation);",
+        "var Injectable = makeDecorator(InjectableAnnotation);",
+        "var Optional = makeParamDecorator(OptionalAnnotation);",
+        "var Parent = makeParamDecorator(ParentAnnotation);",
+        "var Self = makeParamDecorator(SelfAnnotation);",
+        "var Unbounded = makeParamDecorator(UnboundedAnnotation);",
+        "var Visibility = makeParamDecorator(VisibilityAnnotation);",
+      ]),
+
+      c('exceptions.ts', [
+        c('class AbstractBindingError extends BaseException', "Base class for all errors arising from misconfigured bindings.", [
+          "addKey(key): void",
+          "constructor(key, constructResolvingMessage: Function)",
+          "constructResolvingMessage: Function;",
+          "keys: List<any>;",
+          "message: string;",
+          "name: string;",
+          "toString(): string",
+        ]),
+        c('class NoBindingError extends AbstractBindingError', "Thrown when trying to retrieve a dependency by `Key` from Injector, but the Injector does not have a Binding for Key.", [
+          "constructor(key)",
+        ]),
+        c('class AsyncBindingError extends AbstractBindingError', "Thrown when trying to retrieve an async Binding using the sync API.", [
+          "constructor(key)",
+        ]),
+        c('class CyclicDependencyError extends AbstractBindingError', "Thrown when dependencies form a cycle.", [
+          "constructor(key)",
+        ]),
+        c('class InstantiationError extends AbstractBindingError', "Thrown when a constructing type returns with an Error. The `InstantiationError` class contains the original error plus the dependency graph which caused this object to be instantiated.", [
+          "cause;",
+          "causeKey;",
+          "constructor(cause, stack, key)",
+          "stack;",
+        ]),
+        c('class InvalidBindingError extends BaseException', "Thrown when an object other then Binding (or `Type`) is passed to Injector creation.", [
+          "constructor(binding)",
+          "message: string;",
+          "toString(): string",
+        ]),
+        c('class NoAnnotationError extends BaseException', "Thrown when the class has no annotation information. Lack of annotation information prevents the Injector from determining which dependencies need to be injected into the constructor.", [
+          "constructor(typeOrFunc, params: List<List<any>>)",
+          "message: string;",
+          "name: string;",
+          "toString(): string",
+        ]),
+        c('class OutOfBoundsError extends BaseException', "Thrown when getting an object by index.", [
+          "constructor(index)",
+          "message: string;",
+          "toString(): string",
+        ]),
+      ]),
+    ]),
     c('directives', []),
     c('dom', []),
     c('facade', []),
