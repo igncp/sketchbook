@@ -6,16 +6,8 @@
 </head>
 <body>
 <%- include partials/_header.ejs %>
+<%- include partials/_breadcrumb.ejs %>
 <div class="col-lg-offset-1 col-lg-10">
-<h1>
-    <strong>
-        <% if (currentPath) { %>
-            <a href="/<%= projectName %>"><%= projectName %></a> <%= currentPath %>
-        <% } else { %>
-            <%= projectName %>
-        <% } %>
-    </strong> sketches:
-</h1>
 <ul>
     <% if (items.length) { %>
     <% items.forEach(function(item){ %>

@@ -23,7 +23,7 @@
 <body>
     <%- include partials/_header.ejs %>
     <div class="row">
-    <h2 class="col-lg-8 col-lg-offset-1"><strong><a href="/<%= projectName %>"><%= projectName %></a></strong> <%=currentPath%></h2>
+    <%- include partials/_breadcrumb.ejs %>
     <h3 class="col-lg-3"><a id="diagram-configuration-trigger" href="#"></a></h3>
     </div>
     <div class="row" id="diagram-configuration-panel">
