@@ -1,20 +1,125 @@
 (function() {
-  var fillBannerWithText = function(content) {
-    var bannerId = 'diagrams-banner',
-      previousBanner = d3.select('#' + bannerId),
-      body = d3.select('body'),
-      bannerEl, bannerHtml;
+  var bannerId = 'diagrams-banner';
 
-    if (previousBanner) previousBanner.remove();
+  var runFnMaintainingScrollDueBanner = function(fn) {
+    var previousBanner = d3.select('#' + bannerId),
+      currentBanner, previousBannerHeight, currentBannerHeight, currentScroll;
 
-    bannerHtml = '<div class="diagrams-banner-cross">&#x2715;</div>';
-    bannerHtml += diagrams.utils.formatTextFragment(content);
+    currentScroll = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+    if (previousBanner[0][0]) {
+      previousBannerHeight = previousBanner[0][0].getBoundingClientRect().height;
+    } else previousBannerHeight = 0;
+    fn();
+    currentBanner = d3.select('#' + bannerId);
+    if (currentBanner[0][0]) {
+      currentBannerHeight = currentBanner[0][0].getBoundingClientRect().height;
+    } else currentBannerHeight = 0;
 
-    bannerEl = body.insert('div', 'svg').attr({
-      id: bannerId
-    }).html(bannerHtml);
-    bannerEl.on('click', function() {
+    window.scrollTo(0, currentScroll - (previousBannerHeight - currentBannerHeight + 10));
+  };
+
+  var removePreviousBanner = function() {
+    var previousBanner = d3.select('#' + bannerId);
+    if (previousBanner[0][0]) {
+      previousBanner.remove();
+    }
+  };
+
+  var fillBanner = function(item, diagram, scroll) {
+    var body = d3.select('body'),
+      content = item.data.fullText,
+      relatedItems = diagram.getAllRelatedItemsOfItem(item.data),
+      generateBreadcrumb = function() {
+        var finalHtml = '',
+          suffix;
+        _.each(relatedItems.dependencies.reverse(), function(dependency, index) {
+          suffix = (index !== relatedItems.dependencies.length - 1) ? ' &nbsp;<strong class="banner-breadcrumb-level-separator">&gt;&gt;&gt;</strong>&nbsp; ' : '';
+          finalHtml += ' <strong class="banner-breadcrumb-level-number">[' + String(index + 1) + ']</strong> ' + (dependency.data.name || dependency.data.text) + suffix;
+        });
+        return finalHtml;
+      },
+      fillSiblingsVars = function() {
+        if (item.data.relationships.dependencies.length > 0) {
+          siblings = [];
+          _.each(item.data.relationships.dependencies, function(dependency) {
+            siblings = siblings.concat(dependency.data.relationships.dependants);
+          });
+          if (siblings.length === 1) siblings = null;
+          else {
+            var siblingDatas = _.pluck(siblings, 'data'),
+              siblingsFullTexts = _.pluck(siblingDatas, 'fullText'),
+              itemInSiblings = siblingsFullTexts.indexOf(item.data.fullText); // indexOf of the object is not detecting it
+
+            if (itemInSiblings < (siblings.length - 1)) nextSibling = siblings[itemInSiblings + 1];
+            else nextSibling = siblings[0];
+          }
+        }
+      },
+      getNextSiblingIntro = function() {
+        return getIntro(nextSibling.data.fullText);
+      },
+      getFirstDependantIntro = function() {
+        return getIntro(item.data.relationships.dependants[0].data.fullText);
+      },
+      getIntro = function(fullText) {
+        var removeTags = function(text, tag) {
+            var replaceText = function(regexp) {
+              text = text.replace(new RegExp(regexp, 'ig'), '');
+            };
+            if (_.isArray(tag)) _.each(tag, function(tagItem) {
+              text = removeTags(text, tagItem);
+            });
+            else {
+              replaceText('<' + tag + '>');
+              replaceText('</' + tag + '>');
+            }
+            return text;
+          },
+          intro = '<i>' + removeTags(fullText, ['strong', 'p', 'br']) + '</i>';
+        return (intro.length > 20) ? intro.substr(0, 20) + '...' : intro;
+      },
+      bannerEl, bannerHtml, scrollElTop, currentScroll, siblings, nextSibling;
+
+    fillSiblingsVars();
+    runFnMaintainingScrollDueBanner(function() {
+      removePreviousBanner();
+
+      bannerHtml = '<div class="diagrams-banner-cross">&#x2715;</div>';
+      bannerHtml += '<div class="diagrams-banner-breadcrumb">' + generateBreadcrumb() + '</div>';
+      bannerHtml += diagrams.utils.formatTextFragment(content);
+      bannerHtml += '<div class="diagrams-banner-footer">';
+      bannerHtml += '<strong class="banner-footer-scroll">Scroll</strong> ';
+      if (siblings) bannerHtml += '| <strong class="banner-footer-siblings">Show next sibling (of ' + String(siblings.length - 1) + '): ' + getNextSiblingIntro() + '</strong> ';
+      if (item.data.relationships.dependants.length > 0) bannerHtml += '| <strong class="banner-footer-dependants">Show first child (of ' + String(item.data.relationships.dependants.length) + '): ' + getFirstDependantIntro() + '</strong> ';
+      bannerHtml += '</div>';
+
+      bannerEl = body.insert('div', 'svg').attr({
+        id: bannerId
+      }).html(bannerHtml);
+    });
+    bannerEl.select('.diagrams-banner-cross').on('click', function() {
       bannerEl.remove();
+    });
+    bannerEl.select('.banner-footer-siblings').on('click', function() {
+      fillBanner(nextSibling, diagram);
+    });
+    bannerEl.select('.banner-footer-dependants').on('click', function() {
+      fillBanner(item.data.relationships.dependants[0], diagram);
+    });
+
+    if (scrollElTop !== 0) {
+      bannerEl.select('.banner-footer-scroll').on('click', function() {
+        currentScroll = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+        d3.event.stopPropagation();
+        scrollElTop = item.el[0][0].getBoundingClientRect().top;
+        window.scrollTo(0, scrollElTop + currentScroll);
+      });
+    }
+    _.each(bannerEl.selectAll('.banner-breadcrumb-level-number')[0], function(el, index) {
+      var levelNumberEl = d3.select(el);
+      levelNumberEl.on('click', function() {
+        fillBanner(relatedItems.dependencies[index], diagram);
+      });
     });
   };
 
@@ -109,6 +214,7 @@
           },
           formEl;
 
+        panel.text('');
         formEl = panel.append('form');
         for (var configKey in diagram.config()) {
           buildFormItem(configKey);
@@ -148,7 +254,15 @@
       if (diagram.unmarkAllItems && diagram.config(MARK_RELATED)) diagram.unmarkAllItems();
     });
     diagram.listen('itemclick', function(item) {
-      if (diagram.config(SHOW_BANNER) === true) fillBannerWithText(item.data.fullText);
+      if (diagram.config(SHOW_BANNER) === true) fillBanner(item, diagram);
     });
+    diagram.listen('items-rendered', function() {
+      runFnMaintainingScrollDueBanner(function() {
+        removePreviousBanner();
+      });
+    });
+  });
+  diagrams.events.listen('diagram-to-transform', function(diagram) {
+    diagram.dispose();
   });
 })();
