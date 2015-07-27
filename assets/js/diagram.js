@@ -89,8 +89,8 @@
       bannerHtml += diagrams.utils.formatTextFragment(content);
       bannerHtml += '<div class="diagrams-banner-footer">';
       bannerHtml += '<strong class="banner-footer-scroll">Scroll</strong> ';
-      if (siblings) bannerHtml += '| <strong class="banner-footer-siblings">Show next sibling (of ' + String(siblings.length - 1) + '): ' + getNextSiblingIntro() + '</strong> ';
-      if (item.data.relationships.dependants.length > 0) bannerHtml += '| <strong class="banner-footer-dependants">Show first child (of ' + String(item.data.relationships.dependants.length) + '): ' + getFirstDependantIntro() + '</strong> ';
+      if (siblings) bannerHtml += '| <strong class="banner-footer-siblings">Show next sibling (of a total of ' + String(siblings.length) + '): ' + getNextSiblingIntro() + '</strong> ';
+      if (item.data.relationships.dependants.length > 0) bannerHtml += '| <strong class="banner-footer-dependants">Show first child (of a total of' + String(item.data.relationships.dependants.length) + '): ' + getFirstDependantIntro() + '</strong> ';
       bannerHtml += '</div>';
 
       bannerEl = body.insert('div', 'svg').attr({
