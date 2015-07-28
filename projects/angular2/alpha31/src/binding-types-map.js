@@ -23,5 +23,7 @@ var n = diagrams.graph.generateNode,
 diagrams.graph([
   n("class Binding", [0, ct(1, 'resolve() using new ResolvedBinding'), ct(2, 'resolve() using Key.get')], '/src/di/binding.ts'),
   n("class ResolvedBinding", [1, ctd(2, 'public key: Key')], '/src/di/binding.ts'),
-  n("class Key", 2, '/src/di/key.ts'),
+  n("class Key", [2, 3], '/src/di/key.ts'),
+  n("class KeyRegistry", 3, '/src/di/key.ts'),
 ]);
+
