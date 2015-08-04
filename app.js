@@ -57,7 +57,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/:urlPath*', function(req, res) {
-  var urlPath = req.originalUrl.replace(/^\//, ''),
+  var urlPath = req.originalUrl.replace(/^\//, '').split('?')[0],
     urlSegments = urlPath.split('/'),
     projectName = urlSegments[0],
     projects = getProjects(),

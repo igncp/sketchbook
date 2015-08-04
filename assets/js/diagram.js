@@ -25,7 +25,7 @@
     }
   };
 
-  var fillBanner = function(item, diagram, scroll) {
+  var fillBanner = function(item, diagram) {
     var body = d3.select('body'),
       content = item.data.fullText,
       relatedItems = diagram.getAllRelatedItemsOfItem(item.data),
@@ -149,7 +149,7 @@
         });
       }
 
-      if (display === 'show') {
+      if (display === 'show' && _.isUndefined(content) === false) {
         tooltipStyle += 'display: inline-block; ';
         formatAndAddContent();
 
@@ -171,7 +171,7 @@
         }
         tooltipStyle += 'top: ' + tooltipTop + 'px; ';
 
-      } else if (display === 'hide') tooltipStyle += 'display: none; ';
+      } else if (display === 'hide' || _.isUndefined(content) === true) tooltipStyle += 'display: none; ';
 
       tooltip.attr('style', tooltipStyle);
     }
@@ -193,22 +193,35 @@
       },
       buildPanel = function() {
         var buildFormItem = function(configKey) {
-            var optionEl = formEl.append('div').attr('class', 'col-lg-6'),
+            var optionEl = formEl.append('div').attr('class', 'col-lg-6 text-center'),
               configValue = diagram.config(configKey),
               elId = configKey.replace(/ /g, '-').toLowerCase(),
-              inputEl;
+              inputEl, labelEl;
 
             if (_.isBoolean(configValue)) {
-              optionEl.append('label').attr({
+              labelEl = optionEl.append('div').attr({
+                'class': 'btn-group',
+                'data-toggle': 'buttons'
+              }).append('label').attr({
                 'for': elId,
-                'class': 'checkbox-label'
-              }).text(configKey);
-              inputEl = optionEl.append('input').attr({
+                'class': 'checkbox-label btn btn-default'
+              });
+
+              inputEl = labelEl.append('input').attr({
+                autocomplete: 'off',
                 type: 'checkbox',
                 id: elId
-              }).property('checked', configValue);
+              });
+              labelEl.append('span').text(configKey);
+
+              if (configValue === true) {
+                inputEl.property('checked', configValue);
+                labelEl.classed('active', configValue);
+              }
+
               inputEl.on('change', function() {
                 diagram.config(configKey, inputEl.property('checked'));
+                labelEl.classed('active', inputEl.property('checked'));
               });
             }
           },

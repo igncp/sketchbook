@@ -85,7 +85,7 @@ diagrams.box({
       c('annotations_impl', [
         c('annotations.ts', [
           c('Directive extends InjectableMetadata', "@CONST(); Directives allow you to attach behavior to elements in the DOM. Directives with an embedded view are called Components.A directive consists of a single directive annotation and a controller class.", [
-            "constructor({selector, properties, events, host, lifecycle, hostInjector, exportAs, compileChildren = true,}: {selector?: string, properties?: List<string>, events?: List<string>, host?: StringMap<string, string>, lifecycle?: List<LifecycleEvent>, hostInjector?: List<any>, exportAs?: string, compileChildren?: boolean,   } = {})",
+            "constructor({selector, properties, events, host, lifecycle, hostInjector, exportAs, compileChildren = true,}: {selector?: string, properties?: List<string>, events?: List<string>, host?: StringMap<string, string>, lifecycle?: List<LifecycleEvent>, hostInjector?: List<any>, exportAs?: string, compileChildren?: boolean} = {})",
             d("compileChildren: boolean;", "If set to false the compiler does not compile the children of this directive."),
             d("events: List<string>;", "Enumerates the set of emitted events."),
             d("exportAs: string;", "Defines the name that can be used in the template to assign this directive to a variable."),
@@ -744,7 +744,7 @@ diagrams.box({
 
       c('forward_ref.ts', [
         d("function forwardRef(forwardRefFn: ForwardRefFn): Type", "Allows to refer to references which are not yet defined. This situation arises when the key which we need te refer to for the purposes of DI is declared, but not yet defined."),
-        d("export function resolveForwardRef(type: any): any", "Lazily retrieve the reference value. See: forwardRef"),
+        d("function resolveForwardRef(type: any): any", "Lazily retrieve the reference value. See: forwardRef"),
       ]),
 
       c('injector.ts', [
@@ -1183,6 +1183,4 @@ diagrams.box({
     c('transform', []),
     c('util', []),
   ])]
-}, {
-  allCollapsed: true
 });
