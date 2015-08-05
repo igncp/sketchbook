@@ -873,9 +873,7 @@ diagrams.box({
           d("static resolveAndCreate(bindings: List<Type | Binding | List<any>>, depProvider: DependencyProvider = null): Injector", "Resolves bindings and creates an injector based on those bindings. This function is slower than the corresponding `fromResolvedBindings` because it needs to resolve bindings first. See resolve` for the Injector. Prefer `fromResolvedBindings` in performance-critical code that creates lots of injectors."),
         ]),
       ]),
-
       c('key.ts', [
-        "export {TypeLiteral} from './type_literal';",
         c('class Key', "A unique object used for retrieving items from the Injector. Keys have: - a system-wide unique `id`. - a `token`, usually the `Type` of the instance. Keys are used internally by the Injector because their system-wide unique `id`s allow the injector to index in arrays rather than looking up items in maps.", [
           "constructor(public token: Object, public id: number)",
           "get displayName(): string",
@@ -888,7 +886,6 @@ diagrams.box({
           "private _allKeys: Map<Object, Key> = new Map();",
         ]),
       ]),
-
       c('metadata.ts', [
         c('class InjectMetadata', "@CONST(); A parameter metadata that specifies a dependency.", [
           "constructor(public token)",
@@ -922,7 +919,18 @@ diagrams.box({
         ]),
         "const DEFAULT_VISIBILITY = CONST_EXPR(new UnboundedMetadata({self: true}));",
       ]),
-
+      c('opaque_token.ts', [
+        c('class OpaqueToken', "@CONST()", [
+          "_desc: string;",
+          "constructor(desc: string)",
+          "toString()",
+        ]),
+      ]),
+      c('type_literal.ts', [
+        c('class TypeLiteral', "Type literals is a Dart-only feature. This is here only so we can x-compile to multiple languages.", [
+          "get type(): any",
+        ]),
+      ]),
     ]),
     c('directives', []),
     c('dom', []),

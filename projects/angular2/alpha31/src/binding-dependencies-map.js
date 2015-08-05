@@ -21,7 +21,7 @@ diagrams.graph([
     ctd(2, 'key'), ctd(5, 'visibility')
   ], '/src/di/binding.ts'),
   nl('class VisibilityMetadata', [5], '/src/di/metadata.ts'),
-  nl('function resolveForwardRef', [6, cti(0, 'resolve()')], '/src/di/forward_ref.ts'),
+  nl('function resolveForwardRef', [6, cti(0, 'resolve()'), cti(2, 'static get')], '/src/di/forward_ref.ts'),
   np('function _constructDependencies', [7, cti(0, 'resolve()'), ct(4, 'return'), ct(10, 'return'), ct(11, 'return')]),
   nl('function bind', [8, ct(9, 'return')], '/src/di/binding.ts'),
   nl('class BindingBuilder', [9, ct(0, 'toClass(), toValue(), toAlias(), toFactory()')], '/src/di/binding.ts'),
@@ -35,4 +35,5 @@ diagrams.graph([
   nl('class HostMetadata', [17], '/src/di/metadata.ts'),
   nl('class SkipSelfMetadata', [18], '/src/di/metadata.ts'),
   nl('class DependencyMetadata', [19], '/src/di/metadata.ts'),
+  nl('class TypeLiteral', [20, cti(3, 'get()')], '/src/di/type_literal.ts'),
 ]);
