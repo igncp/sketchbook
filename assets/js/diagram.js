@@ -196,7 +196,7 @@
             var optionEl = formEl.append('div').attr('class', 'col-lg-6 text-center'),
               configValue = diagram.config(configKey),
               elId = configKey.replace(/ /g, '-').toLowerCase(),
-              inputEl, labelEl;
+              inputEl, labelEl, subInputEl;
 
             if (_.isBoolean(configValue)) {
               labelEl = optionEl.append('div').attr({
@@ -223,7 +223,23 @@
                 diagram.config(configKey, inputEl.property('checked'));
                 labelEl.classed('active', inputEl.property('checked'));
               });
+            } else if (_.isObject(configValue) && configValue['private'] !== true) {
+              if (_.isArray(configValue.possibleValues)) {
+                inputEl = optionEl.append('select').attr({
+                  id: elId
+                });
+                _.each(configValue.possibleValues, function(possibleValue, index) {
+                  subInputEl = inputEl.append('option').text(possibleValue);
+                  if (index === configValue.value) subInputEl.property('selected', true);
+                });
+
+                inputEl.on('change', function() {
+                  configValue.value = configValue.possibleValues.indexOf(inputEl.node().value);
+                  diagram.config(configKey, configValue);
+                });
+              }
             }
+
           },
           formEl;
 
@@ -246,13 +262,38 @@
   };
 
   var SHOW_BANNER = 'Show banner on click',
-    MARK_RELATED = 'Mark related items',
+    MR = { // Mark Related
+      KEY: 'Mark related items',
+      NONE: "Don't mark any related items",
+      ALL: 'Mark all related items',
+      DEPENDANTS: 'Mark just the dependants',
+      DEPENDENCIES: 'Mark just the dependencies'
+    },
     SHOW_TOOLTIP = 'Show tooltip';
+
+  MR.DEFAULT = {
+    value: 0,
+    type: Number,
+    possibleValues: [MR.NONE, MR.ALL, MR.DEPENDANTS, MR.DEPENDENCIES]
+  };
 
   var setDefaultConfiguration = function(diagram) {
     diagram.configCheckingLocalStorage(SHOW_TOOLTIP, true);
     diagram.configCheckingLocalStorage(SHOW_BANNER, true);
-    diagram.configCheckingLocalStorage(MARK_RELATED, true);
+    diagram.configCheckingLocalStorage(MR.KEY, MR.DEFAULT);
+  };
+
+  var handleMarkRelatedItems = function(diagram, item) {
+    var indexValue = diagram.config(MR.KEY).value,
+      textValue = MR.DEFAULT.possibleValues[indexValue],
+      opts;
+
+    if (textValue !== MR.NONE) {
+      opts = {};
+      if (textValue === MR.DEPENDANTS) opts.filter = 'dependants';
+      else if (textValue === MR.DEPENDENCIES) opts.filter = 'dependencies';
+      diagram.markRelatedItems(item.data, opts);
+    }
   };
 
   diagrams.events.listen('diagram-created', function(diagram) {
@@ -260,11 +301,11 @@
     setupConfigurationPanel(diagram);
     diagram.listen('mouseenter', function(item) {
       if (diagram.config(SHOW_TOOLTIP)) tooltip.onMouseEnterListenerFn(item.el, item.data.fullText);
-      if (diagram.config(MARK_RELATED)) diagram.markRelatedItems(item.data);
+      handleMarkRelatedItems(diagram, item);
     });
     diagram.listen('mouseleave', function() {
       tooltip.onMouseLeaveListenerFn();
-      if (diagram.unmarkAllItems && diagram.config(MARK_RELATED)) diagram.unmarkAllItems();
+      if (diagram.unmarkAllItems && diagram.config(MR.KEY)) diagram.unmarkAllItems();
     });
     diagram.listen('itemclick', function(item) {
       if (diagram.config(SHOW_BANNER) === true) fillBanner(item, diagram);

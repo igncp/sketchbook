@@ -1151,7 +1151,170 @@ diagrams.box({
         ]),
       ]),
     ]),
-    c('router', []),
+    c('router', [
+      c('instruction.ts', [
+        c('class RouteParams', [
+          "constructor(public params: StringMap<string, string>)",
+          "get(param: string): string",
+        ]),
+        c('class Instruction', "An `Instruction` represents the component hierarchy of the application based on a given route", [
+          "accumulatedUrl: string;",
+          "constructor(public component: any, public capturedUrl: string, private _recognizer: PathRecognizer, public child: Instruction = null)",
+          "params(): StringMap<string, string>",
+          "private _params: StringMap<string, string>;",
+          "reuse: boolean = false;",
+          "specificity: number;",
+        ]),
+      ]),
+      c('lifecycle_annotations.t', [
+        d("var CanActivate", "This indirection is needed to free up Component, etc symbols in the public API to be used by the decorator versions of these annotations."),
+      ]),
+      c('location.ts', [
+        "const appBaseHrefToken: OpaqueToken = CONST_EXPR(new OpaqueToken('locationHrefToken'));",
+        c('class Location', "@Injectable(); This is the service that an application developer will directly interact with. Responsible for normalizing the URL against the application's base href. A normalized URL is absolute from the URL host, includes the application's base href, and has no trailing slash: `/my/app/user/123` is normalized `my/app/user/123` **is not** normalized - `/my/app/user/123/` **is not** normalized", [
+          "_addBaseHref(url: string): string",
+          "_onPopState(_): void",
+          "_stripBaseHref(url: string): string",
+          "back(): void",
+          "constructor(public _platformStrategy: LocationStrategy, @Optional() @Inject(appBaseHrefToken) href?: string)",
+          "forward(): void",
+          "go(url: string): void",
+          "normalize(url: string): string",
+          "normalizeAbsolutely(url: string): string",
+          "path(): string",
+          "private _baseHref: string;",
+          "private _subject: EventEmitter = new EventEmitter();",
+          "subscribe(onNext, onThrow = null, onReturn = null): void",
+        ]),
+      ]),
+      c('location_strategy.ts', [
+        c('class LocationStrategy', [
+          "path(): string",
+          "pushState(ctx: any, title: string, url: string): void",
+          "forward(): void",
+          "back(): void",
+          "onPopState(fn): void",
+          "getBaseHref(): string",
+        ]),
+      ]),
+      c('path_recognizer.ts', [
+        c('class Segment', [
+          "name: string;",
+          "regex: string;",
+          "generate(params: TouchMap): string",
+        ]),
+        c('class PathRecognizer', "represents something like '/foo/:bar'", [
+          "constructor(public path: string, public handler: RouteHandler)",
+          "generate(params: StringMap<string, any>): string",
+          "parseParams(url: string): StringMap<string, string>",
+          "regex: RegExp;",
+          "resolveComponentType(): Promise<any>",
+          "segments: List<Segment>;",
+          "specificity: number;",
+          "terminal: boolean = true;",
+        ]),
+      ]),
+      c('pipeline.ts', [
+        c('class Pipeline', "@Injectable(); Responsible for performing each step of navigation. 'Steps' are conceptually similar to 'middleware'", [
+          "constructor()",
+          "process(instruction: Instruction): Promise<any>",
+          "steps: List<Function>;",
+        ]),
+      ]),
+      c('route_config_impl.ts', [
+        c('class RouteConfig', "@CONST(); You use the RouteConfig annotation to add routes to a component. Supported keys: - `path` (required) - `component`,  `redirectTo` (requires exactly one of these) - `as` (optional)", [
+          "constructor(public configs: List<Map<any, any>>)",
+        ]),
+      ]),
+      c('route_handler.ts', [
+        c('interface RouteHandler', [
+          "componentType: Type;",
+          "resolveComponentType(): Promise<any>;",
+        ]),
+      ]),
+      c('route_lifecycle_reflector.ts', [
+        "function hasLifecycleHook(e: RouteLifecycleHook, type): boolean",
+        "function getCanActivateHook(type): Function",
+      ]),
+      c('route_recognizer.ts', [
+        c('class RouteRecognizer', "`RouteRecognizer` is responsible for recognizing routes for a single component. It is consumed by `RouteRegistry`, which knows how to recognize an entire hierarchy of components.", [
+          "addConfig(path: string, handlerObj: any, alias: string = null): boolean",
+          "addRedirect(path: string, target: string): void",
+          "generate(name: string, params: any): StringMap<string, any>",
+          "hasRoute(name: string): boolean",
+          "matchers: Map<RegExp, PathRecognizer> = new Map();",
+          "names: Map<string, PathRecognizer> = new Map();",
+          "redirects: Map<string, string> = new Map();",
+          d("recognize(url: string): List<RouteMatch>", "Given a URL, returns a list of `RouteMatch`es, which are partial recognitions for some route."),
+        ]),
+
+        c('class RouteMatch', [
+          "constructor(public recognizer: PathRecognizer, public matchedUrl: string, public unmatchedUrl: string)",
+          "params(): StringMap<string, string>",
+        ]),
+      ]),
+      c('route_registry.ts', [
+        c('class RouteRegistry', "@Injectable(); The RouteRegistry holds route configurations for each component in an Angular app. It is responsible for creating Instructions from URLs, and generating URLs based on route and  parameters.", [
+          "_completeRouteMatch(partialMatch: RouteMatch): Promise<Instruction>",
+          "private _rules: Map<any, RouteRecognizer> = new Map();",
+          d("config(parentComponent, config: StringMap<string, any>): void", "Given a component and a configuration object, add the route to this registry"),
+          d("configFromComponent(component): void", "Reads the annotations of a component and configures the registry based on them"),
+          d("generate(linkParams: List<any>, parentComponent): string", "Given a normalized list with component names and params like: `['user', {id: 3 }]` generates a url with a leading slash relative to the provided `parentComponent`."),
+          d("recognize(url: string, parentComponent): Promise<Instruction>", "Given a URL and a parent component, return the most specific instruction for navigating the application into the state specified by the url"),
+        ]),
+      ]),
+      c('router.ts', [
+        c('class Router', "The router is responsible for mapping URLs to components. You can see the state of the router by inspecting the read-only field `router.navigating`. This may be useful for showing a spinner, for instance. Routers and component instances have a 1:1 correspondence. The router holds reference to a number of \"outlets.\" An outlet is a placeholder that the router dynamically fills in depending on the current URL. When the router navigates from a URL, it must first recognizes it and serialize it into an `Instruction`. The router uses the `RouteRegistry` to get an `Instruction`.", [
+          "_finishNavigating(): void",
+          "_reuse(instruction): Promise<any>",
+          "_startNavigating(): void",
+          "constructor(public registry: RouteRegistry, public _pipeline: Pipeline, public parent: Router, public hostComponent: any)",
+          "lastNavigationAttempt: string;",
+          "navigating: boolean;",
+          "private _afterPromiseFinishNavigating(promise: Promise<any>): Promise<any>",
+          "private _canActivate(instruction: Instruction): Promise<boolean>",
+          "private _canDeactivate(instruction: Instruction): Promise<boolean>",
+          "private _currentInstruction: Instruction = null;",
+          "private _currentNavigation: Promise<any> = _resolveToTrue;",
+          "private _emitNavigationFinish(url): void",
+          "private _outlet: RouterOutlet = null;",
+          "private _subject: EventEmitter = new EventEmitter();",
+          d("childRouter(hostComponent: any): Router { return new ChildRouter(this, hostComponent); }", "Constructs a child router. You probably don't need to use this unless you're writing a reusable component."),
+          d("commit(instruction: Instruction): Promise<any>", "Updates this router and all descendant routers according to the given instruction"),
+          d("config(config: StringMap<string, any>| List<StringMap<string, any>>): Promise<any>", "Dynamically update the routing configuration and trigger a navigation."),
+          d("deactivate(instruction: Instruction): Promise<any>", "Removes the contents of this router's outlet and all descendant outlets"),
+          d("generate(linkParams: List<any>): string", "Generate a URL from a component name and optional map of parameters. The URL is relative to the app's base href."),
+          d("navigate(url: string): Promise<any>", "Navigate to a URL. Returns a promise that resolves when navigation is complete. If the given URL begins with a `/`, router will navigate absolutely. If the given URL does not begin with `/`, the router will navigate relative to this component."),
+          d("recognize(url: string): Promise<Instruction>", "Given a URL, returns an instruction representing the component graph"),
+          d("registerOutlet(outlet: RouterOutlet): Promise<boolean>", "Register an object to notify of route changes. You probably don't need to use this unless you're writing a reusable component."),
+          d("renavigate(): Promise<any>", "Navigates to either the last URL successfully navigated to, or the last URL requested if the router has yet to successfully navigate."),
+          d("subscribe(onNext): void { ObservableWrapper.subscribe(this._subject, onNext); }", "Subscribe to URL updates from the router"),
+        ]),
+        c('class RootRouter extends Router', [
+          "_location: Location;",
+          "constructor(registry: RouteRegistry, pipeline: Pipeline, location: Location, hostComponent: Type)",
+          "commit(instruction): Promise<any>",
+        ]),
+      ]),
+      c('router_outlet.ts', [
+        c('class RouterOutlet', "@Directive({selector: 'router-outlet'}); A router outlet is a placeholder that Angular dynamically fills based on the application's route.", [
+          "childRouter: routerMod.Router = null;",
+          "constructor(private _elementRef: ElementRef, private _loader: DynamicComponentLoader, private _parentRouter: routerMod.Router, @Attribute('name') nameAttr: string)",
+          "deactivate(nextInstruction: Instruction): Promise<any>",
+          "private _activate(instruction: Instruction): Promise<any>",
+          "private _commitChild(instruction: Instruction): Promise<any>",
+          "private _componentRef: ComponentRef = null;",
+          "private _currentInstruction: Instruction = null;",
+          "private _reuse(instruction): Promise<any>",
+          d("canDeactivate(nextInstruction: Instruction): Promise<boolean>", "Called by Router during recognition phase"),
+          d("canReuse(nextInstruction: Instruction): Promise<boolean>", "Called by Router during recognition phase"),
+          d("commit(instruction: Instruction): Promise<any>", "Given an instruction, update the contents of this outlet."),
+        ]),
+      ]),
+      c('url.ts', [
+        "function escapeRegex(string: string): string",
+      ]),
+    ]),
     c('services', [
       c('app_root_url.ts', [
         c('class AppRootUrl', "@Injectable(); Specifies app root url for the application. Used by the Compiler when resolving HTML and CSS template URLs.. This interface can be overridden by the application developer to create custom behavior.", [

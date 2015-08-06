@@ -111,4 +111,15 @@ li {
       cursor: pointer;
     }
   }
+  select {
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    cursor: pointer;
+    height: 30px;
+    margin-top: 15px;
+    padding-left: 10px;
+    text-shadow: 1px 1px 1px #EEEEEE;
+
+    @include border-radius(5px);
+  }
 }
