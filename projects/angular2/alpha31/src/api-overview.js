@@ -1166,7 +1166,7 @@ diagrams.box({
           "specificity: number;",
         ]),
       ]),
-      c('lifecycle_annotations.t', [
+      c('lifecycle_annotations.ts', [
         d("var CanActivate", "This indirection is needed to free up Component, etc symbols in the public API to be used by the decorator versions of these annotations."),
       ]),
       c('location.ts', [
@@ -1350,7 +1350,56 @@ diagrams.box({
         ]),
       ]),
     ]),
-    c('test_lib', []),
+    c('test_lib', [
+      c('test_injector.ts', [
+        "function createTestInjector(bindings: List<Type | Binding | List<any>>): Injector",
+        d("function inject(tokens: List<any>, fn: Function): FunctionWithParamTokens", "Allows injecting dependencies in `beforeEach()` and `it()`.  Notes: - injecting an `AsyncTestCompleter` allow completing async tests - this is the equivalent of adding a `done` parameter in Jasmine, - inject is currently a function because of some Traceur limitation the syntax should eventually becomes `it('...', @Inject (object: AClass, async: AsyncTestCompleter) => { ... });`"),
+        c('class FunctionWithParamTokens', [
+          "_fn: Function;",
+          "_tokens: List<any>;",
+          "constructor(tokens: List<any>, fn: Function)",
+          "execute(injector: Injector): void",
+        ]),
+      ]),
+      c('test_lib.ts', [
+        "function proxy()",
+        "var afterEach = _global.afterEach;",
+        c('interface NgMatchers extends jasmine.Matchers', [
+          "not: NgMatchers;",
+          "toBe(expected: any): boolean;",
+          "toBeAnInstanceOf(expected: any): boolean;",
+          "toBePromise(): boolean;",
+          "toEqual(expected: any): boolean;",
+          "toHaveText(expected: any): boolean;",
+          "toImplement(expected: any): boolean;",
+        ]),
+        "var expect: (actual: any) => NgMatchers = <any>_global.expect;",
+        "var IS_DARTIUM = false;",
+        c('class AsyncTestCompleter', [
+          "_done: Function;",
+          "constructor(done: Function)",
+          "done()",
+        ]),
+        "function describe(...args)",
+        "function ddescribe(...args)",
+        "function xdescribe(...args)",
+        "function beforeEach(fn",
+        d("export function beforeEachBindings(fn)", "Allows overriding default bindings defined in test_injector.js. The given function must return a list of DI bindings."),
+        "function it(name, fn)",
+        "function xit(name, fn)",
+        "function iit(name, fn)",
+        "interface GuinessCompatibleSpy extends jasmine.Spy",
+        c('class SpyObject', [
+          "_createGuinnessCompatibleSpy(name): GuinessCompatibleSpy",
+          "constructor(type = null)",
+          "rttsAssert(value)",
+          "spy(name)",
+          "static stub(object = null, config = null, overrides = null)",
+          d("noSuchMethod(args)", "Noop so that SpyObject has the smae interface as in Dart"),
+        ]),
+        "function isInInnerZone(): boolean",
+      ]),
+    ]),
     c('transform', []),
     c('util', []),
   ])]

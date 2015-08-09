@@ -1,11 +1,5 @@
-var n = diagrams.graph.generateNode,
-  np = function() {
-    var args = Array.prototype.slice.call(arguments);
-    args[2] = args[2] + '<br><strong>PRIVATE</strong>';
-    args[3] = 's-t';
-    return n.apply({}, args);
-  },
-  nl = diagrams.graph.generateNodeWithTextAsTargetLink('api-overview'),
+var np = diagrams.graph.generatePrivateNode,
+  nl = diagrams.graph.generateNodeWithTextAsTargetLink('../api-overview'),
   ct = diagrams.graph.generateConnectionWithText,
   connectionFnFactory = diagrams.graph.connectionFnFactory,
   cti = connectionFnFactory(ct, 'direction', 'in'),
