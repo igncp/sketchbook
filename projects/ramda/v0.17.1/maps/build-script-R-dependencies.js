@@ -7,7 +7,12 @@ var n = diagrams.graph.generateNode,
   },
   ct = function() {
     var args = Array.prototype.slice.call(arguments);
-    args[1] = 'x' + args[1] + ' times';
+    if (_.isArray(args[0])) return _.map(args[0], function(id) {
+      var argsCopied = _.cloneDeep(args);
+      argsCopied[0] = id;
+      return ct.apply({}, argsCopied);
+    });
+    args[1] = 'x' + args[1] + ' time(s)';
     return diagrams.graph.generateConnectionWithText.apply({}, args);
   },
   connectionFnFactory = diagrams.graph.connectionFnFactory,
@@ -18,17 +23,17 @@ diagrams.graph([
   nt('warn', [1, ct(0, 1)]),
   nt('abort', [2, ct(0, 1), ct(20, 1), ct(21, 1)]),
   nt('filenameToIdentifier', [3, ct(22, 1)]),
-  nt('identifierToFilename', [4, ct(20, 1), ct(23, 1), ct(24, 1), ct(25, 2), ct(26, 1), ct(27, 1)]),
+  nt('identifierToFilename', [4, ct([20, 23, 24], 1), ct(25, 2), ct(26, 1), ct(27, 1)]),
   nt('parse', [5, ct(28, 1)]),
-  nt('isModuleExportsExpr', 6),
-  nt('isRequireExpr', 7),
-  nt('warnIgnoredTopLevel', 8),
+  nt('isModuleExportsExpr', [6, ct(29, 1), ct(30, 8)]),
+  nt('isRequireExpr', [7, ct(29, 1), ct(30, 4)]),
+  nt('warnIgnoredTopLevel', [8, ct([31, 20, 32, 23, 33, 34, 35, 36, 37, 6, 7, 38, 39], 1)]),
   nt('abortIfNotSorted', 9),
   nt('abortIfExportNotLast', 10),
   nt('abortIfDifferentRequireVar', 11),
   nt('abortIfEmptyBody', 12),
   nt('dependenciesOf', 13),
-  nt('createDependencyGraph', 14),
+  nt('createDependencyGraph', [14, ct([40, 13], 1)]),
   nt('orderDependencies', 15),
   nt('getModifiedSource', 16),
   nt('build', 17),
@@ -43,30 +48,19 @@ diagrams.graph([
   n('R.concat', 26),
   n('R.__', 27),
   n('R.memoize', 28),
+  n('R.allPass', 29),
+  n('R.pathEq', 30),
+  n('R.tap', 31),
+  n('R.chain', 32),
+  n('R.propEq', 33),
+  n('R.prop', 34),
+  n('R.of', 35),
+  n('R.reject', 36),
+  n('R.either', 37),
+  n('R.map', 38),
+  n('R.forEach', 39),
+  n('R.has', 40),
 ]);
-
-// isModuleExportsExpr
-// R.allPass
-// R.pathEq
-
-// isRequireExpr
-// R.allPass
-// R.pathEq
-
-// warnIgnoredTopLevel
-// R.tap
-// R.pipe
-// R.chain
-// R.ifElse
-// R.propEq
-// R.prop
-// R.of
-// R.reject
-// R.either
-// isModuleExportsExpr
-// isRequireExpr
-// R.map
-// R.forEach
 
 // abortIfNotSorted
 // R.tap
@@ -139,10 +133,6 @@ diagrams.graph([
 // abortIfDifferentRequireVar,
 // R.map
 // R.path
-
-// createDependencyGraph
-// R.has
-// dependenciesOf
 
 
 // orderDependencies
