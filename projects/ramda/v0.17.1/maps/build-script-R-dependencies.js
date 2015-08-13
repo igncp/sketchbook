@@ -14,9 +14,7 @@ var n = diagrams.graph.generateNode,
     });
     args[1] = 'x' + args[1] + ' time(s)';
     return diagrams.graph.generateConnectionWithText.apply({}, args);
-  },
-  connectionFnFactory = diagrams.graph.connectionFnFactory,
-  cti = connectionFnFactory(ct, 'direction', 'in');
+  };
 
 diagrams.graph([
   nt('logWithPrefix', [0, ct(19, 1)]),
@@ -29,15 +27,15 @@ diagrams.graph([
   nt('isRequireExpr', [7, ct(29, 1), ct(30, 4)]),
   nt('warnIgnoredTopLevel', [8, ct([31, 20, 32, 23, 33, 34, 35, 36, 37, 6, 7, 38, 39], 1)]),
   nt('abortIfNotSorted', 9),
-  nt('abortIfExportNotLast', 10),
-  nt('abortIfDifferentRequireVar', 11),
-  nt('abortIfEmptyBody', 12),
+  nt('abortIfExportNotLast', [10, ct([31, 44, 48, 34, 43, 6, 46, 26, 2], 1), ct(20, 1)]),
+  nt('abortIfDifferentRequireVar', [11, ct([31, 39, 44, 47, 48, 49, 51, 52, 2], 1), ct([46, 20], 2), ct(50, 3)]),
+  nt('abortIfEmptyBody', [12, ct([31, 44, 34, 45, 46, 26, 2], 1), ct(20, 2)]),
   nt('dependenciesOf', 13),
   nt('createDependencyGraph', [14, ct([40, 13], 1)]),
   nt('orderDependencies', 15),
-  nt('getModifiedSource', 16),
+  nt('getModifiedSource', [16, ct([4, 12, 10], 1)]),
   nt('build', 17),
-  nt('filenames', 18),
+  nt('filenames', [18, ct([41, 24, 43], 1)]),
   n('R.curry', 19),
   n('R.pipe', 20),
   n('R.always', 21),
@@ -60,7 +58,19 @@ diagrams.graph([
   n('R.map', 38),
   n('R.forEach', 39),
   n('R.has', 40),
+  n('R.filter', 41),
+  n('R.last', 43),
+  n('R.cond', 44),
+  n('R.isEmpty', 45),
+  n('R.path', 46),
+  n('R.converge', 47),
+  n('R.complement', 48),
+  n('R.equals', 49),
+  n('R.replace', 50),
+  n('R.topUpper', 51),
+  n('R.nthArg', 52),
 ]);
+
 
 // abortIfNotSorted
 // R.tap
@@ -77,43 +87,6 @@ diagrams.graph([
 // R.concat
 // abort
 
-// abortIfExportNotLast
-// R.tap
-// R.cond
-// R.complement
-// R.pipe
-// R.prop
-// R.last
-// isModuleExportsExpr
-// R.path
-// R.concat
-// abort
-
-// abortIfDifferentRequireVar
-// R.tap
-// R.forEach
-// R.cond
-// R.converge
-// R.complement
-// R.equals
-// R.path
-// R.pipe
-// R.path
-// R.replace
-// R.replace
-// R.toUpper
-// abort
-
-
-// abortIfEmptyBody
-// R.tap
-// R.cond
-// R.pipe
-// R.prop
-// R.isEmpty
-// R.path
-// R.concat
-// abort
 
 // dependenciesOf
 // R.pipe
@@ -150,13 +123,6 @@ diagrams.graph([
 // R.identity
 // R.keys
 
-// getModifiedSource
-// identifierToFilename
-// abortIfEmptyBody
-// abortIfExportNotLast
-// R.last
-
-
 // build
 // R.pipe
 // R.map
@@ -177,8 +143,3 @@ diagrams.graph([
 // R.replace
 // R.always,
 // R.replace
-
-
-// filenames
-// R.filter
-// R.test
