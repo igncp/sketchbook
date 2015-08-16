@@ -29,7 +29,7 @@ def recursive_diagram_str_generation(path):
     if (with_files or any_child_is_dir):
       returned_str = '\nc("' + os.path.basename(path) + '", ['
       for child in dir_list:
-        if with_files or is_valid_dir(os.path.join(path, child)):
+        if is_valid_dir(os.path.join(path, child)):
           returned_str += recursive_diagram_str_generation(os.path.join(path, child))
       returned_str += ']),'
     else: returned_str = wrap_in_description(path)
