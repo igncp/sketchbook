@@ -16,7 +16,11 @@ def wrap_in_description(path):
 
 
 def is_valid_dir(path):
-  return os.path.isdir(path) and (os.path.basename(path) not in excluded_dirs)
+  return os.path.isdir(path) and is_valid_child(path)
+
+
+def is_valid_child(path):
+  return (os.path.basename(path) not in excluded_dirs)
 
 
 def recursive_diagram_str_generation(path):
@@ -29,7 +33,8 @@ def recursive_diagram_str_generation(path):
     if (with_files or any_child_is_dir):
       returned_str = '\nc("' + os.path.basename(path) + '", ['
       for child in dir_list:
-        if is_valid_dir(os.path.join(path, child)):
+        child_path = os.path.join(path, child)
+        if (with_files and is_valid_child(child_path)) or is_valid_dir(child_path):
           returned_str += recursive_diagram_str_generation(os.path.join(path, child))
       returned_str += ']),'
     else: returned_str = wrap_in_description(path)
