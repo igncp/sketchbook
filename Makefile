@@ -1,5 +1,15 @@
 all: set-dev-diagrams server
 
+install:
+	@sudo npm install
+	@./node_modules/.bin/bower install
+	@gem install compass
+	@echo "Done."
+
+executables:
+	@chmod -R +x ./scripts
+	@echo "Done."
+
 server:
 	@echo 'Port 8080'
 	@supervisor app.js
