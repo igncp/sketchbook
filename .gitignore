@@ -3,3 +3,5 @@ vendors
 .sass-cache
 /projects/discontinued
 /projects/private
+scripts-labs
+*.pyc

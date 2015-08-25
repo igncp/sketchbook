@@ -11,3 +11,6 @@ Project sketches.
 - `make server` And in a browser visit the page http://localhost:8080
 - `make compass` To compile changes in the `.scss` files
 - `./scripts/` In this directory there can be found some helpers scripts which require Python
+
+## Author and License
+Ignacio Carbajo · MIT

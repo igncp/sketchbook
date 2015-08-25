@@ -1,0 +1,86 @@
+#!/usr/bin/env python
+
+import ast
+import sys
+import os
+
+path = os.path.abspath(sys.argv[1])
+out_path = os.path.abspath(sys.argv[2])
+project_name = os.path.basename(path)
+
+imports_names = {}
+
+
+def add_to_dict(name):
+  module_name = name.split('.')[0]
+  if module_name != project_name:
+    if module_name not in imports_names:
+      imports_names[module_name] = 0
+    imports_names[module_name] += 1
+
+
+def add_imports_names(path):
+  f = open(path, 'r')
+  content = f.read()
+  f.close()
+  parsed = ast.parse(content)
+  imports = [node for node in parsed.body if isinstance(node, ast.Import)
+    or isinstance(node, ast.ImportFrom)]
+
+  for imprt in imports:
+    if hasattr(imprt, 'level') is False or imprt.level == 0:
+      if hasattr(imprt, 'module'):
+        add_to_dict(imprt.module)
+      else: add_to_dict(imprt.names[0].name)
+
+standard_import_names = {}
+external_import_names = {}
+
+
+def generate_import_names_str(imported_names_dict):
+  final_str = ''
+  names = imported_names_dict.keys()
+  for name in sorted(names):
+    final_str += '\nd("' + name + '", "' + str(imported_names_dict[name]) + ' times"),'
+  return final_str
+
+
+def separate_import_names():
+  names = imports_names.keys()
+  for name in sorted(names):
+    try:
+      module = __import__(name)
+      if hasattr(module, '__file__'):
+        file_name = module.__file__
+        if 'pymodules' in file_name or 'dist-packages' in file_name\
+          or 'lib-tk' in file_name:
+          external_import_names[name] = imports_names[name]
+        else:
+          standard_import_names[name] = imports_names[name]
+      else:
+        standard_import_names[name] = imports_names[name]
+    except ImportError:
+      external_import_names[name] = imports_names[name]
+
+for root, dirs, files in os.walk(path):
+    for name in files:
+      if name[-3:] == '.py':
+        file_path = os.path.join(root, name)
+        add_imports_names(file_path)
+
+separate_import_names()
+
+diagram_str = """var d = diagrams.box.generateDefinition,
+  c = diagrams.box.generateContainer,
+  s = diagrams.shared.get;
+
+diagrams.box({
+  name: s('project') + ' packages dependencies',
+  body: [c('standard', ["""
+diagram_str += generate_import_names_str(standard_import_names)
+diagram_str += "\n]),\nc('external', ["
+diagram_str += generate_import_names_str(external_import_names)
+diagram_str += "\n])]});"
+
+with open(out_path, 'w') as out_file:
+  out_file.write(diagram_str)

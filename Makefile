@@ -6,10 +6,6 @@ install:
 	@gem install compass
 	@echo "Done."
 
-executables:
-	@chmod -R +x ./scripts
-	@echo "Done."
-
 server:
 	@echo 'Port 8080'
 	@supervisor app.js
@@ -24,3 +20,7 @@ compass:
 tmux-all:
 	@tmux split-window -h "make compass"
 	@tmux split-window -h "make server"
+
+executables:
+	@chmod -R +x ./scripts
+	@echo "Done."
