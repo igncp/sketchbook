@@ -4,11 +4,15 @@ import ast
 import sys
 import os
 
+import _common.utils as utils
+
 path = os.path.abspath(sys.argv[1])
-out_path = os.path.abspath(sys.argv[2])
+output_file_path = os.path.abspath(sys.argv[2])
 project_name = os.path.basename(path)
 
 imports_names = {}
+standard_import_names = {}
+external_import_names = {}
 
 
 def add_to_dict(name):
@@ -32,9 +36,6 @@ def add_imports_names(path):
       if hasattr(imprt, 'module'):
         add_to_dict(imprt.module)
       else: add_to_dict(imprt.names[0].name)
-
-standard_import_names = {}
-external_import_names = {}
 
 
 def generate_import_names_str(imported_names_dict):
@@ -62,25 +63,14 @@ def separate_import_names():
     except ImportError:
       external_import_names[name] = imports_names[name]
 
-for root, dirs, files in os.walk(path):
-    for name in files:
-      if name[-3:] == '.py':
-        file_path = os.path.join(root, name)
-        add_imports_names(file_path)
+utils.walk_dir_python_files(path, add_imports_names)
 
 separate_import_names()
 
-diagram_str = """var d = diagrams.box.generateDefinition,
-  c = diagrams.box.generateContainer,
-  s = diagrams.shared.get;
-
-diagrams.box({
-  name: s('project') + ' packages dependencies',
-  body: [c('standard', ["""
+diagram_str = utils.add_box_diagram_beginning('packages dependencies') + "c('standard', ["
 diagram_str += generate_import_names_str(standard_import_names)
 diagram_str += "\n]),\nc('external', ["
 diagram_str += generate_import_names_str(external_import_names)
 diagram_str += "\n])]});"
 
-with open(out_path, 'w') as out_file:
-  out_file.write(diagram_str)
+utils.set_file_content(output_file_path, diagram_str)
