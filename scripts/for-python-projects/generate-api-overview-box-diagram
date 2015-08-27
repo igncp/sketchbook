@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import ast
 import sys
 import os
 import unicodedata
@@ -9,58 +8,6 @@ import _common.utils as utils
 
 project_path = os.path.abspath(sys.argv[1])
 output_file_path = os.path.abspath(sys.argv[2])
-
-files_dict = {}
-files_doc_strings_dict = {}
-
-
-def get_docstring(node):
-  doc_string = ast.get_docstring(node)
-  if doc_string:
-    max_chars = 300
-    doc_string = doc_string.replace('=', '').replace('\n', ' ').replace('\r', '').replace('"', '\'')
-    if len(doc_string) > max_chars: doc_string = doc_string[0:max_chars] + '...'
-    return doc_string
-  else: return None
-
-
-def add_item_to_files_dict(path, addition):
-  if (path not in files_dict): files_dict[path] = []
-  files_dict[path].append(addition)
-
-
-def print_classes(path):
-  f = open(path, 'r')
-  content = f.read()
-  f.close()
-  parsed = ast.parse(content)
-  relative_path = path.replace(project_path, '')
-  class_definitions = [node for node in parsed.body if isinstance(node, ast.ClassDef)]
-  ds = get_docstring(parsed)
-  if ds: files_doc_strings_dict[relative_path] = ds
-  function_definitions = [node for node in parsed.body if isinstance(node, ast.FunctionDef)]
-  for class_definition in class_definitions:
-    bases = [base.id for base in class_definition.bases if hasattr(base, 'id')]
-    class_line = 'c("' + class_definition.name + '(' + ', '.join(bases) + ')", "'
-    class_line += relative_path + '; '
-    doc_string = get_docstring(class_definition)
-    if doc_string: class_line += doc_string
-    class_line += '", ['
-    method_definitions = [node for node in class_definition.body
-      if isinstance(node, ast.FunctionDef)]
-    method_strs = []
-    for method_definition in method_definitions:
-      args = [arg.id for arg in method_definition.args.args]
-      method_strs.append('d("' + method_definition.name + '(' + ', '.join(args) + ')' + '"),')
-    class_line += '\n' + '\n'.join(sorted(method_strs)) + ']),'
-    add_item_to_files_dict(relative_path, class_line)
-  for function_definition in function_definitions:
-    args = [arg.id for arg in function_definition.args.args]
-    function_line = 'd("' + function_definition.name + '(' + ', '.join(args) + ')' + '"'
-    doc_string = get_docstring(function_definition)
-    if doc_string: function_line += ', "' + doc_string + '"'
-    function_line += '),'
-    add_item_to_files_dict(relative_path, function_line)
 
 
 def setInDict(dataDict, mapList, value):
@@ -94,14 +41,14 @@ def generate_nested_api():
         current_path = path + '/' + data_key
         ds = ''
         if current_path in files_doc_strings_dict: ds = ' ' + files_doc_strings_dict[current_path]
-        final_str += '\nc("' + data_key + '", "' + current_path + ds + '", ['
-        final_str += generate_str_recursively(data[data_key], current_path)
+        final_str += '\nc("' + data_key + '", "' + utils.add_path_as_info(current_path) + ds
+        final_str += '", [' + generate_str_recursively(data[data_key], current_path)
         final_str += ']),'
       return final_str
     elif isinstance(data, str) or isinstance(data, unicode):
       if isinstance(data, unicode):
         data = unicodedata.normalize('NFKD', data).encode('ascii', 'ignore')
-      return '\n' + data
+      return data
 
   tree_dict = {}
  
@@ -111,10 +58,41 @@ def generate_nested_api():
   
   return generate_str_recursively(tree_dict, '')
 
-utils.walk_dir_python_files(project_path, print_classes)
 
-diagram_str = utils.add_box_diagram_beginning('generated api overview')
-diagram_str += generate_nested_api()
-diagram_str += "\n]});"
+def add_item_to_files_dict(path, addition):
+  if (path not in files_dict): files_dict[path] = []
+  files_dict[path].append(addition)
+
+
+def get_api_elements_of_box_dict(path):
+  file_api_elements = utils.get_api_elements_of_file(path)
+  file_doc_string = utils.get_file_doc_tring(path)
+
+  relative_path = path.replace(project_path, '')
+  if file_doc_string: files_doc_strings_dict[relative_path] = file_doc_string
+
+  for element in file_api_elements:
+    element_str = ''
+    if element['type'] == 'class':
+      element_str = '\nc("' + element['name'] + '(' + ', '.join(element['bases']) + ')", "'
+      element_str += utils.add_path_as_info(relative_path)
+      if element['doc_string']: element_str += element['doc_string']
+      element_str += '", ['
+      method_strs = ['d("' + method['name'] + '(' + ', '.join(method['args']) + ')"),'
+        for method in element['methods']]
+      element_str += '\n' + '\n'.join(sorted(method_strs)) + ']),'
+    if element['type'] == 'function':
+      element_str = '\nd("' + element['name'] + '(' + ', '.join(element['args']) + ')"'
+      if element['doc_string']: element_str += ', "' + element['doc_string'] + '"'
+      element_str += '),'
+    add_item_to_files_dict(relative_path, element_str)
+
+files_dict = {}
+files_doc_strings_dict = {}
+
+utils.walk_dir_python_files(project_path, get_api_elements_of_box_dict)
+
+diagram_str = generate_nested_api()
+diagram_str = utils.wrap_str_in_box_diagram(diagram_str, 'generated api overview')
 
 utils.set_file_content(output_file_path, diagram_str)

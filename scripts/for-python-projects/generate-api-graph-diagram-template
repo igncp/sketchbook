@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+
+import sys
+import os
+
+import _common.utils as utils
+
+project_path = os.path.abspath(sys.argv[1])
+output_file_path = os.path.abspath(sys.argv[2])
+
+total_elements = []
+total_ids = [-1]
+
+
+def save_api_elements_of_graph_dict(path):
+  file_api_elements = utils.get_api_elements_of_file(path)
+
+  relative_path = path.replace(project_path, '')
+  for element in file_api_elements:
+    total_ids[0] += 1
+    element_str = '// n("' + element['name'] + '", [' + str(total_ids[0]) + '], "'
+    element_str += utils.add_path_as_info(relative_path)
+    if element['type'] == 'class':
+      method_strs = [method['name'] for method in element['methods']]
+      element_str += element['name'] + ' (' + ', '.join(element['bases'])
+      element_str += ');<br>methods: ' + ', '.join(method_strs) + '")'
+    if element['type'] == 'function':
+      element_str += element['name'] + '(' + ', '.join(element['args']) + ')")'
+    total_elements.append(element_str)
+
+files_dict = {}
+files_doc_strings_dict = {}
+
+utils.walk_dir_python_files(project_path, save_api_elements_of_graph_dict)
+
+diagram_str = ', \n'.join(total_elements)
+diagram_str = utils.wrap_str_in_graph_diagram(diagram_str)
+
+utils.set_file_content(output_file_path, diagram_str)
