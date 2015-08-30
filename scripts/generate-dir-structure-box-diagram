@@ -3,6 +3,8 @@
 import sys
 import os
 
+import _common.utils as utils
+
 dir_path = os.path.abspath(sys.argv[1])
 out_path = os.path.abspath(sys.argv[2])
 with_files = True
@@ -25,7 +27,7 @@ def is_valid_child(path):
 
 def recursive_diagram_str_generation(path):
   if os.path.isdir(path):
-    dir_list = os.listdir(path)
+    dir_list = sorted(os.listdir(path))
     any_child_is_dir = False
     if with_files is False:
       for child in dir_list:
@@ -53,5 +55,4 @@ diagrams.box({
 diagram_str += recursive_diagram_str_generation(dir_path)
 diagram_str += "]});"
 
-with open(out_path, 'w') as out_file:
-  out_file.write(diagram_str)
+utils.set_file_content(out_path, diagram_str)

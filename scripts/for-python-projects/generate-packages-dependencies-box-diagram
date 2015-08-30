@@ -4,6 +4,8 @@ import ast
 import sys
 import os
 
+common_dir_path = os.path.realpath(os.path.dirname(__file__) + '/..')
+sys.path.insert(0, common_dir_path)
 import _common.utils as utils
 
 path = os.path.abspath(sys.argv[1])
@@ -67,10 +69,11 @@ utils.walk_dir_python_files(path, add_imports_names)
 
 separate_import_names()
 
-diagram_str = utils.add_box_diagram_beginning('packages dependencies') + "c('standard', ["
+diagram_str = "c('standard', ["
 diagram_str += generate_import_names_str(standard_import_names)
 diagram_str += "\n]),\nc('external', ["
 diagram_str += generate_import_names_str(external_import_names)
-diagram_str += "\n])]});"
+diagram_str += "\n])"
+diagram_str = utils.wrap_str_in_box_diagram(diagram_str, 'packages dependencies')
 
 utils.set_file_content(output_file_path, diagram_str)

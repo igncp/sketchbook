@@ -1,0 +1,52 @@
+var d = diagrams.box.generateDefinition,
+  c = diagrams.box.generateContainer,
+  s = diagrams.shared.get;
+
+diagrams.box({
+  name: s('project') + ' external dependencies',
+  body: [
+    c('npm', [
+      c('dependencies', [
+        d('commoner', 'Flexible tool for translating any dialect of JavaScript into Node-readable CommonJS modules'),
+        d('jstransform', 'A simple AST visitor-based JS transformer'),
+      ]),
+      c('devDependencies', [
+        d('benchmark'),
+        d('browserify'),
+        d('bundle-collapser'),
+        d('coffee-script'),
+        d('commoner'),
+        d('coverify'),
+        d('derequire', 'Remove requires'),
+        d('envify', 'Selectively replace Node-style environment variables with plain strings. Available as a standalone CLI tool and a Browserify v2 transform.'),
+        d('es3ify', 'Browserify transform to convert ES5 syntax to be ES3-compatible.'),
+        d('es5-shim'),
+        d('eslint'),
+        d('esprima-fb', 'Facebook-specific fork of the esprima project'),
+        d('grunt'),
+        d('grunt-cli'),
+        d('grunt-compare-size'),
+        d('grunt-contrib-clean'),
+        d('grunt-contrib-compress'),
+        d('grunt-contrib-connect'),
+        d('grunt-contrib-jshint'),
+        d('grunt-jest'),
+        d('gzip-js'),
+        d('jasmine-tapreporter'),
+        d('jest-cli'),
+        d('jstransform'),
+        d('optimist'),
+        d('phantomjs'),
+        d('platform', 'A platform detection library that works on nearly all JavaScript platforms.'),
+        d('populist'),
+        d('recast'),
+        d('sauce-tunnel'),
+        d('tmp'),
+        d('typescript'),
+        d('uglify-js'),
+        d('uglifyify'),
+        d('wd', 'WebDriver/Selenium 2 node.js client'),
+      ]),
+    ]),
+  ]
+});

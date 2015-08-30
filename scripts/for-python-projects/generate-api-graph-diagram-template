@@ -3,6 +3,8 @@
 import sys
 import os
 
+common_dir_path = os.path.realpath(os.path.dirname(__file__) + '/..')
+sys.path.insert(0, common_dir_path)
 import _common.utils as utils
 
 project_path = os.path.abspath(sys.argv[1])

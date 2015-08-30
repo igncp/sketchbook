@@ -1,17 +1,36 @@
 import os
 import ast
+import re
 
 
-def is_python_file(item):
-  return item[-3:] == '.py'
+def is_file_of_extension_fn(extension):
+  def is_file_of_extension(item):
+    item_extension_len = len(extension) + 1
+    return item[-item_extension_len:] == '.' + extension
+  return is_file_of_extension
+
+is_python_file = is_file_of_extension_fn('py')
+is_js_file = is_file_of_extension_fn('js')
 
 
-def walk_dir_python_files(project_path, fn):
+def walk_dir_files(project_path, fn):
   for root, dirs, files in os.walk(project_path):
-    for name in files:
-      if is_python_file(name):
-        file_path = os.path.abspath(os.path.join(root, name))
-        fn(file_path)
+    for file_name in files:
+        file_path = os.path.abspath(os.path.join(root, file_name))
+        fn(file_name, file_path)
+
+
+def walk_dir_files_with_file_name_condition_fn(condition):
+  def walk_dir_files_with_file_name_condition(project_path, fn):
+    def condition_fn(file_name, file_path):
+      if condition(file_name): fn(file_path)
+
+    walk_dir_files(project_path, condition_fn)
+  return walk_dir_files_with_file_name_condition
+
+
+walk_dir_python_files = walk_dir_files_with_file_name_condition_fn(is_python_file)
+walk_dir_js_files = walk_dir_files_with_file_name_condition_fn(is_js_file)
 
 
 def wrap_str_in_box_diagram(items_str, title):
@@ -48,6 +67,8 @@ def get_docstring(node):
       max_chars = 300
       doc_string = doc_string.replace('=', '').replace('\n', ' ').replace('\r', '')\
         .replace('"', '\'')
+      doc_string = re.sub(r':mod:`(.+?)`', r'\g<1>', doc_string)
+      doc_string = re.sub(r':ref:`(.+?)`', r'\g<1>', doc_string)
       if len(doc_string) > max_chars: doc_string = doc_string[0:max_chars] + '...'
       return doc_string
     else: return None
@@ -104,6 +125,10 @@ def get_api_elements_of_file(path):
     item['doc_string'] = get_docstring(function_definition)
     file_api_elements.append(item)
 
+  def sorting_predicate(item):
+    return item['name']
+
+  file_api_elements = sorted(file_api_elements, key=sorting_predicate)
   return file_api_elements
 
 
