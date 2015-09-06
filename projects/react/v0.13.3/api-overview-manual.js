@@ -137,6 +137,16 @@ diagrams.box({
             d('topWheel: null'),
           ]),
         ]),
+        c('EventPluginRegistry', [
+          d('plugins: []', 'Ordered list of injected plugins.'),
+          d('eventNameDispatchConfigs: {}', 'Mapping from event name to dispatch config'),
+          d('registrationNameModules: {}', 'Mapping from registration name to plugin module'),
+          d('registrationNameDependencies: {}', 'Mapping from registration name to event name'),
+          d('injectEventPluginOrder: function(InjectedEventPluginOrder) ', 'Injects an ordering of plugins (by plugin name). This allows the ordering to be decoupled from injection of the actual plugins so that ordering is always deterministic regardless of packaging, on-the-fly injection, etc.'),
+          d('injectEventPluginsByName(injectedNamesToPlugins)', 'Injects plugins to be used by `EventPluginHub`. The plugin names must be in the ordering injected by `injectEventPluginOrder`. Plugins can be injected as part of page initialization or on-the-fly.'),
+          d('getPluginModuleForEvent(event)', 'Looks up the plugin for the supplied event.'),
+          d('_resetEventPlugins()', 'Exposed for unit testing.'),
+        ]),
       ]),
       c('test', [
         c('ReactPerf.js', [
