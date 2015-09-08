@@ -17,10 +17,6 @@ set-dev-diagrams:
 compass:
 	@compass watch
 
-tmux-all:
-	@tmux split-window -h "make compass"
-	@tmux split-window -h "make server"
-
 executables:
 	@chmod -R +x ./scripts
 	@echo "Done."
