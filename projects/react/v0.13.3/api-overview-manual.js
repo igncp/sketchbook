@@ -60,7 +60,6 @@ diagrams.box({
             d("unmountComponentAtNode(container)"),
             d("unmountComponentFromNode(instance, container)"),
           ]),
-
         ]),
       ]),
       c('core', [
@@ -146,6 +145,11 @@ diagrams.box({
           d('injectEventPluginsByName(injectedNamesToPlugins)', 'Injects plugins to be used by `EventPluginHub`. The plugin names must be in the ordering injected by `injectEventPluginOrder`. Plugins can be injected as part of page initialization or on-the-fly.'),
           d('getPluginModuleForEvent(event)', 'Looks up the plugin for the supplied event.'),
           d('_resetEventPlugins()', 'Exposed for unit testing.'),
+        ]),
+        c('EventPropagators', "'A small set of propagation patterns, each of which will accept a small amount of information, and generate a set of  dispatch ready event objects which re sets of events that have already been annotated with a set of dispatched listener functions/ids. The API is designed this way to discourage these propagation strategies from actually executing the dispatches, since we always want to collect the entire set of dispatches before executing event a single one.'", [
+          d('accumulateTwoPhaseDispatches', "'Doc for a single Dispatcher: Collect dispatches (must be entirely collected before dispatching - see unit tests). Lazily allocate the array to conserve memory.  We must loop through each event and perform the traversal for each one. We can not perform a single traversal for the entire collection of events because each event may have a different target.'"),
+          d('accumulateDirectDispatches', "'Accumulates without regard to direction, does not look for phased registration names. Same as `accumulateDirectDispatchesSingle` but without requiring that the `dispatchMarker` be the same as the dispatched ID.'"),
+          d('accumulateEnterLeaveDispatches'),
         ]),
       ]),
       c('test', [
