@@ -6,10 +6,10 @@ var n = diagrams.graph.generateNode,
   ctid = connectionFnFactory(cti, 'line', 'dotted');
 
 
+// Starting from ReactEventEmitterMixin
+
 diagrams.graph([
-  n('React Default Injection', [1, ct([2, 4])]),
-  n('React Injection', [2, ct(3), ct(3), ct(3)]),
-  n('XXX.injection', [3]),
-  n('inject()', [4], '', 's-t'),
-  n('React', [5, ct([4, 1])]),
+  n('ReactEventEmitterMixin.handleTopLevel', [1, ct(2, "extractEvents</br>enqueueEvents</br>processEventQueue")]),
+  n('EventPluginHub', [2]),
+  
 ]);
