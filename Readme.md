@@ -1,6 +1,6 @@
 # Sketchbook
 
-Project sketches.
+Project sketches. The sketches consist in diagrams about the source code of popular or interesting projects, with JavaScript related languages or with Python.
 
 ## Complete installation
 
