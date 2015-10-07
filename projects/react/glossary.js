@@ -10,7 +10,6 @@ diagrams.box({
     'native component (/src/core/ReactNativeComponent',
     'PutListenerQueue (/src/browser/ReactPutListenerQueue)',
     'ReactRootIndex (/src/browser/ClientReactRootIndex)',
-    'reconciliation step',
     'ref of a component (/src/core/ReactRef)',
     'releaser (/src/utils/PooledClass)',
     'static poolers (/src/utils/PooledClass)',
@@ -24,6 +23,7 @@ diagrams.box({
     d('Mounting', "'Mounting is the process of initializing a React component by creating its representative DOM elements and inserting them into a supplied `container`. Any prior content inside `container` is destroyed in the process.'"),
     d('public instance <> internal instance (/src/core/ReactUpdateQueue.)', 'It uses the instance maps to retrieve the internal from the public'),
     d('reactRootId', "An attribute called `data-reactid` stored in the DOM elements"),
+    d('reconciliation step', "React uses the 'virtual dom' to simulate dom changes faster, and the it just updates the necessary parts on the real dom. For a deep explanation: https://facebook.github.io/react/docs/reconciliation.html"),
     d('synthetic events (/src/browser/syntheticEvents)', "'Synthetic events are dispatched by event plugins, typically in response to a top-level event delegation handler. These systems should generally use pooling to reduce the frequency of garbage collection. The system should check `isPersistent` to determine whether the event should be released into the pool after being dispatched. Users that need a persisted event should invoke `persist`. Synthetic events (and subclasses) implement the DOM Level 3 Events API by normalizing browser quirks. Subclasses do not necessarily have to implement a DOM interface; custom application-specific events can also subclass this.'"),
     d('Transaction (/src/utils/Transaction)', "'`Transaction` creates a black box that is able to wrap any method such that certain invariants are maintained before and after the method is invoked (Even if an exception is thrown while invoking the wrapped method)'"),
   ]

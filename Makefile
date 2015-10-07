@@ -7,7 +7,7 @@ install:
 	@echo "Done."
 
 server:
-	@echo 'Port 8080'
+	@echo 'Port 8081'
 	@supervisor app.js
 
 set-dev-diagrams:
