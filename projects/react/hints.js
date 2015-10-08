@@ -4,6 +4,7 @@ var d = diagrams.box.generateDefinition,
 diagrams.box({
   name: s('project') + ' hints',
   body: [
+    'ReactCurrentOwner.current != null means that React is in a render phase.',
     'The React API is exposed in /src/browser/ui/React.js',
     'ReactElementValidator is used in __DEV__ environment',
     'props are inmutable, state is mutable (but it should not be changed directly, but with .setState())',
