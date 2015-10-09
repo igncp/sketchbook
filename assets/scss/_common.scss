@@ -1,4 +1,9 @@
-a, a:hover {
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
+a,
+a:hover {
   text-decoration: none;
 }
 
@@ -18,11 +23,11 @@ li {
 
 #title {
   a {
-    color: #90A991;
+    color: #90a991;
 
     @include transition(all linear .5s);
     &:hover {
-      color: #5D6F5E;
+      color: #5d6f5e;
     }
   }
   small {
@@ -36,9 +41,9 @@ li {
 }
 
 #diagrams-tooltip {
-  background: #FFFFFF;
-  border: solid 2px #CCCCCC;
-  box-shadow: 0 0 10px 1px #AAAAAA;
+  background: #fff;
+  border: solid 2px #ccc;
+  box-shadow: 0 0 10px 1px #aaa;
   font-size: 30px;
   left: 1%;
   opacity: .9;
@@ -49,7 +54,7 @@ li {
 }
 
 #diagrams-banner {
-  border: 1px solid #CCCCCC;
+  border: 1px solid #ccc;
   font-size: 25px;
   margin-bottom: 0;
   margin-bottom: 15px;
@@ -66,15 +71,15 @@ li {
     }
   }
   .diagrams-banner-cross {
-    background-color: #F5FCFF;
-    color: #777777;
+    background-color: #f5fcff;
+    color: #777;
     opacity: 0;
     padding: 0 5px;
     position: absolute;
     right: 40px;
 
     @include border-radius(10px);
-    @include box-shadow(0 0 1px .5px #CCCCCC);
+    @include box-shadow(0 0 1px .5px #ccc);
     @include transition(.5s linear all);
   }
   .diagrams-banner-breadcrumb {
@@ -82,25 +87,30 @@ li {
       color: rgb(195, 145, 66);
     }
   }
-  .banner-footer-scroll, .banner-breadcrumb-level-number, .banner-footer-siblings, .banner-footer-dependants {
+  .banner-footer-scroll,
+  .banner-breadcrumb-level-number,
+  .banner-footer-siblings,
+  .banner-footer-dependants {
     color: rgb(88, 138, 187);
     cursor: pointer;
   }
-  .diagrams-banner-breadcrumb, .diagrams-banner-footer {
-    color: #777777;
+  .diagrams-banner-breadcrumb,
+  .diagrams-banner-footer {
+    color: #777;
     font-size: 15px;
   }
 }
 
 #diagram-configuration-trigger {
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     text-decoration: none;
   }
 }
 #diagram-configuration-panel {
-  background-color: #FAFAFA;
-  border: 1px solid #777777;
-  box-shadow: 0 0 10px 1px #EEEEEE;
+  background-color: #fafafa;
+  border: 1px solid #777;
+  box-shadow: 0 0 10px 1px #eee;
   display: none;
   padding: 30px;
 
@@ -112,13 +122,13 @@ li {
     }
   }
   select {
-    background-color: #FFFFFF;
-    border: 1px solid #CCCCCC;
+    background-color: #fff;
+    border: 1px solid #ccc;
     cursor: pointer;
     height: 30px;
     margin-top: 15px;
     padding-left: 10px;
-    text-shadow: 1px 1px 1px #EEEEEE;
+    text-shadow: 1px 1px 1px #eee;
 
     @include border-radius(5px);
   }
