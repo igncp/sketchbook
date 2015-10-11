@@ -7,7 +7,7 @@
     "curly"         : false,     // true: Require {} for every new block or scope
     "eqeqeq"        : true,     // true: Require triple equals (===) for comparison
     "freeze"        : true,     // true: prohibits overwriting prototypes of native objects such as Array, Date etc.
-    "forin"         : true,     // true: Require filtering for..in loops with obj.hasOwnProperty()
+    "forin"         : false,     // true: Require filtering for..in loops with obj.hasOwnProperty()
     "immed"         : false,    // true: Require immediate invocations to be wrapped in parens e.g. `(function () { } ());`
     "indent"        : 4,        // {int} Number of spaces to use for indentation
     "latedef"       : false,    // true: Require variables/functions to be defined before being used
@@ -65,9 +65,14 @@
         "d": false,
         "d3": false,
         "_": false,
+        "React": false,
+        "ReactDOM": false,
         "diagrams": false,
         "console": false,
         "Rx": false,
+        "require": false,
+        "define": false,
+        "diagramsLoaded": false,
         "hljs": false
     }
 }
