@@ -34,7 +34,7 @@ diagrams.box({
                 d('unmountComponentFromNode', "'Unmounts a component and removes it from the DOM.'"),
                 d('findReactContainerForID', "'Finds the container DOM element that contains React component to which the supplied DOM `id` belongs.'"),
             ]),
-          ]),
+          ], 'not-completed'),
         ]),
       ])
     ])

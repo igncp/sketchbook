@@ -6,17 +6,17 @@ diagrams.box({
   name: s('project') + ' glossary',
   body: [
     c('Pending', [
-      'classic <> modern',
       'event plugin registry <> event plugin hub (/src/event/...)',
       'native component (/src/core/ReactNativeComponent',
       'PutListenerQueue (/src/browser/ReactPutListenerQueue)',
-      'ref of a component (/src/core/ReactRef)',
       'releaser (/src/utils/PooledClass)',
     ]),
     c('General', [
       d('Breadth-first search (BFS)', "algorithm for traversing or searching tree or graph data structures. It starts at the tree root (or some arbitrary node of a graph, sometimes referred to as a `search key') and explores the neighbor nodes first, before moving to the next level neighbors."),
+      d('components with stateless functions', "' These components must not retain internal state, do not have backing instances, and do not have the component lifecycle methods. They are pure functional transforms of their input, with zero boilerplate.'")
     ]),
     c('Structured', [
+      d('classic <> modern', "There is a distinction between classic and modern in the concepts: class, element and types. It has a TypeScript definition file for React, though it is under construction yet."),
       c('core', [
         d('dirty components', "During the update of components, the enqueued components are flushed in batches. The components that are not flushed in the current batch, are stored in an array representing this concept."),
         d('instance handles', "'Manages the IDs assigned to DOM representations of React components. This uses a specific scheme in order to traverse the DOM efficiently (e.g. in order to simulate events).' Also: 'Module that performs logical traversals of DOM hierarchy given ids of the logical DOM elements involved.'"),
@@ -24,6 +24,7 @@ diagrams.box({
         d('reactRootId', "An attribute called `data-reactid` stored in the DOM elements. It is generated directly using the reactRootIndex. Created in the core but used basically in the mounting / rendering"),
         d('reactRootIndex', 'It provides just the injection API, which is ClientReactRootIndex or ServerReactRootIndex depending if the environment can use DOM. The way it is created differs from the two strategies (in the server it is randomized) but they are simple id generators.'),
         d('reconciliation step', "React uses the 'virtual dom' to simulate dom changes faster, and the it just updates the necessary parts on the real dom. For a deep explanation: https://facebook.github.io/react/docs/reconciliation.html"),
+        d('ref of a component', "'refs (references) are especially useful when you need to: find the DOM markup rendered by a component (for instance, to position it absolutely), use React components in a larger non-React application, or transition your existing codebase to React. [...] React supports a special attribute that you can attach to any component. The ref attribute can be a callback function, and this callback will be executed immediately after the component is mounted. [...] Never access refs inside of any component's render method - or while any component's render method is even running anywhere in the call stack.'"),
       ]),
       c('browser', [
         d('mounting', "'Mounting is the process of initializing a React component by creating its representative DOM elements and inserting them into a supplied `container`. Any prior content inside `container` is destroyed in the process.'"),
