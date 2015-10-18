@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+"""
+Generate structure box diagram
+
+To just print the dirs, add the --no-files option
+"""
+
 import sys
 import os
 
@@ -8,7 +14,7 @@ import _common.utils as utils
 dir_path = os.path.abspath(sys.argv[1])
 out_path = os.path.abspath(sys.argv[2])
 with_files = True
-if len(sys.argv) > 3: with_files = (sys.argv[3].lower() == 'true')
+if len(sys.argv) > 3: with_files = (sys.argv[3].lower() != '--no-files')
 
 excluded_dirs = ['.git', 'node_modules']
 
@@ -50,7 +56,7 @@ diagram_str = """var d = diagrams.box.generateDefinition,
   s = diagrams.shared.get;
 
 diagrams.box({
-  name: s('project') + ' structure',
+  name: s('project') + ' dir structure',
   body: ["""
 diagram_str += recursive_diagram_str_generation(dir_path)
 diagram_str += "]});"

@@ -5,11 +5,8 @@ var d = diagrams.box.generateDefinition,
 diagrams.box({
   name: s('project') + ' glossary',
   body: [
-    c('Pending', [
+    c('Pending', 'Concepts with no knowledge about them', [
       'event plugin registry <> event plugin hub (/src/event/...)',
-      'native component (/src/core/ReactNativeComponent',
-      'PutListenerQueue (/src/browser/ReactPutListenerQueue)',
-      'releaser (/src/utils/PooledClass)',
     ]),
     c('General', [
       d('Breadth-first search (BFS)', "algorithm for traversing or searching tree or graph data structures. It starts at the tree root (or some arbitrary node of a graph, sometimes referred to as a `search key') and explores the neighbor nodes first, before moving to the next level neighbors."),
@@ -20,6 +17,7 @@ diagrams.box({
       c('core', [
         d('dirty components', "During the update of components, the enqueued components are flushed in batches. The components that are not flushed in the current batch, are stored in an array representing this concept."),
         d('instance handles', "'Manages the IDs assigned to DOM representations of React components. This uses a specific scheme in order to traverse the DOM efficiently (e.g. in order to simulate events).' Also: 'Module that performs logical traversals of DOM hierarchy given ids of the logical DOM elements involved.'"),
+        d('native component', "Provides pluggable helpers related with React components. For example: createInternalComponent, createInstanceForText, etc."),
         d('public instance <> internal instance', 'It uses the instance maps to retrieve the internal from the public'),
         d('reactRootId', "An attribute called `data-reactid` stored in the DOM elements. It is generated directly using the reactRootIndex. Created in the core but used basically in the mounting / rendering"),
         d('reactRootIndex', 'It provides just the injection API, which is ClientReactRootIndex or ServerReactRootIndex depending if the environment can use DOM. The way it is created differs from the two strategies (in the server it is randomized) but they are simple id generators.'),
@@ -28,16 +26,22 @@ diagrams.box({
       ]),
       c('browser', [
         d('mounting', "'Mounting is the process of initializing a React component by creating its representative DOM elements and inserting them into a supplied `container`. Any prior content inside `container` is destroyed in the process.'"),
-        d('synthetic events', "'Synthetic events are dispatched by event plugins, typically in response to a top-level event delegation handler. These systems should generally use pooling to reduce the frequency of garbage collection. The system should check `isPersistent` to determine whether the event should be released into the pool after being dispatched. Users that need a persisted event should invoke `persist`. Synthetic events (and subclasses) implement the DOM Level 3 Events API by normalizing browser quirks. Subclasses do not necessarily have to implement a DOM interface; custom application-specific events can also subclass this.'"),
+        d('synthetic events', "'Synthetic events are dispatched by event plugins, typically in response to a top-level event delegation handler. These systems should generally use pooling to reduce the frequency of garbage collection. The system should check `isPersistent` to determine whether the event should be released into the pool after being dispatched. Users that need a persisted event should invoke `persist`. Synthetic events (and subclasses) implement the DOM Level 3 Events API by normalizing browser quirks. Subclasses do not necessarily have to implement a DOM interface; custom application-specific events can also subclass this. [...] Your event handlers will be passed instances of SyntheticEvent, a cross-browser wrapper around the browser's native event. It has the same interface as the browser's native event, including stopPropagation() and preventDefault(), except the events work identically across all browsers.'"),
         c('eventPlugins', [
           d('FallbackCompositionState', "'Stores information about text content of a target node, allowing comparison of content before and after a given event.  Identify the node where selection currently begins, then observe both its text content and its current position in the DOM. Since the browser may natively replace the target node during composition, we can use its position to find its replacement.'"),
-        ])
+        ]),
+        d('text component', "'Text nodes violate a couple assumptions that React makes about components: - When mounting text into the DOM, adjacent text nodes are merged. - Text nodes cannot be assigned a React root ID. A React Text component is used to wrap strings in elements so that they can undergo the same reconciliation that is applied to elements.'"),
+        d('put listener queue', "A pooled class that is responsible for accumulating listeners to put them in a later time. It uses ReactBrowserEventEmitter.putListener to 'put them'."),
+        d('react browser event emitter', "'`ReactBrowserEventEmitter` is used to attach top-level event listeners. For example: ReactBrowserEventEmitter.putListener('myID', 'onClick', myFunction);. [...] It forwards DOM native events (with the associated top-level type used to trap it) to `EventPluginHub`, which in turn will ask plugins if they want to extract any synthetic events.'")
       ]),
       c('event', [
         d('event direct dispatch', "there must be at most one dispatch. In this case the return value is tracked."),
       ]),
       c('utils', [
-        d('static poolers', 'Poolers that accept a fixed number of arguments (e.g. twoArgumentPooler). Created this way (and not dynamically) to improve performance as it would have to access the arguments object.'),
+        c('PooledClass', [
+          d('releaser', "the strategy used to return an instance to its class pool (if there is still size inside)"),
+          d('static poolers', 'Poolers that accept a fixed number of arguments (e.g. twoArgumentPooler). Created this way (and not dynamically) to improve performance as it would have to access the arguments object.'),
+        ]),
         d('callbackQueue', "'A specialized pseudo-event module to help keep track of components waiting to be notified when their DOM representations are available for use. This implements PooledClass, so you should never need to instantiate this. Instead, use CallbackQueue.getPooled()'"),
         d('transaction', "'`Transaction` creates a black box that is able to wrap any method such that certain invariants are maintained before and after the method is invoked (Even if an exception is thrown while invoking the wrapped method)'"),
       ]),
