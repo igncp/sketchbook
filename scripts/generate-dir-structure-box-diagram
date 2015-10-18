@@ -56,7 +56,7 @@ diagram_str = """var d = diagrams.box.generateDefinition,
   s = diagrams.shared.get;
 
 diagrams.box({
-  name: s('project') + ' dir structure',
+  name: s('project') + ' structure',
   body: ["""
 diagram_str += recursive_diagram_str_generation(dir_path)
 diagram_str += "]});"
