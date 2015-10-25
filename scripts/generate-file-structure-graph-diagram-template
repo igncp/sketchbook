@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+"""
+  Arguments:
+  - Project path
+  - Output path
+"""
+
 import sys
 import os
 
@@ -27,6 +33,6 @@ utils.walk_dir_js_files(project_path, walk_fn)
 files_list = sorted(files_list)
 diagram_str_list = map(generate_nodes, files_list)
 diagram_str = ',\n'.join(diagram_str_list)
-diagram_str = utils.wrap_str_in_graph_diagram(diagram_str)
+diagram_str = utils.Graph.wrap_items_str_in_diagram(diagram_str)
 
 utils.set_file_content(out_path, diagram_str)

@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+
+"""
+Arguments:
+- path to the file
+"""
+
+import sys
+import os
+
+import _common.utils as utils
+
+create_node = lambda id: 'n("", [' + str(id) + '], "", ""),\n'
+
+out_path = os.path.abspath(sys.argv[1])
+
+items_str = create_node(1)
+for id in range(2, 101):
+  items_str += '// ' + create_node(id)
+
+graph_str = utils.Graph.wrap_items_str_in_diagram(items_str)
+
+utils.set_file_content(out_path, graph_str)

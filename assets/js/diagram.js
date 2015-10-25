@@ -46,7 +46,7 @@ require(['banner', 'tooltip', 'config-panel', 'components/box-search-bar'], func
       if (diagram.unmarkAllItems && diagram.config(MR.KEY)) diagram.unmarkAllItems();
     });
     diagram.listen('itemclick', function(item) {
-      if (diagram.config(SHOW_BANNER) === true) banner.fillBanner(item, diagram);
+      if (diagram.config(SHOW_BANNER) === true && item.data.relationships) banner.fillBanner(item, diagram);
     });
     diagram.listen('items-rendered', function() {
       banner.runFnMaintainingScrollDueBanner(function() {

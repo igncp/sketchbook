@@ -36,6 +36,6 @@ files_doc_strings_dict = {}
 utils.walk_dir_python_files(project_path, save_api_elements_of_graph_dict)
 
 diagram_str = ', \n'.join(total_elements)
-diagram_str = utils.wrap_str_in_graph_diagram(diagram_str)
+diagram_str = utils.Graph.wrap_items_str_in_diagram(diagram_str)
 
 utils.set_file_content(output_file_path, diagram_str)

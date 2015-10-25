@@ -44,7 +44,7 @@ define('banner', [], function() {
         if (item.data.relationships.dependencies.length > 0) {
           siblings = [];
           _.each(item.data.relationships.dependencies, function(dependency) {
-            siblings = siblings.concat(dependency.data.relationships.dependants);
+            siblings = dependency.data.relationships ? siblings.concat(dependency.data.relationships.dependants) : siblings;
           });
           if (siblings.length === 1) siblings = null;
           else {

@@ -66,6 +66,12 @@ diagrams.box({
       "Exposes the Collection registerMethods",
       "Exposes the match (' Utility function to match a node against a pattern.', which returns a boolean) and template ('./template.js') functions",
       "Adds two maps to core, one of collections' filters and other of collections' mappings"
-    ])
+    ]),
+    c('template.js', [
+      "Requires babel",
+      c("Defines the `getPlugin` function, which returns a Plugin factory", [
+        "To create the Plugin, and object is passed with this structure: visitor > Identifier > exit [Function]"
+      ])
+    ], 'not-completed'),
   ]
 });

@@ -3,6 +3,24 @@ import ast
 import re
 
 
+class Graph:
+  @staticmethod
+  def wrap_items_str_in_diagram(items_str):
+    return """var n = diagrams.graph.generateNode,
+    // nl = diagrams.graph.generateNodeWithTextAsTargetLink('RELATIVE_URL_PATH'),
+    ct = diagrams.graph.generateConnectionWithText,
+    connectionFnFactory = diagrams.graph.connectionFnFactory,
+    cti = connectionFnFactory(ct, 'direction', 'in'),
+    ctd = connectionFnFactory(ct, 'line', 'dotted'),
+    ctid = connectionFnFactory(cti, 'line', 'dotted'),
+    config = {};
+    
+    config.info = ["Title", "Description"];
+    config[diagrams.graph.configurationKeys.SHY_CONNECTIONS] = false;
+    
+    diagrams.graph([\n""" + items_str + "\n], config);"
+
+
 def is_file_of_extension_fn(extension):
   def is_file_of_extension(item):
     item_extension_len = len(extension) + 1
@@ -41,18 +59,6 @@ def wrap_str_in_box_diagram(items_str, title):
   diagrams.box({
     name: s('project') + ' """ + title + """',
     body: [""" + items_str + "\n]});"
-
-
-def wrap_str_in_graph_diagram(items_str):
-  return """var n = diagrams.graph.generateNode,
-  // nl = diagrams.graph.generateNodeWithTextAsTargetLink('RELATIVE_URL_PATH'),
-  ct = diagrams.graph.generateConnectionWithText,
-  connectionFnFactory = diagrams.graph.connectionFnFactory,
-  cti = connectionFnFactory(ct, 'direction', 'in'),
-  ctd = connectionFnFactory(ct, 'line', 'dotted'),
-  ctid = connectionFnFactory(cti, 'line', 'dotted');
-
-diagrams.graph([\n""" + items_str + "\n]);"
 
 
 def set_file_content(file_path, content):
