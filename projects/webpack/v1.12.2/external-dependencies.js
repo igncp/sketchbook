@@ -9,12 +9,15 @@ diagrams.box({
       c('dependencies', [
         'async',
         'clone',
-        'enhanced-resolve',
+        c('enhanced-resolve', "Offers a async require.resolve function. It's highly configurable.", [
+          d('NodeJsInputFileSystem', "An interface to the native node fs module, exposing only a few async methods"),
+          d('CachedInputFileSystem', "Used to improve performance, is passed a fileStystem and a durantion and it handles caching with a Storage class.")
+        ]),
         'esprima',
         'interpret',
         'memory-fs',
         'mkdirp',
-        'node-libs-browser',
+        d('node-libs-browser', "The node core libs for in browser usage."),
         'optimist',
         'supports-color',
         d('tapable', "'Tapable is a class for plugin binding and applying. Just extend it.'"),
