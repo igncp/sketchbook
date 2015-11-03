@@ -95,7 +95,7 @@ define('banner', [], function() {
       if (item.data.relationships.dependants.length > 0) bannerHtml += '| <strong class="banner-footer-dependants">Show first child (of a total of' + String(item.data.relationships.dependants.length) + '): ' + getFirstDependantIntro() + '</strong> ';
       bannerHtml += '</div>';
 
-      bannerEl = body.insert('div', 'svg').attr({
+      bannerEl = diagrams.insertInBodyBeforeSvg('div').attr({
         id: banner.BANNER_ID
       }).html(bannerHtml);
     });

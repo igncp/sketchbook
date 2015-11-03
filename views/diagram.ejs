@@ -32,9 +32,13 @@
     <%- include partials/_header.ejs %>
     <div class="row">
     <%- include partials/_breadcrumb.ejs %>
-    <h3 class="col-lg-3"><a id="diagram-configuration-trigger" href="#"></a></h3>
+    <h3 class="col-lg-12">
+        <a id="diagram-configuration-trigger" href="#"></a> 
+        <a href="#" id="diagram-fullscreen-trigger" class="svg-image" title="Enter fullscreen"><img src="/assets/icons/fullscreen-free.svg" alt=""></a>
+    </h3>
     </div>
     <div class="row" id="diagram-configuration-panel">
     </div>
+    <div id="diagram-wrapper"></div>
 </body>
 </html>

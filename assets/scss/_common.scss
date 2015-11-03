@@ -150,3 +150,25 @@ li {
     font-weight: bold;
   }
 }
+
+#diagram-fullscreen-trigger {
+  float: right;
+  position: relative;
+  img {
+    height: auto;
+    left: -42px;
+    position: absolute;
+    top: -10px;
+    width: 40px;
+
+    @include transition(linear .1s all);
+    &:hover {
+      width: 42px;
+    }
+  }
+}
+
+#diagram-wrapper {
+  overflow-x: hidden;
+  overflow-y: auto;
+}

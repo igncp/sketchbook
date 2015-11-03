@@ -1,8 +1,7 @@
 define('components/box-search-bar', [], function() {
   var rce = React.createElement,
     searchBarFactory = function(diagram) {
-      var body = d3.select('body'),
-        searchBarContainer = body.insert('div', 'svg').attr({
+      var searchBarContainer = diagrams.svg.insertInBodyBeforeSvg('div').attr({
           id: 'box-search-bar-container'
         })[0][0],
         searchBar = React.createClass({

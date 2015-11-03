@@ -1,12 +1,14 @@
-define('tooltip', [], function() {
+define('tooltip', ['constants'], function(constants) {
   var tooltip = function(display, elementAbove, content) {
     var tooltipId = 'diagrams-tooltip',
       tooltip = d3.select('#' + tooltipId),
       tooltipStyle = '',
       bodyHeight = (function() {
         var body = document.body,
-          html = document.documentElement;
-        return Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+          html = document.documentElement,
+          height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+
+        return diagrams.svg.selectScreenHeightOrHeight(height);
       })(),
       highlightCodeIfAny = function() {
         content = diagrams.utils.formatTextFragment(content);
@@ -15,12 +17,12 @@ define('tooltip', [], function() {
         highlightCodeIfAny();
         tooltip.html(content);
       },
-      tooltipHeight, tooltipTop, body, otherElementDims;
+      tooltipHeight, tooltipTop, wrapper, otherElementDims;
 
     if (content !== false) {
       if (tooltip[0][0] === null) {
-        body = d3.select('body');
-        tooltip = body.insert('div', 'svg').attr({
+        wrapper = d3.select(constants.diagramsWrapperSelector);
+        tooltip = wrapper.insert('div', 'svg').attr({
           id: tooltipId
         });
       }
