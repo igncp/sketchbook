@@ -26,8 +26,8 @@ diagrams.graph([
   n("BannerPlugin", [6, 63], "/BannerPlugin.js"),
   n("PrefetchPlugin", [86, 149], "/PrefetchPlugin.js"),
   n("AutomaticPrefetchPlugin", [5, 149, 78], "/AutomaticPrefetchPlugin.js"),
-
-  n("ProvidePlugin", [88], "/ProvidePlugin.js"),
+  n("ProvidePlugin", [88, 66, 123, 81], "/ProvidePlugin.js"),
+  
   n("HotModuleReplacementPlugin", [48], "/HotModuleReplacementPlugin.js"),
   n("ResolverPlugin", [94], "/ResolverPlugin.js"),
   n("SourceMapDevToolPlugin", [99], "/SourceMapDevToolPlugin.js"),
@@ -77,6 +77,7 @@ diagrams.graph([
   n("ModuleParseError", [65], "/ModuleParseError.js"),
   n("TemplateArgumentDependency", [167], "/dependencies/TemplateArgumentDependency.js"),
   n("AsyncDependenciesBlock", [4, 26], "/AsyncDependenciesBlock.js"),
+  n("ModuleParserHelpers", [66], "/ModuleParserHelpers.js"),
 
   // n("APIPlugin", [0], "/APIPlugin.js"),
   // n("AbstractPlugin", [1], "/AbstractPlugin.js"),
@@ -120,7 +121,6 @@ diagrams.graph([
   // n("MainTemplate", [60], "/MainTemplate.js"),
   // n("ModuleNotFoundError", [64], "/ModuleNotFoundError.js"),
   // n("ModuleParseError", [65], "/ModuleParseError.js"),
-  // n("ModuleParserHelpers", [66], "/ModuleParserHelpers.js"),
   // n("ModuleTemplate", [68], "/ModuleTemplate.js"),
   // n("MovedToPluginWarningPlugin", [69], "/MovedToPluginWarningPlugin.js"),
   // n("MultiCompiler", [70], "/MultiCompiler.js"),
