@@ -39,6 +39,9 @@ diagrams.box({
     c('General', [
       d('chunk', "'webpack allows to split your codebase into chunks. Chunks are loaded on demand. This reduces initial loading time.'"),
       d('hash', "Item created by the native module `crypto`. crypto.createHash: 'Creates and returns a hash object, a cryptographic hash with the given algorithm which can be used to generate hash digests.' hash.digest: 'Calculates the digest of all of the passed data to be hashed. The encoding can be 'hex', 'binary' or 'base64'.'"),
+      c('parser / js terminology', [
+        d('unary operator', 'e.g. typeof, delete'),
+      ]),
     ]),
     c('Structured', [
       // d("APIPlugin.js"),
