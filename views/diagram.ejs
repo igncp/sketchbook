@@ -19,11 +19,12 @@
     <link rel="stylesheet" type="text/css" href="/vendors/diagrams-collections/dist/diagrams.css">
     
     <script>
-        var diagramsLoaded = [];
+        var sketchbook = {};
+
         <% if (sharedExists === true) { %>
-            diagramsLoaded.push("/projects/<%= projectName %>/shared.js");
+            sketchbook.sharedPath = "/projects/<%= projectName %>/shared.js";
         <% } %>
-        diagramsLoaded.push("/projects/<%= projectName %><%= currentPath %>.js");
+        sketchbook.diagramPath = "/projects/<%= projectName %><%= currentPath %>.js";
     </script>
     
     <script type="text/javascript" src="/vendors/requirejs/require.js" data-main="/assets/js/diagram.js"></script>

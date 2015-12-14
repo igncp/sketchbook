@@ -65,5 +65,10 @@ require(['banner', 'tooltip', 'config-panel', 'components/box-search-bar', 'full
 
     diagrams.diagramsWrapperSelector = constants.diagramsWrapperSelector;
 
-    require(diagramsLoaded);
+    var requireDiagram = function() {
+      require([sketchbook.diagramPath]);
+    };
+    if (sketchbook.sharedPath) {
+      require([sketchbook.sharedPath], requireDiagram)
+    } else requireDiagram();
   });
