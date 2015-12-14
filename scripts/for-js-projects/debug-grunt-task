@@ -22,5 +22,5 @@ project_path = sys.argv[1]
 grunt_task = ''
 if len(sys.argv) > 2: grunt_task = sys.argv[2]
 
-command = "cd " + project_path + "; node-debug --debug-brk  $(which grunt) " + grunt_task
+command = "cd " + project_path + "; node-inspector --debug-brk  $(which grunt) " + grunt_task
 helpers.print_and_run(command)
