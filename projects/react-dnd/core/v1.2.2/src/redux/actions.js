@@ -1,9 +1,8 @@
 var d = diagrams.box.generateDefinition,
-  c = diagrams.box.generateContainer,
-  s = diagrams.shared.get;
+  c = diagrams.box.generateContainer;
 
 diagrams.box({
-  name: s('project') + ' redux actions',
+  name: 'dnd-core redux actions',
   body: [
     c('dragDrop', [
       'BEGIN_DRAG',

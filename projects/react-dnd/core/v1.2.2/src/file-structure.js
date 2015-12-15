@@ -3,7 +3,7 @@ var d = diagrams.box.generateDefinition,
   s = diagrams.shared.get;
 
 diagrams.box({
-  name: s('project') + ' structure',
+  name: 'dnd-core structure',
   body: [
     c("src", [
       d("DragDropManager.js"),

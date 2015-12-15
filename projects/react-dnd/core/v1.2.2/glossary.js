@@ -1,9 +1,8 @@
 var d = diagrams.box.generateDefinition,
-  c = diagrams.box.generateContainer,
-  s = diagrams.shared.get;
+  c = diagrams.box.generateContainer;
 
 diagrams.box({
-  name: s('project') + ' glossary',
+  name: 'dnd-core glossary',
   body: [
     c('Pending', [
       d('manager', 'Instance of DragDropManager. It is passed to `createBackend` when instantiating. The methods are: `handleRefCountChange()`, `getMonitor()`, `getBackend()`, `getRegistry()`, `getActions()`'),

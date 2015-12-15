@@ -3,7 +3,7 @@ var d = diagrams.box.generateDefinition,
   s = diagrams.shared.get;
 
 diagrams.box({
-  name: s('project') + ' test suite',
+  name: 'dnd-core test suite',
   body: [
     c('DragDropManager', [
       c('handler registration', [

@@ -1,9 +1,8 @@
 var d = diagrams.box.generateDefinition,
-  c = diagrams.box.generateContainer,
-  s = diagrams.shared.get;
+  c = diagrams.box.generateContainer;
 
 diagrams.box({
-  name: s('project') + ' manual api',
+  name: 'dnd-core manual api',
   body: [
     c("src", [
       c("DragDropManager.js", [

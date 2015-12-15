@@ -1,9 +1,8 @@
 var d = diagrams.box.generateDefinition,
-  c = diagrams.box.generateContainer,
-  s = diagrams.shared.get;
+  c = diagrams.box.generateContainer;
 
 diagrams.box({
-  name: s('project') + ' external libraries',
+  name: 'dnd-core external libraries',
   body: [
     c('npm', [
       c('dependencies', [
