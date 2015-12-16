@@ -65,10 +65,21 @@ require(['banner', 'tooltip', 'config-panel', 'components/box-search-bar', 'full
 
     diagrams.diagramsWrapperSelector = constants.diagramsWrapperSelector;
 
-    var requireDiagram = function() {
-      require([sketchbook.diagramPath]);
+    var bootstrap = function() {
+      // Requires the shared files in series from left to right, 
+      // till it finishes, and then requires the diagram
+      var requireInSeries = function(paths) {
+        if (paths.length === 0) {
+          require([sketchbook.diagramPath]);
+        } else {
+          require([_.first(paths)], function() {
+            requireInSeries(paths.slice(1, paths.length));
+          });
+        }
+      }
+      
+      requireInSeries(sketchbook.sharedFilesPaths);
     };
-    if (sketchbook.sharedPath) {
-      require([sketchbook.sharedPath], requireDiagram)
-    } else requireDiagram();
+
+    bootstrap();
   });

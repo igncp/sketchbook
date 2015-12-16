@@ -44,10 +44,27 @@ var getPathItems = function(projectName, pathRelativeToProject) {
   }).value();
 };
 
-var sharedOfProjectExists = function(projectName, cb) {
-  fs.stat('projects/' + projectName + '/shared.js', function(err) {
-    cb(!err);
+var getSharedFilesPaths = function(urlSegments, cb) {
+  var sharedFilesPaths = [];
+  var checksFinished = 0;
+  var totalChecks = 0;
+  var finishIfTotalChecksFinished = function() {
+    checksFinished++;
+    if (checksFinished === totalChecks) {
+      cb(sharedFilesPaths);
+    }
+  };
+
+  urlSegments.forEach(function(urlSegment, urlSegmentIndex) {
+    var path = 'projects/' + urlSegments.slice(0, urlSegmentIndex + 1).join('/') + '/shared.js';
+    totalChecks++;
+    fs.stat(path, function(err) {
+      var fileExists = !err;
+      if (fileExists) sharedFilesPaths.push('/' + path);
+      finishIfTotalChecksFinished();
+    });
   });
+  finishIfTotalChecksFinished();
 };
 
 app.get('/', function(req, res) {
@@ -69,12 +86,12 @@ app.get('/:urlPath*', function(req, res) {
       isDiagram = (err) ? false : true;
 
       if (isDiagram) {
-        sharedOfProjectExists(projectName, function(sharedExistsResult) {
+        getSharedFilesPaths(urlSegments, function(sharedFilesPaths) {
           res.render('diagram', {
             projectName: projectName,
             currentPath: pathRelativeToProject,
             diagramName: _.last(urlSegments),
-            sharedExists: sharedExistsResult,
+            sharedFilesPaths: sharedFilesPaths.join(','),
             diagramsFile: (process.env.NODE_ENV === 'production') ? 'diagrams.min' : 'diagrams'
           });
         });

@@ -21,9 +21,7 @@
     <script>
         var sketchbook = {};
 
-        <% if (sharedExists === true) { %>
-            sketchbook.sharedPath = "/projects/<%= projectName %>/shared.js";
-        <% } %>
+        sketchbook.sharedFilesPaths = '<%= sharedFilesPaths %>'.split(',');
         sketchbook.diagramPath = "/projects/<%= projectName %><%= currentPath %>.js";
     </script>
     

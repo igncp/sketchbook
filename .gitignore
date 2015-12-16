@@ -5,3 +5,4 @@ vendors
 /projects/private
 scripts-labs
 *.pyc
+*.log
