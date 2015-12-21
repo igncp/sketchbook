@@ -1,6 +1,6 @@
 # Sketchbook
 
-Project sketches. The sketches consist in diagrams about the source code of popular or interesting projects, with JavaScript related languages or with Python.
+Project sketches. The sketches consist in diagrams about the source code of popular or interesting projects, with JavaScript related languages or with Python. It uses [this library](https://github.com/igncp/diagrams-collections), built on top of D3.js, to render the diagrams.
 
 ## Complete installation
 
