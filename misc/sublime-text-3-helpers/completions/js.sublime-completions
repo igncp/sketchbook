@@ -1,0 +1,10 @@
+// Copy-paste these into your JS completions to make diagrams faster
+// All completions are prefixed with `sk`
+{
+  "scope": "source.js",
+
+  "completions": [
+    {"trigger": "skc", "contents": "c(\"$1\", [\n\t$2\n]),"}, // Box container
+    {"trigger": "skd", "contents": "d(\"$1\", \"$2\"),"} // Box description
+  ]
+}
