@@ -10,6 +10,13 @@ import sys
 import os
 
 import _common.utils as utils
+import _common.command_line_helpers as cl_helpers
+
+cl_helpers.help_if_less_than_args(2, """
+Arguments:
+- [required] path to the project
+- [required] output file path
+""")
 
 
 def walk_fn(file_path):

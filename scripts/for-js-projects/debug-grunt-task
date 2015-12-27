@@ -5,22 +5,17 @@ import os
 
 common_dir_path = os.path.realpath(os.path.dirname(__file__) + '/..')
 sys.path.insert(0, common_dir_path)
-import _common.command_line_helpers as helpers
+import _common.command_line_helpers as cl_helpers
 
-args = sys.argv
-
-helpers.help_if_no_args("""
-  Arguments:
-- path to the project
-- grunt task (if any)
+cl_helpers.help_if_no_args("""
+Arguments:
+- [required] path to the project
+- grunt task
 """)
 
-if len(sys.argv) == 1:
-  print(help)
-  sys.exit()
 project_path = sys.argv[1]
 grunt_task = ''
 if len(sys.argv) > 2: grunt_task = sys.argv[2]
 
 command = "cd " + project_path + "; node-inspector --debug-brk  $(which grunt) " + grunt_task
-helpers.print_and_run(command)
+cl_helpers.print_and_run(command)

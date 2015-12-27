@@ -5,16 +5,14 @@ import os
 
 common_dir_path = os.path.realpath(os.path.dirname(__file__) + '/..')
 sys.path.insert(0, common_dir_path)
-import _common.command_line_helpers as helpers
+import _common.command_line_helpers as cl_helpers
 
-args = sys.argv
-
-helpers.help_if_no_args("""
-  Arguments:
-- path to the directory
+cl_helpers.help_if_no_args("""
+Arguments:
+- [required] path to the directory
 """)
 
-dir_path = args[1]
+dir_path = sys.argv[1]
 
 command = "find " + dir_path + " -type f -exec sed -i 's/^[ ]*debugger[;]//g' {} +"
-helpers.print_and_run(command)
+cl_helpers.print_and_run(command)

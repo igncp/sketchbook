@@ -9,6 +9,12 @@ import sys
 import os
 
 import _common.utils as utils
+import _common.command_line_helpers as cl_helpers
+
+cl_helpers.help_if_no_args("""
+Arguments:
+- [required] output file path
+""")
 
 create_node = lambda id: 'n("", [' + str(id) + '], "", ""),\n'
 

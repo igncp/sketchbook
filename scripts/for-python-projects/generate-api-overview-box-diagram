@@ -6,7 +6,15 @@ import unicodedata
 
 common_dir_path = os.path.realpath(os.path.dirname(__file__) + '/..')
 sys.path.insert(0, common_dir_path)
+
 import _common.utils as utils
+import _common.command_line_helpers as cl_helpers
+
+cl_helpers.help_if_less_than_args(2, """
+Arguments:
+- [required] path to the project
+- [required] output file path
+""")
 
 project_path = os.path.abspath(sys.argv[1])
 output_file_path = os.path.abspath(sys.argv[2])
