@@ -25,7 +25,7 @@ li {
   a {
     color: #90a991;
 
-    @include transition(all linear .5s);
+    @include transition(color linear .5s);
     &:hover {
       color: #5d6f5e;
     }
