@@ -9,6 +9,9 @@
   },
   "author": "icarbajop@gmail.com",
   "license": "MIT",
+  "engines": {
+    "node": "4.1.1"
+  },
   "dependencies": {
     "ejs": "^2.3.1",
     "express": "^4.12.4",
