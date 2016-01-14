@@ -25,8 +25,8 @@ li {
   a {
     color: #90a991;
 
-    @include transition(color linear .5s);
     &:hover {
+      @include transition(color linear .5s);
       color: #5d6f5e;
     }
   }
@@ -38,6 +38,11 @@ li {
       color: #909090;
     }
   }
+}
+
+#github-icon img {
+  position: absolute;
+  top: 0;
 }
 
 #diagrams-tooltip {
