@@ -1,0 +1,10 @@
+{
+    "linters": {
+        "eslint": {
+            "excludes": ["**/misc/**","**/projects/**"]
+        },
+        "jscs": {
+            "excludes": ["**/misc/**","**/projects/**"]
+        }
+    }
+}

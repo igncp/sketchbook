@@ -1,0 +1,31 @@
+@import 'compass';
+
+// Manually added the style hierarchy, instead of requiring each 
+// style file in a different js file to import compass just once.
+// If in the future there are a lot of files, change to require and
+// place each file next to the affected sections
+@import 'receptors';
+@import 'config';
+@import 'box-search-bar';
+
+#diagram-fullscreen-trigger {
+  float: right;
+  position: relative;
+  img {
+    height: auto;
+    left: -42px;
+    position: absolute;
+    top: -10px;
+    width: 40px;
+
+    @include transition(linear .1s all);
+    &:hover {
+      width: 42px;
+    }
+  }
+}
+
+#diagram-wrapper {
+  overflow-x: hidden;
+  overflow-y: auto;
+}

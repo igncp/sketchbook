@@ -1,0 +1,32 @@
+#diagram-configuration-trigger {
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+}
+#diagram-configuration-panel {
+  background-color: #fafafa;
+  border: 1px solid #777;
+  box-shadow: 0 0 10px 1px #eee;
+  display: none;
+  padding: 30px;
+
+  @include border-radius(10px);
+  label {
+    margin: 5px 0;
+    &.checkbox-label {
+      cursor: pointer;
+    }
+  }
+  select {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    height: 30px;
+    margin-top: 15px;
+    padding-left: 10px;
+    text-shadow: 1px 1px 1px #eee;
+
+    @include border-radius(5px);
+  }
+}

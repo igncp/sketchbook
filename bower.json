@@ -15,7 +15,6 @@
   "dependencies": {
     "diagrams-collections": "*",
     "bootstrap": "~3.3.5",
-    "react": "~0.14.0",
-    "requirejs": "~2.1.20"
+    "react": "~0.14.0"
   }
 }

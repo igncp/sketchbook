@@ -15,9 +15,15 @@ set-dev-diagrams:
 	@rm -rf vendors/diagrams-collections
 	@ln -s ../../diagrams-collections vendors/diagrams-collections
 
-compass:
-	@compass watch
-
 executables:
 	@chmod -R +x ./scripts
 	@echo "Done."
+
+remove-dist:
+	@rm -rf dist
+
+watch: remove-dist
+	@./node_modules/.bin/webpack -w
+
+build: remove-dist
+	@./node_modules/.bin/webpack

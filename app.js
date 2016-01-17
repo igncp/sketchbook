@@ -6,7 +6,7 @@ var _ = require('lodash'); // jshint ignore:line
 app.set('view engine', 'ejs');
 app.use(express['static']('.'));
 
-var REJECTED_PROJECT_NAMES = ['discontinued', 'private'];
+var REJECTED_PROJECT_NAMES = ['discontinued'];
 
 var getProjects = function() {
   var projects;
