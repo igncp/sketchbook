@@ -3,7 +3,11 @@ var d = diagrams.box.generateDefinition,
   s = diagrams.shared.get;
 
 diagrams.box({
-  name: s('project') + ' src manual api',
+  name: s('project') + ' structure',
   body: [
-  ]
-});
+c("postcss", [
+d("d.ts"),
+c("docs", [
+d("guidelines"),]),
+d("lib"),
+d("test"),]),]});

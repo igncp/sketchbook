@@ -19,13 +19,14 @@ Arguments:
 """)
 
 
-def walk_fn(file_path):
+def walk_fn(file_name, file_path):
   relative_path = file_path.replace(project_path, '')
   files_list.append(relative_path)
 
 
 def generate_nodes(file_path):
-  file_name_without_ext = os.path.basename(file_path)[:-3]
+  basename = os.path.basename(file_path)
+  file_name_without_ext = os.path.splitext(basename)[0]
   nodes_ids_count[0] += 1
   node_str = '// n("' + file_name_without_ext + '", [' + str(nodes_ids_count[0])
   node_str += '], "' + file_path + '")'
@@ -36,7 +37,7 @@ out_path = os.path.abspath(sys.argv[2])
 files_list = []
 nodes_ids_count = [-1]
 
-utils.walk_dir_js_files(project_path, walk_fn)
+utils.walk_dir_files(project_path, walk_fn)
 files_list = sorted(files_list)
 diagram_str_list = map(generate_nodes, files_list)
 diagram_str = ',\n'.join(diagram_str_list)

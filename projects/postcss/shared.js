@@ -1,3 +1,3 @@
 diagrams.shared.set({
-    project: 'django',
+    project: 'postcss',
 });

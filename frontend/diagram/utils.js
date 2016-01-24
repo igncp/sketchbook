@@ -8,6 +8,8 @@ const _loadScriptOfUrl = (url, success = () => null) => {
     dataType: "script",
     success,
     url,
+  }).fail((jqXHR, textStatus, errorThrown) => {
+    console.warn(errorThrown)
   })
 }
 
