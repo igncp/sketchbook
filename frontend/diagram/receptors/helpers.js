@@ -84,15 +84,19 @@ const getRelatedItems = ({ diagram, item }) => {
   return item.data.relationships ? diagram.getAllRelatedItemsOfItem(item.data) : []
 }
 
+const DIAGRAMS_WITHOUT_BREADCRUMB = ["graph"]
+
 export const getFillHtmlOfItem = ({ diagram, item, receptorPrefix }) => {
   const content = item.data.fullText
   const prefix = getSelectorPrefix(receptorPrefix)
   const relatedItems = getRelatedItems({ diagram, item })
   const { nextSibling, siblings } = getSiblingsAndNextSibling(item)
-  let fillHtml
+  let fillHtml = ""
 
-  fillHtml = `<div class="${gGARC(prefix, "breadcrumb")}">`
-  fillHtml += `${getBreadcrumbHtml({ prefix, relatedItems })}</div>`
+  if (DIAGRAMS_WITHOUT_BREADCRUMB.indexOf(diagram.name) < 0) {
+    fillHtml += `<div class="${gGARC(prefix, "breadcrumb")}">`
+    fillHtml += `${getBreadcrumbHtml({ prefix, relatedItems })}</div>`
+  }
   fillHtml += diagrams.utils.formatTextFragment(content)
   fillHtml += `<div class="${gGARC(prefix, "footer")}">`
   fillHtml += `<strong class="${gGARC(prefix, "footer-scroll")}">Scroll</strong> `

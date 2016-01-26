@@ -41,13 +41,15 @@ const setDefaultConfiguration = (diagram) => {
 
 const diagramsCallbacks = {
   itemclick: (diagram) => (item) => {
-    const currentValue = getCurrentValueOfMultivalueConfig(diagram, CLICK_HANDLER)
-    let receptor
+    if (item.data.fullText) {
+      const currentValue = getCurrentValueOfMultivalueConfig(diagram, CLICK_HANDLER)
+      let receptor
 
-    if (currentValue === CLICK_HANDLER.BANNER && item.data.relationships) receptor = banner
-    else if (currentValue === CLICK_HANDLER.MODAL) receptor = modal
+      if (currentValue === CLICK_HANDLER.BANNER && item.data.relationships) receptor = banner
+      else if (currentValue === CLICK_HANDLER.MODAL) receptor = modal
 
-    if (receptor) receptor.fill(item, diagram)
+      if (receptor) receptor.fill(item, diagram)
+    }
   },
   "items-rendered": () => () => {
     banner.runFnMaintainingScrollDueBanner(() => {

@@ -33,18 +33,16 @@ const buildPanel = ({ diagram, panel }) => {
         type: `checkbox`,
       })
       labelEl.append(`span`).text(configKey)
+      labelEl.on("click", () => {
+        const checked = !inputEl.property("checked")
+
+        diagram.config(configKey, checked)
+      })
 
       if (configValue === true) {
         inputEl.property(`checked`, configValue)
         labelEl.classed(`active`, configValue)
       }
-
-      inputEl.on(`change`, () => {
-        const checked = inputEl.property("checked")
-
-        diagram.config(configKey, checked)
-        labelEl.classed("active", checked)
-      })
     } else if (isObject(configValue) && configValue[`private`] !== true) {
       if (isArrayLike(configValue.possibleValues)) {
         inputEl = optionEl.append(`select`).attr({
