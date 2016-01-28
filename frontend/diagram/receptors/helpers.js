@@ -2,6 +2,7 @@ import d3, { select } from "d3"
 import { forEach, isArrayLike, pluck } from "ramda"
 
 import { each } from "../utils"
+const { formatShortDescription } = diagrams.utils
 
 const getSelectorPrefix = (receptorPrefix) => `diagrams-${receptorPrefix}`
 const getGeneralAndReceptorClasses = (prefix, suffix) => {
@@ -10,6 +11,14 @@ const getGeneralAndReceptorClasses = (prefix, suffix) => {
   return `${generalPrefix}-${suffix} ${prefix}-${suffix}`
 }
 const gGARC = getGeneralAndReceptorClasses
+
+const MAX_BREADCRUMB_LENGTH = 15
+const shortenIfNecessary = (text) => {
+  const parsedText = formatShortDescription(text)
+
+  return formatShortDescription(parsedText.length > MAX_BREADCRUMB_LENGTH
+    ? `${parsedText.substr(0, MAX_BREADCRUMB_LENGTH)}...` : parsedText)
+}
 
 const getBreadcrumbHtml = ({ prefix, relatedItems }) => {
   let breadcrumbHtml = ``
@@ -20,7 +29,8 @@ const getBreadcrumbHtml = ({ prefix, relatedItems }) => {
         + `&gt;&gt;&gt;</strong>&nbsp; ` : ``
 
     breadcrumbHtml += ` <strong class="${gGARC(prefix, "breadcrumb-level-number")}">`
-      + `[${index + 1}]</strong> ${dependency.data.name || dependency.data.text}${suffix}`
+      + `[${index + 1}]</strong> `
+      + `${shortenIfNecessary(dependency.data.name || dependency.data.text)}${suffix}`
   })(relatedItems.dependencies.reverse())
 
   return breadcrumbHtml
@@ -148,5 +158,5 @@ export const addListenersToContentElLinks = ({
     levelNumberEl.on("click", () => {
       fillFn(relatedItems.dependencies[index], diagram)
     })
-  })(contentEl.selectAll(`.${prefix}-breadcrumb-level-number`)[0])
+  })(contentEl.selectAll(`.${prefix}-breadcrumb-level-number`)[0].reverse())
 }
