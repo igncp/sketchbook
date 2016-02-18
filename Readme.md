@@ -1,6 +1,6 @@
 # Sketchbook
 
-Project sketches. The sketches consist in diagrams about the source code of popular or interesting projects. It uses [this library](https://github.com/igncp/diagrams-collections), built on top of D3.js, to render the diagrams. The projects may change as there are directories (`discontinued` and `hidden`) that are not committed to the repo.
+Project sketches. The sketches consist in diagrams about the source code of popular or interesting projects. It uses [this library](https://github.com/igncp/diagrams-collections), built on top of D3.js, to render the diagrams. The projects may change as there are directories (`discontinued` and `hidden`) that are not tracked by git.
 
 ## Complete installation
 
@@ -8,8 +8,8 @@ Project sketches. The sketches consist in diagrams about the source code of popu
 
 ## Local usage
 
-- `make server` And in a browser visit the page http://localhost:8080
-- `make compass` To compile changes in the `.scss` files
+- `node app.js` to serve the application, using 8081 by default
+- `make build` or `make watch` To compile the javascript and styles
 - `./scripts/` In this directory there can be found some helpers scripts which require Python
 
 ## Author and License
