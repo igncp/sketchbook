@@ -112,7 +112,6 @@ diagrams.box({
         c("type QueryTiming int", "QueryTiming identifies the code area or functionality in which time is spent during a query.", [
           d("(s QueryTiming) String() string", "'Return a string represenation of a QueryTiming identifier.'"),
         ]),
-
         c("const", "Query timings.", [
           "TotalEvalTime QueryTiming = iota",
           "ResultSortTime",
@@ -132,8 +131,35 @@ diagrams.box({
           "ViewDiskExtractionTime",
         ]),
       ]),
-      d("strutil"),
-      d("testutil"),
+      c("strutil", [
+        d("var ErrSyntax = errors.New(\"invalid syntax\")", "ErrSyntax indicates that a value does not have the right syntax for the target type."),
+        d("Unquote(s string) (t string, err error)", "Unquote interprets s as a single-quoted, double-quoted, or backquoted Prometheus query language string literal, returning the string value that s quotes. NOTE: This function as well as the necessary helper functions below (unquoteChar, contains, unhex) and associated tests have been adapted from the corresponding functions in the \"strconv\" package of the Go standard library to work for Prometheus-style strings. Go's special-casing for single quotes was removed and single quoted strings are now treated the same as double quoted ones."),
+        d("TableLinkForExpression(expr string) string", "TableLinkForExpression creates an escaped relative link to the table view of the provided expression."),
+        d("GraphLinkForExpression(expr string) string", "GraphLinkForExpression creates an escaped relative link to the graph view of the provided expression."),
+        d("SanitizeLabelName(name string) string", "SanitizeLabelName replaces anything that doesn't match client_label.LabelNameRE with an underscore."),
+      ]),
+      c("testutil", [
+        c("const", [
+          d("NilCloser = nilCloser(true)", "NilCloser is a no-op Closer."),
+        ]),
+        c("type", [
+          c("Closer interface", "Closer is the interface that wraps the Close method.", [
+            d("Close()", "Close reaps the underlying directory and its children.  The directory could be deleted by its users already."),
+          ]),
+          c("TemporaryDirectory interface", "TemporaryDirectory models a closeable path for transient POSIX disk activities.", [
+            "Closer",
+            d("Path() string", "Path returns the underlying path for access."),
+          ]),
+          c("T interface", "T implements the needed methods of testing.TB so that we do not need to actually import testing (which has the side effect of adding all the test flags, which we do not want in non-test binaries even if they make use of these utilities for some reason).", [
+            "Fatal(args ...interface{})",
+            "Fatalf(format string, args ...interface{})",
+          ]),
+        ]),
+        d("NewCallbackCloser(fn func()) Closer", "NewCallbackCloser returns a Closer that calls the provided function upon closing."),
+        d("NewTemporaryDirectory(name string, t T) (handler TemporaryDirectory)", "NewTemporaryDirectory creates a new temporary directory for transient POSIX activities."),
+        d("ErrorEqual(left, right error) bool", "ErrorEqual compares Go errors for equality."),
+
+      ]),
       c("treecache", [
         c("type ZookeeperLogger struct", [
           d("(zl ZookeeperLogger) Printf(s string, i ...interface{})", "Implements zk.Logger"),
