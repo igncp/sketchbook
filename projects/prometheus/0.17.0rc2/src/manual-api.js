@@ -29,8 +29,108 @@ diagrams.box({
         d("kubernetes"),
       ]),
     ]),
-    d("rules"),
-    d("storage"),
+    c("rules", [
+      c("type AlertState int", "AlertState denotes the state of an active alert.", [
+        "(s AlertState) String() string",
+      ]),
+
+      c("const", [
+        d("StateInactive AlertState = iota", "StateInactive is the state of an alert that is neither firing nor pending."),
+        d("StatePending", "StatePending is the state of an alert that has been active for less than the configured threshold duration."),
+        d("StateFiring", "StateFiring is the state of an alert that has been active for longer than the configured threshold duration."),
+      ]),
+
+
+      c("type Alert struct", "Alert is the user-level representation of a single instance of an alerting rule.", [
+        "State  AlertState",
+        "Labels model.LabelSet",
+        d("Value model.SampleValue", "The value at the last evaluation of the alerting expression."),
+        d("ActiveAt, ResolvedAt model.Time", "The interval during which the condition of this alert held true. ResolvedAt will be 0 to indicate a still active alert."),
+      ]),
+
+      c("type AlertingRule struct", "An AlertingRule generates alerts from its vector expression.", [
+        d("name string", "The name of the alert."),
+        d("vector promql.Expr", "The vector expression from which to generate alerts."),
+        d("holdDuration time.Duration", "The duration for which a labelset needs to persist in the expression output vector before an alert transitions from Pending to Firing state."),
+        d("annotations model.LabelSet", "Extra labels to attach to the resulting alert sample vectors. labels model.LabelSet Non-identifying key/value pairs."),
+        d("mtx sync.Mutex", "Protects the below."),
+        d("active map[model.Fingerprint]*Alert", "A map of alerts which are currently active (Pending or Firing), keyed by the fingerprint of the labelset they correspond to."),
+        d("(rule *AlertingRule) Name() string", "Name returns the name of the alert."),
+        "(r *AlertingRule) sample(alert *Alert, ts model.Time, set bool) *model.Sample",
+        d("(r *AlertingRule) eval(ts model.Time, engine *promql.Engine) (model.Vector, error)", "eval evaluates the rule expression and then creates pending alerts and fires or removes previously pending alerts accordingly."),
+        d("(r *AlertingRule) State() AlertState", "State returns the maximum state of alert instances for this rule. StateFiring > StatePending > StateInactive"),
+        d("(r *AlertingRule) ActiveAlerts() []*Alert", "ActiveAlerts returns a slice of active alerts."),
+        d("(r *AlertingRule) currentAlerts() []*Alert", "currentAlerts returns all instances of alerts for this rule. This may include inactive alerts that were previously firing."),
+        "(rule *AlertingRule) String() string",
+        d("(rule *AlertingRule) HTMLSnippet(pathPrefix string) template.HTML", "HTMLSnippet returns an HTML snippet representing this alerting rule. The resulting snippet is expected to be presented in a <pre> element, so that line breaks and other returned whitespace is respected."),
+      ]),
+      d("NewAlertingRule(name string, vec promql.Expr, hold time.Duration, lbls, anns model.LabelSet) *AlertingRule", "NewAlertingRule constructs a new AlertingRule."),
+
+      c("type Rule interface", "A Rule encapsulates a vector expression which is evaluated at a specified interval and acted upon (currently either recorded or used for alerting).", [
+        "Name() string",
+        d("eval(model.Time, *promql.Engine) (model.Vector, error)", "eval evaluates the rule, including any associated recording or alerting actions."),
+        d("String() string", "String returns a human-readable string representation of the rule."),
+        d("HTMLSnippet(pathPrefix string) html_template.HTML", "HTMLSnippet returns a human-readable string representation of the rule, decorated with HTML elements for use the web frontend."),
+      ]),
+
+      c("type Group struct", "Group is a set of rules that have a logical relation.", [
+        "name     string",
+        "interval time.Duration",
+        "rules    []Rule",
+        "opts     *ManagerOptions",
+        "done       chan struct{}",
+        "terminated chan struct{}",
+        "(g *Group) run()",
+        "(g *Group) stop()",
+        "(g *Group) fingerprint() model.Fingerprint",
+        d("(g *Group) offset() time.Duration", "offset returns until the next consistently slotted evaluation interval."),
+        d("(g *Group) copyState(from *Group)", "copyState copies the alerting rule state from the given group."),
+        d("(g *Group) eval()", "eval runs a single evaluation cycle in which all rules are evaluated in parallel. In the future a single group will be evaluated sequentially to properly handle rule dependency."),
+        d("(g *Group) sendAlerts(rule *AlertingRule, timestamp model.Time) error", "sendAlerts sends alert notifications for the given rule."),
+      ]),
+      "newGroup(name string, opts *ManagerOptions) *Group",
+      c("type Manager struct", "The Manager manages recording and alerting rules.", [
+        "opts   *ManagerOptions",
+        "groups map[string]*Group",
+        "mtx    sync.RWMutex",
+        "block  chan struct{}",
+        d("(m *Manager) Run()", "Run starts processing of the rule manager."),
+        d("(m *Manager) Stop()", "Stop the rule manager's rule evaluation cycles."),
+        d("(m *Manager) ApplyConfig(conf *config.Config) bool", "ApplyConfig updates the rule manager's state as the config requires. If loading the new rules failed the old rule set is restored. Returns true on success."),
+        d("(m *Manager) loadGroups(filenames ...string) (map[string]*Group, error)", "loadGroups reads groups from a list of files. As there's currently no group syntax a single group named \"default\" containing all rules will be returned."),
+        d("(m *Manager) Rules() []Rule", "Rules returns the list of the manager's rules."),
+        d("(m *Manager) AlertingRules() []*AlertingRule", "AlertingRules returns the list of the manager's alerting rules."),
+      ]),
+      c("type ManagerOptions struct", "ManagerOptions bundles options for the Manager.", [
+        "ExternalURL         *url.URL",
+        "QueryEngine         *promql.Engine",
+        "NotificationHandler *notification.Handler",
+        "SampleAppender      storage.SampleAppender",
+      ]),
+      d("NewManager(o *ManagerOptions) *Manager", "NewManager returns an implementation of Manager, ready to be started by calling the Run method."),
+
+      c("type RecordingRule struct", "A RecordingRule records its vector expression into new timeseries.", [
+        "name   string",
+        "vector promql.Expr",
+        "labels model.LabelSet",
+        d("(rule RecordingRule) Name() string", "Name returns the rule name."),
+        d("(rule RecordingRule) eval(timestamp model.Time, engine *promql.Engine) (model.Vector, error)", "eval evaluates the rule and then overrides the metric names and labels accordingly."),
+        "(rule RecordingRule) String() string",
+        d("(rule RecordingRule) HTMLSnippet(pathPrefix string) template.HTML", "HTMLSnippet returns an HTML snippet representing this rule."),
+      ]),
+      d("NewRecordingRule(name string, vector promql.Expr, labels model.LabelSet) *RecordingRule", "NewRecordingRule returns a new recording rule."),
+    ]),
+    c("storage", [
+      c("type SampleAppender interface", "SampleAppender is the interface to append samples to both, local and remote storage. All methods are goroutine-safe.", [
+        d("Append(*model.Sample) error", "Append appends a sample to the underlying storage. Depending on the storage implementation, there are different guarantees for the fate of the sample after Append has returned. Remote storage implementation will simply drop samples if they cannot keep up with sending samples. Local storage implementations will only drop metrics upon unrecoverable errors."),
+        d("NeedsThrottling() bool", "NeedsThrottling returns true if the underlying storage wishes to not receive any more samples. Append will still work but might lead to undue resource usage. It is recommended to call NeedsThrottling once before an upcoming batch of Append calls (e.g. a full scrape of a target or the evaluation of a rule group) and only proceed with the batch if NeedsThrottling returns false. In that way, the result of a scrape or of an evaluation of a rule group will always be appended completely or not at all, and the work of scraping or evaluation will not be performed in vain. Also, a call of NeedsThrottling is potentially expensive, so limiting the number of calls is reasonable.  Only SampleAppenders for which it is considered critical to receive each and every sample should ever return true. SampleAppenders that tolerate not receiving all samples should always return false and instead drop samples as they see fit to avoid overload."),
+      ]),
+
+      c("type Fanout []SampleAppend", "Fanout is a SampleAppender that appends every sample to each SampleAppender in its list.", [
+        d("(f Fanout) Append(s *model.Sample) error", "Append implements SampleAppender. It appends the provided sample to all SampleAppenders in the Fanout slice and waits for each append to complete before proceeding with the next. If any of the SampleAppenders returns an error, the first one is returned at the end."),
+        d("(f Fanout) NeedsThrottling() bool", "NeedsThrottling returns true if at least one of the SampleAppenders in the Fanout slice is throttled."),
+      ]),
+    ]),
     c("storage", [
       d("local"),
       c("local", [
@@ -45,7 +145,18 @@ diagrams.box({
         d("opentsdb"),
       ]),
     ]),
-    d("template"),
+    c("template", [
+      c("type Expander struct", "Expander executes templates in text or HTML mode with a common set of Prometheus template functions.", [
+        "text    string",
+        "name    string",
+        "data    interface{}",
+        "funcMap text_template.FuncMap",
+        d("(te Expander) Funcs(fm text_template.FuncMap)", "Funcs adds the functions in fm to the Expander's function map. Existing functions will be overwritten in case of conflict."),
+        d("(te Expander) Expand() (result string, resultErr error)", "Expand expands a template in text (non-HTML) mode."),
+        d("(te Expander) ExpandHTML(templateFiles []string) (result string, resultErr error)", "ExpandHTML expands a template with HTML escaping, with templates read from the given files."),
+      ]),
+      d("NewTemplateExpander(text string, name string, data interface{}, timestamp model.Time, queryEngine *promql.Engine, pathPrefix string) *Expander", "NewTemplateExpander returns a template expander ready to use."),
+    ]),
     c("util", [
       c("cli", [
         c("type Command struct", "Command represents a single command within an application.", [
