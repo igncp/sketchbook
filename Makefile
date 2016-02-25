@@ -3,7 +3,6 @@ all: set-dev-diagrams server
 install:
 	@npm i
 	@./node_modules/.bin/bower install
-	@gem install compass
 	@sudo pip install termcolor
 	@echo "Done."
 
