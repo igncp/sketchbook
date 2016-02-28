@@ -7,5 +7,6 @@ diagrams.box({
   body: [
     "`Must` is a prefix used in functions that panic instead of returning an error",
     "For many types (that use struct), after the definition of the type, it defines a factory function for that type (e.g. NewTypeA) and the methods for the type are defined.",
+    "Prometheus has a registry of services, which is used with `MustRegister`",
   ],
 });

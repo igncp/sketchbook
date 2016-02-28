@@ -21,7 +21,83 @@ diagrams.box({
     d("config"),
     d("notification"),
     d("promql"),
-    d("retrieval"),
+    c("retrieval", [
+      d("Relabel(labels model.LabelSet, cfgs ...*config.RelabelConfig) (model.LabelSet, error)", "Relabel returns a relabeled copy of the given label set. The relabel configurations are applied in order of input. If a label set is dropped, nil is returned."),
+      c("type TargetHealth int", "TargetHealth describes the health state of a target.", [
+        "(t TargetHealth) String() string",
+        "(t TargetHealth) value() model.SampleValue",
+      ]),
+      c("const", [
+        d("HealthUnknown TargetHealth = iota", "HealthUnknown is the state of a Target before it is first scraped."),
+        d("HealthGood", "HealthGood is the state of a Target that has been successfully scraped."),
+        d("HealthBad", "HealthBad is the state of a Target that was scraped unsuccessfully."),
+      ]),
+      c("type TargetStatus struct", "TargetStatus contains information about the current status of a scrape target.", [
+        "lastError  error",
+        "lastScrape time.Time",
+        "health     TargetHealth",
+        "mu sync.RWMutex",
+        d("(ts *TargetStatus) LastError() error", "LastError returns the error encountered during the last scrape."),
+        d("(ts *TargetStatus) LastScrape() time.Time", "LastScrape returns the time of the last scrape."),
+        d("(ts *TargetStatus) Health() TargetHealth", "Health returns the last known health state of the target."),
+        "(ts *TargetStatus) setLastScrape(t time.Time)",
+        "(ts *TargetStatus) setLastError(err error)",
+      ]),
+      c("type Target struct", "Target refers to a singular HTTP or HTTPS endpoint.", [
+        d("status *TargetStatus", "The status object for the target. It is only set once on initialization."),
+        d("scraperStopping chan struct{}", "Closing scraperStopping signals that scraping should stop."),
+        d("scraperStopped chan struct{}", "Closing scraperStopped signals that scraping has been stopped."),
+        d("sync.RWMutex", "Mutex protects the members below."),
+        d("httpClient *http.Client", "The HTTP client used to scrape the target's endpoint."),
+        d("url *url.URL", "url is the URL to be scraped. Its host is immutable."),
+        d("metaLabels model.LabelSet", "Labels before any processing."),
+        d("baseLabels model.LabelSet", "Any base labels that are added to this target and its metrics."),
+        d("internalLabels model.LabelSet", "Internal labels, such as scheme."),
+        d("scrapeInterval time.Duration", "The time between two scrapes."),
+        d("honorLabels bool", "Whether the target's labels have precedence over the base labels assigned by the scraping instance."),
+        d("metricRelabelConfigs []*config.RelabelConfig", "Metric relabel configuration."),
+        d("(t *Target) Status() *TargetStatus", "Status returns the status of the target."),
+        d("(t *Target) Update(cfg *config.ScrapeConfig, baseLabels, metaLabels model.LabelSet)", "Update overwrites settings in the target that are derived from the job config it belongs to."),
+        "(t *Target) String() string",
+        d("(t *Target) RunScraper(sampleAppender storage.SampleAppender)", "RunScraper implements Target."),
+        d("(t *Target) StopScraper()", "StopScraper implements Target."),
+        "(t *Target) scrape(appender storage.SampleAppender) (err error)",
+        d("(t *Target) URL() *url.URL", "URL returns a copy of the target's URL."),
+        d("(t *Target) InstanceIdentifier() string", "InstanceIdentifier returns the identifier for the target."),
+        d("(t *Target) fullLabels() model.LabelSet", "fullLabels returns the base labels plus internal labels defining the target."),
+        d("(t *Target) BaseLabels() model.LabelSet", "BaseLabels returns a copy of the target's base labels."),
+        d("(t *Target) MetaLabels() model.LabelSet", "MetaLabels returns a copy of the target's labels before any processing."),
+      ]),
+      d("NewTarget(cfg *config.ScrapeConfig, baseLabels, metaLabels model.LabelSet) *Target", "NewTarget creates a reasonably configured target for querying."),
+      c("type TargetProvider interface", "A TargetProvider provides information about target groups. It maintains a set of sources from which TargetGroups can originate. Whenever a target provider detects a potential change, it sends the TargetGroup through its provided channel. The TargetProvider does not have to guarantee that an actual change happened. It does guarantee that it sends the new TargetGroup whenever a change happens. Sources() is guaranteed to be called exactly once before each call to Run(). On a call to Run() implementing types must send a valid target group for each of the sources they declared in the last call to Sources().", [
+        d("Sources() []string", "Sources returns the source identifiers the provider is currently aware of."),
+        d("Run(up chan<- config.TargetGroup, done <-chan struct{})", "Run hands a channel to the target provider through which it can send updated target groups. The channel must be closed by the target provider if no more updates will be sent. On receiving from done Run must return."),
+      ]),
+      c("type TargetManager struct", "TargetManager maintains a set of targets, starts and stops their scraping and creates the new targets based on the target groups it receives from various target providers.", [
+        "mtx            sync.RWMutex",
+        "sampleAppender storage.SampleAppender",
+        "running        bool",
+        "done           chan struct{}",
+        d("targets map[string][]*Target", "Targets by their source ID."),
+        d("providers map[*config.ScrapeConfig][]TargetProvider", "Providers by the scrape configs they are derived from."),
+      ]),
+      d("NewTargetManager(sampleAppender storage.SampleAppender) *TargetManager", "NewTargetManager creates a new TargetManager."),
+      d("(tm *TargetManager) Run()", "Run starts background processing to handle target updates."),
+      d("(tm *TargetManager) handleUpdates(ch <-chan targetGroupUpdate, done <-chan struct{})", "handleUpdates receives target group updates and handles them in the context of the given job config."),
+      d("(tm *TargetManager) Stop()", "Stop all background processing."),
+      d("(tm *TargetManager) stop(removeTargets bool)", "stop background processing of the target manager. If removeTargets is true, existing targets will be stopped and removed."),
+      d("(tm *TargetManager) removeTargets(f func(string) bool)", "removeTargets stops and removes targets for sources where f(source) is true or if f is nil. This method is not thread-safe."),
+      d("(tm *TargetManager) updateTargetGroup(tgroup *config.TargetGroup, cfg *config.ScrapeConfig) error", "updateTargetGroup creates new targets for the group and replaces the old targets for the source ID."),
+      d("(tm *TargetManager) Pools() map[string][]*Target", "Pools returns the targets currently being scraped bucketed by their job name."),
+      d("(tm *TargetManager) ApplyConfig(cfg *config.Config) bool", "ApplyConfig resets the manager's target providers and job configurations as defined by the new cfg. The state of targets that are valid in the new configuration remains unchanged. Returns true on success."),
+      d("(tm *TargetManager) targetsFromGroup(tg *config.TargetGroup, cfg *config.ScrapeConfig) ([]*Target, error)", "targetsFromGroup builds targets based on the given TargetGroup and config."),
+      c("type StaticProvider struct", [
+        "TargetGroups []*config.TargetGroup",
+        d("(sd *StaticProvider) Run(ch chan<- config.TargetGroup, done <-chan struct{})", "Run implements the TargetProvider interface."),
+        d("(sd *StaticProvider) Sources() (srcs []string)", "Sources returns the provider's sources."),
+      ]),
+      d("NewStaticProvider(groups []*config.TargetGroup) *StaticProvider", "NewStaticProvider returns a StaticProvider configured with the given target groups."),
+    ]),
     c("retrieval", [
       d("discovery"),
       c("discovery", [
@@ -33,21 +109,17 @@ diagrams.box({
       c("type AlertState int", "AlertState denotes the state of an active alert.", [
         "(s AlertState) String() string",
       ]),
-
       c("const", [
         d("StateInactive AlertState = iota", "StateInactive is the state of an alert that is neither firing nor pending."),
         d("StatePending", "StatePending is the state of an alert that has been active for less than the configured threshold duration."),
         d("StateFiring", "StateFiring is the state of an alert that has been active for longer than the configured threshold duration."),
       ]),
-
-
       c("type Alert struct", "Alert is the user-level representation of a single instance of an alerting rule.", [
         "State  AlertState",
         "Labels model.LabelSet",
         d("Value model.SampleValue", "The value at the last evaluation of the alerting expression."),
         d("ActiveAt, ResolvedAt model.Time", "The interval during which the condition of this alert held true. ResolvedAt will be 0 to indicate a still active alert."),
       ]),
-
       c("type AlertingRule struct", "An AlertingRule generates alerts from its vector expression.", [
         d("name string", "The name of the alert."),
         d("vector promql.Expr", "The vector expression from which to generate alerts."),
@@ -65,14 +137,12 @@ diagrams.box({
         d("(rule *AlertingRule) HTMLSnippet(pathPrefix string) template.HTML", "HTMLSnippet returns an HTML snippet representing this alerting rule. The resulting snippet is expected to be presented in a <pre> element, so that line breaks and other returned whitespace is respected."),
       ]),
       d("NewAlertingRule(name string, vec promql.Expr, hold time.Duration, lbls, anns model.LabelSet) *AlertingRule", "NewAlertingRule constructs a new AlertingRule."),
-
       c("type Rule interface", "A Rule encapsulates a vector expression which is evaluated at a specified interval and acted upon (currently either recorded or used for alerting).", [
         "Name() string",
         d("eval(model.Time, *promql.Engine) (model.Vector, error)", "eval evaluates the rule, including any associated recording or alerting actions."),
         d("String() string", "String returns a human-readable string representation of the rule."),
         d("HTMLSnippet(pathPrefix string) html_template.HTML", "HTMLSnippet returns a human-readable string representation of the rule, decorated with HTML elements for use the web frontend."),
       ]),
-
       c("type Group struct", "Group is a set of rules that have a logical relation.", [
         "name     string",
         "interval time.Duration",
