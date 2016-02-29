@@ -7,6 +7,7 @@ diagrams.box({
   body: [
     c('Pending', 'Concepts with no knowledge about them', [
       "hierarchical and horizontal federation",
+      "console libraries",
       c("prometheus", [
         c("cmd", [
           c("prometheus", [
@@ -88,22 +89,29 @@ diagrams.box({
           d("target address", "'ip of the target'"),
           d("TLS", "'Transport Layer Security (TLS) is a protocol that ensures privacy between communicating applications and their users on the Internet. When a server and client communicate, TLS ensures that no third party may eavesdrop or tamper with any message. TLS is the successor to the Secure Sockets Layer (SSL).'"),
           d("Twitter serverset", "An interface from Twitter's Zookeper lib. 'A logical set of servers registered in ZooKeeper. Intended to be used by both servers in a common service and their clients.'"),
-          d("bearer token file", "OAuth 2.0: 'Bearer tokens are the default type of access tokens. They are automatically enabled when either an Authorization Server or Resource Server are initialized.' ' Any party in possession of a bearer token (a "bearer") can use it to get access to the associated resources (without demonstrating possession of a cryptographic key).  To prevent misuse, bearer tokens need to be protected from disclosure in storage and in transport.' The file is for the targets, as a property in the ScrapeConfig"),
+          d("bearer token file", "OAuth 2.0: 'Bearer tokens are the default type of access tokens. They are automatically enabled when either an Authorization Server or Resource Server are initialized.' ' Any party in possession of a bearer token (a \"bearer\") can use it to get access to the associated resources (without demonstrating possession of a cryptographic key).  To prevent misuse, bearer tokens need to be protected from disclosure in storage and in transport.' The file is for the targets, as a property in the ScrapeConfig"),
         ])
       ]),
+      c("notification.go", [
+        d("BuildFQName", "func BuildFQName(namespace, subsystem, name string) string. 'BuildFQName joins the given three name components by \"_\". Empty name components are ignored. If the name parameter itself is empty, an empty string is returned, no matter what. Metric implementations included in this library use this function internally to generate the fully-qualified metric name from the name component in their Opts. Users of the library will only need this function if they implement their own Metric or instantiate a Desc (with NewDesc) directly.'"),
+        d("collector interface", "'Collector is the interface implemented by anything that can be used by Prometheus to collect metrics. [...] The stock metrics provided by this package (like Gauge, Counter, Summary) are also Collectors (which only ever collect one metric, namely itself). An implementer of Collector may, however, collect multiple metrics in a coordinated fashion and/or create metrics on the fly.'"),
+        d("context (x/net/context package)", "'Package context defines the Context type, which carries deadlines, cancelation signals, and other request-scoped values across API boundaries and between processes. Incoming requests to a server should create a Context, and outgoing calls to servers should accept a Context. The chain of function calls between must propagate the Context, optionally replacing it with a modified copy created using WithDeadline, WithTimeout, WithCancel, or WithValue.'"),
+        d("context http (x/net/ctxhttp package)", "'Package ctxhttp provides helper functions for performing context-aware HTTP requests.'"),
+        d("summary data type", "In client_golang, 'A Summary captures individual observations from an event or sample stream and summarizes them in a manner similar to traditional summary statistics: 1. sum of observations, 2. observation count, 3. rank estimations. A typical use-case is the observation of request latencies. By default, a Summary provides the median, the 90th and the 99th percentile of the latency as rank estimations.'"),
+      ]),
       c("retrieval", [
-          c("relabel.go", [
-            d("md5 hash", "'The MD5 message-digest algorithm is a widely used cryptographic hash function producing a 128-bit (16-byte) hash value, typically expressed in text format as a 32 digit hexadecimal number. MD5 has been utilized in a wide variety of cryptographic applications, and is also commonly used to verify data integrity.' 'The security of the MD5 has been severely compromised, with its weaknesses having been exploited in the field, most infamously by the Flame malware in 2012. The CMU Software Engineering Institute considers MD5 essentially \"cryptographically broken and unsuitable for further use\".' "),
-          ]),
-          c("target.go", [
-            d("prometheus expfmt", "'A package for reading and writing Prometheus metrics.'"),
-            d("http round tripper", "'RoundTripper is an interface representing the ability to execute a single HTTP transaction, obtaining the Response for a given Request. A RoundTripper must be safe for concurrent use by multiple goroutines.'"),
-            d("http transport", "'Transport is an implementation of RoundTripper that supports HTTP, HTTPS, and HTTP proxies (for either HTTP or HTTPS with CONNECT).'"),
-          ]),
-          c("targetmanager.go", [
-            d("scheme label", "'SchemeLabel is the name of the label that holds the scheme on which to scrape a target.'"),
-          ]),
+        c("relabel.go", [
+          d("md5 hash", "'The MD5 message-digest algorithm is a widely used cryptographic hash function producing a 128-bit (16-byte) hash value, typically expressed in text format as a 32 digit hexadecimal number. MD5 has been utilized in a wide variety of cryptographic applications, and is also commonly used to verify data integrity.' 'The security of the MD5 has been severely compromised, with its weaknesses having been exploited in the field, most infamously by the Flame malware in 2012. The CMU Software Engineering Institute considers MD5 essentially \"cryptographically broken and unsuitable for further use\".' "),
         ]),
+        c("target.go", [
+          d("prometheus expfmt", "'A package for reading and writing Prometheus metrics.'"),
+          d("http round tripper", "'RoundTripper is an interface representing the ability to execute a single HTTP transaction, obtaining the Response for a given Request. A RoundTripper must be safe for concurrent use by multiple goroutines.'"),
+          d("http transport", "'Transport is an implementation of RoundTripper that supports HTTP, HTTPS, and HTTP proxies (for either HTTP or HTTPS with CONNECT).'"),
+        ]),
+        c("targetmanager.go", [
+          d("scheme label", "'SchemeLabel is the name of the label that holds the scheme on which to scrape a target.'"),
+        ]),
+      ]),
     ]),
   ],
 });
