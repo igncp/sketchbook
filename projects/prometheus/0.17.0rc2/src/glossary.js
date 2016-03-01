@@ -48,7 +48,12 @@ diagrams.box({
             "meta labels",
           ]),
         ]),
-      ])
+        c("rules", [
+          c("alerting.go", [
+            "synthetic alert timeseries",
+          ]),
+        ]),
+      ]),
     ]),
     c('General', [
       d("prometheus target", "'One application, server or endpoint that Prometheus is scraping.'"),
@@ -110,6 +115,11 @@ diagrams.box({
         ]),
         c("targetmanager.go", [
           d("scheme label", "'SchemeLabel is the name of the label that holds the scheme on which to scrape a target.'"),
+        ]),
+      ]),
+      c("rules", [
+        c("alerting.go", [
+          d("resolved retention", "'duration for which a resolved alert instance is kept in memory state and consequentally repeatedly sent to the AlertManager.'"),
         ]),
       ]),
     ]),
