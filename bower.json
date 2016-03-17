@@ -13,7 +13,7 @@
     "tests"
   ],
   "dependencies": {
-    "diagrams-collections": "*",
+    "diagrams-collection": "*",
     "bootstrap": "~3.3.5",
     "react": "~0.14.0"
   }
