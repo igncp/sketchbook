@@ -11,8 +11,8 @@ server:
 	@supervisor app.js
 
 set-dev-diagrams:
-	@rm -rf vendors/diagrams-collections
-	@ln -s ../../diagrams-collections vendors/diagrams-collections
+	@rm -rf vendors/diagrams-collection
+	@ln -s ../../diagrams-collections vendors/diagrams-collection
 
 executables:
 	@chmod -R +x ./scripts
