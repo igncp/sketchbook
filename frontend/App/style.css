@@ -1,0 +1,9 @@
+* {
+  color: #777;
+}
+
+a,
+a:visited {
+  text-decoration: none;
+  color: #0b7eca;
+}

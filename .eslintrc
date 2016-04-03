@@ -25,6 +25,7 @@
     "templateStrings": true,
     "unicodeCodePointEscapes": true,
   },
+  "parser": "babel-eslint",
   "rules": {
     "array-bracket-spacing": 0, // enforce spacing inside array brackets (fixable)
     "arrow-body-style": 0, // require braces in arrow function body
@@ -57,8 +58,6 @@
     "handle-callback-err": 0, // enforce error handling in callbacks
     "id-length": 0, // this option enforces minimum and maximum identifier lengths (variable names, property names etc.)
     "id-match": 0, // require identifiers to match the provided regular expression
-    "igncp-extras/max-indentation-spaces": [2, 10],
-    "igncp-extras/object-properties-sorted": 2,
     "indent": [2, 2], // specify tab or space width for your code (fixable)
     "init-declarations": 0, // enforce or disallow variable initializations at definition
     "jsx-quotes": 2, // specify whether double or single quotes should be used in JSX attributes
@@ -199,7 +198,7 @@
     "semi": [2, 'never'], // require or disallow use of semicolons instead of ASI (fixable)
     "semi-spacing": 2, // enforce spacing before and after semicolons
     "sort-vars": 0, // sort variables within the same declaration block
-    "space-after-keywords": 2, // require a space after certain keywords (fixable)
+    "keyword-spacing": 2, // require a space after certain keywords (fixable)
     "space-before-blocks": 2, // require or disallow a space before blocks (fixable)
     "space-before-function-paren": 0, // require or disallow a space before function opening parenthesis (fixable)
     "space-before-keywords": 0, // require a space before certain keywords (fixable)
@@ -217,21 +216,8 @@
     "wrap-regex": 0, // require regex literals to be wrapped in parentheses
     "yoda": 0, // require or disallow Yoda conditions
   },
-  "plugins": [
-    "react",
-    "igncp-extras"
-  ],
   "env": {
     "browser": true,
     "node": true
-  },
-  "globals": {
-    diagrams: false,
-    React: false,
-    ReactDOM: false,
-    sketchbook: false,
-    _: false,
-    jQuery: false,
-    d3: false,
   }
 }

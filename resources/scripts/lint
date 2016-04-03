@@ -1,0 +1,4 @@
+#!/usr/bin/env bash 
+
+./node_modules/.bin/eslint frontend resources
+./node_modules/.bin/jscs frontend resources

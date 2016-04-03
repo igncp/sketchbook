@@ -7,3 +7,4 @@ vendors
 scripts-labs
 *.pyc
 *.log
+*.map

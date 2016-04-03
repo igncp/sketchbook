@@ -1,0 +1,13 @@
+#files-explorer {
+  a {
+    font-size: 30px;
+
+    &.file {
+      font-style: italic;
+    }
+
+    &.directory {
+      font-weight: bold;
+    }
+  }
+}
