@@ -6,6 +6,7 @@ import cssnext from "postcss-cssnext"
 const isProduction = process.env.NODE_ENV === "production"
 
 const plugins = []
+
 if (isProduction) {
   plugins.push(new webpack.optimize.UglifyJsPlugin())
 }
@@ -43,4 +44,3 @@ export default {
     return [cssnext, nested]
   },
 }
-

@@ -11,6 +11,7 @@ export default class History {
     const { location } = window
     const fullUrl = location.href
     const removed = `${location.origin}`
+
     return compose(
       handleRoot,
       replace("#", ""),
@@ -20,6 +21,7 @@ export default class History {
   }
   pushState(path) {
     const newPath = path === "/" ? this.root : `${this.root}${path}`
+
     window.history.pushState(null, null, newPath)
   }
 }

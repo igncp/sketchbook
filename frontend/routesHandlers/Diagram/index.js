@@ -1,9 +1,4 @@
-const createContent = ({ renderer }) => {
-  const content = renderer.create("p")
-
-  content.text("diagram")
-  return content
-}
+import DiagramFile from "./DiagramFile"
 
 export default class Diagram {
   constructor({ common, app }) {
@@ -15,16 +10,15 @@ export default class Diagram {
       return true
     }
   }
-  handleRoute(route) {
+  handleRoute() {
     const { defaultLayout } = this.common.layouts
-    const { common } = this
-    const { renderer } = this.app
+    const { renderer, router } = this.app
+    const currentPath = router.getCurrentPath()
+    const file = new DiagramFile({ path: currentPath })
 
     renderer.setLayout(defaultLayout)
     defaultLayout.onRouteChange()
-
-    const content = createContent({ renderer, route, common })
-
-    renderer.renderInLayout(content)
+    renderer.renderInLayout(renderer.create("div"))
+    file.load()
   }
 }

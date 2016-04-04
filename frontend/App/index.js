@@ -10,8 +10,8 @@ export default class App {
     this.router = new Router({ routes })
   }
   bootstrap() {
-    const routesHandlersInitializer =
-      new RoutesHandlersInitializer({ app: this })
+    const routesHandlersInitializer
+      = new RoutesHandlersInitializer({ app: this })
 
     this.router.pushRoutesHandlers(routesHandlersInitializer.getAll())
     this.router.bootstrap()

@@ -1,0 +1,10 @@
+set -e
+
+npm run lint
+
+rm -rf dist/index.js
+rm -rf dist/index.js.map
+
+npm run build-prod
+npm run generate-html-files
+npm run generate-routes

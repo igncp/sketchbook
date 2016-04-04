@@ -10,6 +10,7 @@ const renderNodeInNode = (parentNode, childNode) => {
 const renderSelectionInSelection = (parentSelection, childSelection) => {
   const parentNode = parentSelection.node()
   const childNode = childSelection.node()
+
   renderNodeInNode(parentNode, childNode)
 }
 
@@ -20,6 +21,7 @@ export default class DOMRenderer {
   }
   renderInLayout(contentSelection, sectionName = "main") {
     const sectionSelection = this.layout.selectSection(sectionName)
+
     renderSelectionInSelection(sectionSelection, contentSelection)
   }
   appendSelectionInSelection(childNode, parentNode) {
@@ -30,6 +32,7 @@ export default class DOMRenderer {
   }
   createTrigger(fn) {
     const a = this.create("a")
+
     a.attr("href", "#")
     a.on("click", () => {
       event.preventDefault()

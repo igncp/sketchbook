@@ -8,9 +8,13 @@ Project sketches. The sketches consist in diagrams about the source code of popu
 
 ## Local usage
 
-- `node app.js` to serve the application, using 8081 by default
-- `make build` or `make watch` To compile the javascript and styles
-- `./scripts/` In this directory there can be found some helpers scripts which require Python
+- `npm serve` to serve the application, using 8080 by default
+- `npm build-dev` To compile the javascript and styles
+
+
+## Development
+
+It assumes that you have the repository `diagrams-collection` at the same level as `sketchbook`
 
 ## Author and License
 Ignacio Carbajo · MIT

@@ -1,5 +1,4 @@
 node_modules
-/dist
 vendors
 .sass-cache
 /projects/discontinued

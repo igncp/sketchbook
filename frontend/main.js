@@ -5,6 +5,7 @@ const routesFile = new File({ path: "/dist/routes.json" })
 
 routesFile.load().then((routes) => {
   const app = new App({ routes })
+
   app.bootstrap()
 })
 
