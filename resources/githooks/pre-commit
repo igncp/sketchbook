@@ -5,6 +5,10 @@ npm run lint
 rm -rf dist/index.js
 rm -rf dist/index.js.map
 
+# gh-pages deploy doesn't handle well symlinks
+# pointing outside the repo, even those not used
+rm -rf dist/diagrams-collection
+
 npm run build-prod
 npm run generate-html-files
 npm run generate-routes
