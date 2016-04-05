@@ -1,5 +1,5 @@
 import fs from "fs"
-import { assoc, compose, map, omit, filter, isEmpty } from "ramda"
+import { assoc, compose, map, omit, filter, isEmpty, partial } from "ramda"
 import { directoryTree } from "directory-tree"
 
 const routesTree = directoryTree("./projects")
@@ -11,8 +11,6 @@ const getParsedRoutesTreeOfChildren = item => (item.children)
 
 const isOmitedFile = (fileName) => {
   if (fileName.substr(-3) !== ".js") return true
-
-  if (fileName === "shared.js") return true
 
   return false
 }
@@ -29,7 +27,9 @@ const getParsedRoutesTree = (item) => {
 }
 
 const getCleanedRoutesTree = (item) => {
-  if (item === null || item.type === "file" || isEmpty(item)) return item
+  if (isEmpty(item)) return null
+
+  if (item === null || item.type === "file") return item
 
   const newChildren = compose(
     filterOutNull,
@@ -38,12 +38,13 @@ const getCleanedRoutesTree = (item) => {
 
   if (newChildren.length === 0) return null
 
-  return assoc("children", map(getParsedRoutesTree, item.children), item)
+  return assoc("children", newChildren, item)
 }
 
-const finalRoutesTree = compose(
+compose(
+  partial(fs.writeFileSync, [`${__dirname}/../../dist/routes.json`]),
+  JSON.stringify,
   getCleanedRoutesTree,
   getParsedRoutesTree
 )(routesTree)
 
-fs.writeFileSync(`${__dirname}/../../dist/routes.json`, JSON.stringify(finalRoutesTree))

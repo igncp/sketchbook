@@ -1,6 +1,32 @@
-import { forEach } from "ramda"
+import { compose, forEach, sortBy, prop, filter, any } from "ramda"
 
 import "./style.css"
+
+const sortByType = sortBy(prop("type"))
+
+const loopAddingLinks = ({ content, linkToRoute, renderer }) => forEach((childRoute) => {
+  const p = content.append("p")
+  const a = linkToRoute.create(childRoute.name, childRoute.name)
+
+  if (childRoute.type === "directory") a.attr("class", "directory")
+  else a.attr("class", "file")
+
+  renderer.appendSelectionInSelection(a, p)
+})
+
+const isMoreThanShared = (item) => {
+  if (item.type === "file" && item.name === "shared.js") return false
+
+  if (item.type === "directory") {
+    if (!item.children || item.children.length === 0) return false
+
+    return any(isMoreThanShared, item.children)
+  }
+
+  return true
+}
+
+const filterOutShared = filter(isMoreThanShared)
 
 const createContent = ({ common, renderer, route }) => {
   const { linkToRoute } = common.factories
@@ -8,15 +34,11 @@ const createContent = ({ common, renderer, route }) => {
 
   content.attr("id", "files-explorer")
 
-  forEach((childRoute) => {
-    const p = content.append("p")
-    const a = linkToRoute.create(childRoute.name, childRoute.name)
-
-    if (childRoute.type === "directory") a.attr("class", "directory")
-    else a.attr("class", "file")
-
-    renderer.appendSelectionInSelection(a, p)
-  }, route.children)
+  compose(
+    loopAddingLinks({ content, linkToRoute, renderer }),
+    sortByType,
+    filterOutShared,
+  )(route.children)
 
   return content
 }

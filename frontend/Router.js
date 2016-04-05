@@ -23,7 +23,7 @@ export function getPathMatch(path, routes) {
   const segments = path.split("/").slice(1)
 
   if (segments.length === 1 && segments[0] === "") {
-    return assoc("path", path, returnJustFirstChildren(routes))
+    return assoc("path", path, routes)
   } else {
     return getPathRecursively(segments, routes)
   }

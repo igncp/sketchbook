@@ -5,7 +5,7 @@ const handleRoot = path => path === "" ? "/" : path
 export default class History {
   constructor() {
     this.isDev = /dev\.html/.exec(location.href)
-    this.root = this.isDev ? "/dev.html#" : "#"
+    this.root = this.isDev ? "/dev.html" : "/sketchbook"
   }
   getCurrentPath() {
     const { location } = window
@@ -15,12 +15,13 @@ export default class History {
     return compose(
       handleRoot,
       replace("#", ""),
-      replace(removed, ""),
-      replace("/dev.html", "")
+      replace(this.root, ""),
+      replace(removed, "")
     )(fullUrl)
   }
   pushState(path) {
-    const newPath = path === "/" ? this.root : `${this.root}${path}`
+    const prefix = `${this.root}#`
+    const newPath = path === "/" ? prefix : `${prefix}${path}`
 
     window.history.pushState(null, null, newPath)
   }

@@ -2,6 +2,10 @@ set -e
 
 npm run lint
 
+git rm dist/index.js --cached || true
+git rm dist/index.js.map --cached || true
+git rm dist/diagrams-collection --cached || true
+
 rm -rf dist/index.js
 rm -rf dist/index.js.map
 
