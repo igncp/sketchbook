@@ -14,26 +14,29 @@ export default class PathResolver {
   isAbsolutePath(path) {
     return path.substr(0, 1) === "/"
   }
-  resolve(pathStr, withPrefix = false) {
+  resolve(pathStr, opts) {
+    const { withPrefix, withRoot } = (opts || {})
     const isAbsolutePath = this.isAbsolutePath(pathStr)
 
     return isAbsolutePath
-      ? this.buildResolvedPath(withPrefix, pathStr)
-      : this.resolveRelativePath(this.unresolveCurrentPath(), pathStr, withPrefix)
+      ? this.buildResolvedPath(pathStr, { withPrefix, withRoot })
+      : this.resolveRelativePath(this.unresolveCurrentPath(), pathStr, { withPrefix, withRoot })
   }
   joinWithCurrentPath(currentPath, path) {
     const currentPathUsed = currentPath === "/" ? "" : currentPath
 
     return `${currentPathUsed}/${path}`
   }
-  resolveRelativePath(currentPath, path, withPrefix = false) {
+  resolveRelativePath(currentPath, path, opts) {
+    const { withPrefix, withRoot } = (opts || {})
     const fullPath = this.joinWithCurrentPath(currentPath, path)
 
-    return this.buildResolvedPath(withPrefix, fullPath)
+    return this.buildResolvedPath(fullPath, { withPrefix, withRoot })
   }
-  buildResolvedPath(withPrefix, path) {
+  buildResolvedPath(path, opts) {
+    const { withPrefix, withRoot } = (opts || {})
     const prefix = withPrefix ? `${this.prefix}#` : ""
-    const root = this.root
+    const root = withRoot ? this.root : ""
 
     return `${root}${prefix}${path}`
   }

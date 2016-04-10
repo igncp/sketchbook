@@ -8,11 +8,12 @@ const isProduction = process.env.NODE_ENV === "production"
 const plugins = []
 
 if (isProduction) {
-  plugins.push(new webpack.optimize.UglifyJsPlugin())
+  plugins.push(new webpack.optimize.UglifyJsPlugin({
+    minimize: true,
+  }))
 }
-
 const filename = isProduction ? "index.min.js" : "index.js"
-const devtool = isProduction ? "eval" : "source-map"
+const devtool = isProduction ? "cheap-module-source-map" : "source-map"
 
 export default {
   devtool,

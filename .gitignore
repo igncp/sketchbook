@@ -1,5 +1,4 @@
 *.log
-*.map
 *.pyc
 .sass-cache
 /dist/diagrams-collection

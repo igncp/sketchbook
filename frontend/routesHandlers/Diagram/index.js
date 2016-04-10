@@ -19,7 +19,7 @@ const createContent = function(renderer, pathResolver) {
   })
 
   const iconPath = pathResolver
-    .resolveDirPath(`${__dirname}/icons/fullscreen-free.svg`)
+    .resolveDirPath(`${__dirname}/icons/fullscreen-free.svg`, { withRoot: true })
 
   fullscreenTrigger.append("img").attr("src", iconPath)
 

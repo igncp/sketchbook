@@ -37,7 +37,7 @@ export default class Router implements fRouter {
       const shouldHandleRoute = this.routesHandlers[i].shouldHandleRoute(routeOfPath)
 
       if (shouldHandleRoute) {
-        const historyPath = this.pathResolver.resolve(usedPath, true)
+        const historyPath = this.pathResolver.resolve(usedPath, { withPrefix: true, withRoot: true })
 
         window.history.pushState(null, null, historyPath)
         this.routesHandlers[i].handleRoute(routeOfPath)
