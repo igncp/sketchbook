@@ -1,9 +1,11 @@
 import fs from "fs"
-import { assoc, compose, map, omit, filter, isEmpty, partial } from "ramda"
+import { assoc, compose, map, omit, filter, isEmpty, partial, flip, contains, not } from "ramda"
 import { directoryTree } from "directory-tree"
 
+const UNTRACKED_PROJECTS = ["private", "discontinued"]
+
 const routesTree = directoryTree("./projects")
-const filterOutNull = filter(item => item !== null)
+const isUntrackedProject = flip(contains)(UNTRACKED_PROJECTS)
 
 const getParsedRoutesTreeOfChildren = item => (item.children)
   ? assoc("children", map(getParsedRoutesTree, item.children), item)
@@ -14,14 +16,20 @@ const isOmitedFile = (fileName) => {
 
   return false
 }
-const filterOutOmitedFiles = item => (item.type === "file" && isOmitedFile(item.name))
-  ? null
-  : item
+const nullifyOmitedFiles = item => (item.type === "file" && isOmitedFile(item.name))
+  ? null: item
+
+const filterOutNull = filter(item => item !== null)
+const filterOutUntrackedProjects = filter(compose(not, isUntrackedProject))
+
+const filterOutUntrackedProjectOfTree = (tree) => {
+  return assoc("children", filterOutUntrackedProjects(tree.children), tree)
+}
 
 const getParsedRoutesTree = (item) => {
   return compose(
     omit(["path"]),
-    filterOutOmitedFiles,
+    nullifyOmitedFiles,
     getParsedRoutesTreeOfChildren,
   )(item)
 }
@@ -45,6 +53,7 @@ compose(
   partial(fs.writeFileSync, [`${__dirname}/../../dist/routes.json`]),
   JSON.stringify,
   getCleanedRoutesTree,
-  getParsedRoutesTree
+  getParsedRoutesTree,
+  filterOutUntrackedProjectOfTree
 )(routesTree)
 
