@@ -1,6 +1,7 @@
-import { adjust, compose, replace, prepend, join } from "ramda"
+import { adjust, ifElse, compose, replace, prepend, join, equals, head, identity } from "ramda"
 
 const prependSlash = compose(join(""), prepend("/"))
+const firstIsSlash = compose(equals("/"), head)
 
 export default class PathResolver {
   constructor({ pathRetriever }) {
@@ -45,6 +46,7 @@ export default class PathResolver {
   }
   unresolveCurrentPath() {
     return compose(
+      ifElse(firstIsSlash, identity, prependSlash),
       replace("#", ""),
       replace("#/", ""),
       replace(`${this.root}${this.prefix}`, "")

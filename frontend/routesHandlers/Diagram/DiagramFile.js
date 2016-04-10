@@ -19,8 +19,8 @@ const getSharedPaths = (sharedPaths, route, currentPath) => {
 }
 
 export default class DiagramFile {
-  constructor({ path, route }) {
-    this.path = `/projects${path}`
+  constructor({ path, route, pathResolver }) {
+    this.path = pathResolver.resolve(`/projects${path}`, { withRoot: true })
     this.file = new File(this.path)
     this.route = route
   }

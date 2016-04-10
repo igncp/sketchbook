@@ -47,7 +47,7 @@ export default class Diagram {
     const { defaultLayout } = this.common.layouts
     const { renderer, router, pathResolver } = this.app
     const currentPath = router.getCurrentPath()
-    const file = new DiagramFile({ path: currentPath, route })
+    const file = new DiagramFile({ path: currentPath, route, pathResolver })
 
     renderer.setLayout(defaultLayout)
     defaultLayout.onRouteChange()

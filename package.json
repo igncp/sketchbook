@@ -9,10 +9,12 @@
     "build-prod": "export NODE_ENV='production' && ./resources/scripts/build",
     "lint": "./resources/scripts/lint",
     "watch": "./resources/scripts/build -w",
+    "watch-prod": "export NODE_ENV='production' && ./resources/scripts/build -w",
     "generate-html-files": "./node_modules/.bin/babel-node resources/scripts/generate-html-files.js",
     "generate-routes": "./node_modules/.bin/babel-node resources/scripts/generate-routes.js",
     "generate-tsconfig": "./node_modules/.bin/babel-node resources/scripts/generate-tsconfig.js",
     "serve": "./node_modules/.bin/http-server -c-1 -s",
+    "serve-prod": "cd .. && ./sketchbook/node_modules/.bin/http-server -c-1 -s",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "icarbajop@gmail.com",
