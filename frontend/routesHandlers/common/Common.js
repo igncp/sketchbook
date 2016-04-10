@@ -5,9 +5,9 @@ export default class Common {
   constructor({ renderer, router }) {
     const factories = this.factories = {}
 
-    factories.linkToRoute = new LinkToRoute({ renderer, router, factories })
+    factories.linkToRoute = new LinkToRoute(renderer, router)
     this.layouts = {
-      defaultLayout: new DefaultLayout({ factories, renderer, router }),
+      defaultLayout: new DefaultLayout(factories, renderer, router),
     }
   }
 }

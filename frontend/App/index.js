@@ -5,9 +5,10 @@ import DOMRenderer from "../DOMRenderer"
 import RoutesHandlersInitializer from "../RoutesHandlersInitializer"
 
 export default class App {
-  constructor({ routes }) {
+  constructor(routes, pathResolver) {
     this.renderer = new DOMRenderer()
-    this.router = new Router({ routes })
+    this.pathResolver = pathResolver
+    this.router = new Router(routes, pathResolver)
   }
   bootstrap() {
     const routesHandlersInitializer

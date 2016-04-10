@@ -23,9 +23,13 @@ export default {
     filename,
   },
   resolve: {
+    extensions: ["", ".webpack.js", ".web.js", ".js", ".ts"],
     alias: {
       zepto: "zepto/zepto.min.js",
     },
+  },
+  node: {
+    __dirname: true,
   },
   module: {
     loaders: [{
@@ -36,6 +40,10 @@ export default {
       test: /\.css$/,
       exclude: /(node_modules|bower_components)/,
       loaders: ["style", "css", "postcss"],
+    }, {
+      test: /\.ts$/,
+      exclude: /(node_modules|bower_components)/,
+      loader: "ts",
     }, {
       test: /zepto(\.min)?\.js$/, loader: "exports?Zepto; delete window.$; delete window.Zepto;",
     }],

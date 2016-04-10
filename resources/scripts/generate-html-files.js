@@ -16,6 +16,12 @@ const getHtml = (scriptSrc, linkHref, indexFile) => `
 <head>
     <meta charset="UTF-8">
     <title>Sketchbook</title>
+    <link href='//fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap-theme.min.css">
+
     <script src="${scriptSrc}"></script>
     <link rel="stylesheet" href="${linkHref}">
 </head>
