@@ -1,6 +1,6 @@
 *.log
 *.pyc
-.sass-cache
+/dev.html
 /dist/diagrams-collection
 /dist/index.js
 /dist/index.js.map
