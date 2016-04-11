@@ -8,7 +8,7 @@ import WebPathRetriever from "./WebPathRetriever"
 const pathRetriever = new WebPathRetriever()
 const pathResolver = new PathResolver({ pathRetriever })
 const path = pathResolver.resolve("/dist/routes.json", { withRoot: true })
-const routesFile = new RoutesFile({ path })
+const routesFile = new RoutesFile(path)
 
 routesFile.load().then((routes) => {
   const app = new App(routes, pathResolver)

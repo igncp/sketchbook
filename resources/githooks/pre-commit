@@ -5,6 +5,6 @@ echo "LINTER DISABLED TEMPORARY"
 
 npm run generate-tsconfig
 npm run generate-html-files
-npm run generate-routes
+npm run generate-routes-prod
 
 npm run build-prod

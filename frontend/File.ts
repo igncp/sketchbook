@@ -11,11 +11,11 @@ export default class File implements fFile {
   constructor(private path: string) {}
   load(): Promise {
     validatePath(this.path)
-    return promise(resolve => get(this.path, resolve))
+    return <any>promise(resolve => get(this.path, resolve))
   }
   loadScript(): Promise {
     validatePath(this.path)
-    return promise((resolve) => {
+    return <any>promise((resolve) => {
       const script = document.createElement("script")
       script.async = true
       script.src = this.path

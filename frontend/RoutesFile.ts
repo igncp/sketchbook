@@ -1,8 +1,9 @@
 import { assoc, map, curry } from "ramda"
+import {Promise} from "frontend"
 
 import File from "./File"
 
-const parseRoutes = curry((parent, routes) => {
+const parseRoutes = curry((parent, routes: any) => {
   const usedRoutes = assoc("parent", parent, routes)
 
   return (routes.children)
@@ -11,11 +12,12 @@ const parseRoutes = curry((parent, routes) => {
 })
 
 export default class RoutesFile {
-  constructor({ path }) {
-    this.path = path
+  private file: File
+  constructor(private path: string) {
     this.file = new File(path)
   }
-  load() {
-    return this.file.load().then(parseRoutes(null))
+  load(): Promise {
+    return this.file.load()
+      .then(parseRoutes(null))
   }
 }

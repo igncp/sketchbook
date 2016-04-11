@@ -1,11 +1,16 @@
 import fs from "fs"
-import { assoc, compose, map, omit, filter, isEmpty, partial, flip, contains, not } from "ramda"
+import {
+  ifElse, assoc, compose, map, omit, filter, isEmpty,
+  partial, flip, contains, not, identity, always, prop,
+} from "ramda"
 import { directoryTree } from "directory-tree"
 
 const UNTRACKED_PROJECTS = ["private", "discontinued"]
 
+const isProduction = process.env.NODE_ENV === "production"
+
 const routesTree = directoryTree("./projects")
-const isUntrackedProject = flip(contains)(UNTRACKED_PROJECTS)
+const isUntrackedProject = compose(flip(contains)(UNTRACKED_PROJECTS), prop("name"))
 
 const getParsedRoutesTreeOfChildren = item => (item.children)
   ? assoc("children", map(getParsedRoutesTree, item.children), item)
@@ -54,6 +59,5 @@ compose(
   JSON.stringify,
   getCleanedRoutesTree,
   getParsedRoutesTree,
-  filterOutUntrackedProjectOfTree
+  ifElse(always(isProduction), filterOutUntrackedProjectOfTree, identity)
 )(routesTree)
-

@@ -3,7 +3,11 @@ declare module "frontend" {
   import when = require("when")
 
   export type Selection = d3.Selection<any>
-  export type Promise = when.Promise
+  export interface Promise {
+    (...args: any[]): this
+    then(...args: any[]): this
+    catch(...args: any[]): this
+  }
 
   export interface Node extends EventTarget {
     firstChild: this
@@ -57,5 +61,9 @@ declare module "frontend" {
   export interface RouteHandler {
     handleRoute(route: Route): void
     shouldHandleRoute(route: Route): boolean
+  }
+
+  export interface WebPathRetriever {
+    retrieve(): string
   }
 }
