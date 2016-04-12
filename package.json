@@ -16,7 +16,7 @@
     "generate-tsconfig": "./node_modules/.bin/babel-node resources/scripts/generate-tsconfig.js",
     "serve": "./node_modules/.bin/http-server -c-1 -s",
     "serve-prod": "cd .. && ./sketchbook/node_modules/.bin/http-server -c-1 -s",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./resources/scripts/nightwatch -c tests/e2e/nightwatch.json -f *-test.js"
   },
   "author": "icarbajop@gmail.com",
   "license": "MIT",

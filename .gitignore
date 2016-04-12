@@ -6,8 +6,9 @@
 /dist/index.js.map
 /projects/discontinued
 /projects/private
+/reports
 /tsconfig.json
-/typings/
+/typings
 node_modules
 scripts-labs
 vendors
