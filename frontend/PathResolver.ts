@@ -1,22 +1,24 @@
-import { adjust, ifElse, compose, replace, prepend, join, equals, head, identity } from "ramda"
+import { ifElse, compose, replace, prepend, join, equals, head, identity, split } from "ramda"
 
-const prependSlash = compose(join(""), prepend("/"))
+const prependSlash = compose(join(""), prepend("/"), split(""))
 const firstIsSlash = compose(equals("/"), head)
 
 export default class PathResolver {
-  constructor({ pathRetriever }) {
-    this.pathRetriever = pathRetriever
+  isDev: boolean
+  prefix: string
+  root: string
+  constructor(private pathRetriever) {
     const fullPath = pathRetriever.retrieve()
 
-    this.isDev = /dev\.html/.exec(fullPath)
+    this.isDev = !!/dev\.html/.exec(fullPath)
     this.prefix = this.isDev ? "dev.html" : ""
     this.root = this.isDev ? "" : "/sketchbook"
   }
-  isAbsolutePath(path) {
+  isAbsolutePath(path: string) {
     return path.substr(0, 1) === "/"
   }
-  resolve(pathStr, opts) {
-    const { withPrefix, withRoot } = (opts || {})
+  resolve(pathStr: string, opts) {
+    const { withPrefix, withRoot }: {withPrefix: boolean, withRoot: boolean} = (opts || {})
     const isAbsolutePath = this.isAbsolutePath(pathStr)
 
     return isAbsolutePath
@@ -29,20 +31,21 @@ export default class PathResolver {
     return `${currentPathUsed}/${path}`
   }
   resolveRelativePath(currentPath, path, opts) {
-    const { withPrefix, withRoot } = (opts || {})
+    const { withPrefix, withRoot }: { withPrefix: boolean, withRoot: boolean } = (opts || {})
     const fullPath = this.joinWithCurrentPath(currentPath, path)
 
     return this.buildResolvedPath(fullPath, { withPrefix, withRoot })
   }
   buildResolvedPath(path, opts) {
-    const { withPrefix, withRoot } = (opts || {})
+    const { withPrefix, withRoot }: { withPrefix: boolean, withRoot: boolean } = (opts || {})
     const prefix = withPrefix ? `${this.prefix}#` : ""
     const root = withRoot ? this.root : ""
 
     return `${root}${prefix}${path}`
   }
-  resolveDirPath(...args) {
-    return this.resolve(...adjust(prependSlash, 0, args))
+  resolveDirPath(pathStr: string, opts) {
+    const newPathStr = prependSlash(pathStr)
+    return this.resolve(newPathStr, opts)
   }
   unresolveCurrentPath() {
     return compose(
