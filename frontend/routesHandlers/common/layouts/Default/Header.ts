@@ -25,7 +25,7 @@ const createHeader = (renderer: Renderer, router: Router, linkToRoute: LinkToRou
 
 export default class Header implements LayoutSelection {
   public element: Selection
-  constructor(renderer: Renderer, router, factories) {
+  constructor(renderer: Renderer, router: Router, factories: any) {
     const { linkToRoute } = factories
 
     this.element = createHeader(renderer, router, linkToRoute)

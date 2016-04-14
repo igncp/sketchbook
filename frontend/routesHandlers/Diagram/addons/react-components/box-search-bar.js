@@ -1,4 +1,6 @@
-const SearchBar = React.createClass({
+/* global React, ReactDOM, diagrams */
+
+const SearchBar = React.createClass({ // eslint-disable-line no-unused-vars
   getInitialState() {
     return {
       showChildren: false,

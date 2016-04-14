@@ -1,6 +1,5 @@
 declare module "frontend" {
   import d3 = require("d3")
-  import when = require("when")
 
   export type Selection = d3.Selection<any>
   export interface Promise {
@@ -11,8 +10,8 @@ declare module "frontend" {
 
   export interface Node extends EventTarget {
     firstChild: this
-    appendChild(child: this)
-    removeChild(child: this)
+    appendChild(child: this): void
+    removeChild(child: this): void
   }
 
   export interface Event {
@@ -24,7 +23,6 @@ declare module "frontend" {
     load(): Promise
     loadScript(): Promise
   }
-
   export interface LinkToRoute {
     create(text: string, path: string): Selection
   }
@@ -34,19 +32,19 @@ declare module "frontend" {
     pathResolver: any
     bootstrap(): void
     getCurrentPath(): string
-    getDisplayedNameOfPath(path: string, route?)
+    getDisplayedNameOfPath(path: string, route?: Route): string
     goTo(path: string): void
-    joinWithCurrentPath(...args): string
-    pushRoutesHandlers(routesHandlers): void
+    joinWithCurrentPath(...args: any[]): string
+    pushRoutesHandlers(routesHandlers: Array<any>): void
   }
 
   export interface Renderer {
-    setLayout(layout): void
-    renderInLayout(contentSelection, sectionName?): void
+    setLayout(layout: any): void
+    renderInLayout(contentSelection: Selection, sectionName?: string): void
     appendSelectionInSelection(child: Selection, parent: Selection): void
     create(tag: string): Selection
-    createTrigger(fn): Selection
-    select(...args): Selection
+    createTrigger(fn: any): Selection
+    select(...args: Array<any>): Selection
   }
 
   export interface LayoutSelection {

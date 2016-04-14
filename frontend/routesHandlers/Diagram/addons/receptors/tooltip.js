@@ -1,3 +1,5 @@
+/* global diagrams */
+
 import { select } from "d3"
 import { isNil, partial } from "ramda"
 

@@ -13,7 +13,8 @@ const parseRoutes = curry((parent, routes: any) => {
 
 export default class RoutesFile {
   private file: File
-  constructor(private path: string) {
+
+  constructor(path: string) {
     this.file = new File(path)
   }
   load(): Promise {

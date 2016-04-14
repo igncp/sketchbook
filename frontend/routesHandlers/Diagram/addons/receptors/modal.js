@@ -1,3 +1,4 @@
+/* global jQuery */
 import { select } from "d3"
 
 import { addListenersToContentElLinks, getFillHtmlOfItem } from "./helpers"

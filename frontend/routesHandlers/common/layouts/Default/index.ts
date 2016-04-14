@@ -6,11 +6,12 @@ import Breadcrumb from "./Breadcrumb"
 import {Renderer, LayoutSelection, Selection, Router} from "frontend"
 
 export default class DefaultLayout implements LayoutSelection {
-  private header: Header
-  private breadcrumb: Breadcrumb
   public element: Selection
 
-  constructor(factories, private renderer: Renderer, router: Router) {
+  private header: Header
+  private breadcrumb: Breadcrumb
+
+  constructor(factories: any, private renderer: Renderer, router: Router) {
     this.header = new Header(renderer, router, factories)
     this.breadcrumb = new Breadcrumb(factories, renderer, router)
     this.element = this.createElement()

@@ -1,3 +1,5 @@
+/* global diagrams */
+
 import d3, { select } from "d3"
 import { forEach, isArrayLike, pluck, addIndex } from "ramda"
 

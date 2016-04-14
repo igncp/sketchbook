@@ -1,6 +1,6 @@
 import ramda = require("ramda")
 
-import {Selection, Router, LinkToRoute} from "frontend"
+import {Selection, Router, Renderer, LinkToRoute} from "frontend"
 
 const { addIndex, forEach, reduce } = ramda
 const each = addIndex(forEach)
@@ -25,7 +25,7 @@ const builPathForSegment = (segments: Array<string>, segmentIndex: number) => {
 export default class Breadcrumb {
   public element: Selection
 
-  constructor(private factories, private renderer, private router: Router) {
+  constructor(private factories: any, private renderer: Renderer, private router: Router) {
     this.element = createBreadcrumb(renderer)
   }
 
@@ -36,25 +36,29 @@ export default class Breadcrumb {
     const { linkToRoute }: { linkToRoute: LinkToRoute } = this.factories
 
     p.text("")
-    each((segment, segmentIndex) => {
-      const isLastSegment: boolean = segmentIndex === (segments.length - 1)
-      const isRootSegment: boolean = segmentIndex === 0
+    each(
+      (segment, segmentIndex) => {
+        const isLastSegment: boolean = segmentIndex === (segments.length - 1)
+        const isRootSegment: boolean = segmentIndex === 0
 
-      if (!isRootSegment) {
-        const segmentPath: string = builPathForSegment(segments, segmentIndex)
-        const segmentName: string = this.router.getDisplayedNameOfPath(segmentPath)
+        if (!isRootSegment) {
+          const segmentPath: string = builPathForSegment(segments, segmentIndex)
+          const segmentName: string = this.router.getDisplayedNameOfPath(segmentPath)
 
-        if (isLastSegment) {
-          const lastSegment: Selection = this.renderer.create("span").text(segmentName)
-          this.renderer.appendSelectionInSelection(lastSegment, p)
-        } else {
-          const link = linkToRoute.create(segmentName, segmentPath)
-          this.renderer.appendSelectionInSelection(link, p)
+          if (isLastSegment) {
+            const lastSegment: Selection = this.renderer.create("span").text(segmentName)
+            this.renderer.appendSelectionInSelection(lastSegment, p)
+          } else {
+            const link = linkToRoute.create(segmentName, segmentPath)
+            this.renderer.appendSelectionInSelection(link, p)
 
-          const separator: Selection = this.renderer.create("span").attr("class", "separator").text("/")
-          this.renderer.appendSelectionInSelection(separator, p)
+            const separator: Selection = this.renderer
+              .create("span").attr("class", "separator").text("/")
+            this.renderer.appendSelectionInSelection(separator, p)
+          }
         }
-      }
-    }, segments)
+      },
+      segments
+    )
   }
 }

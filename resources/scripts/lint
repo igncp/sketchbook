@@ -1,4 +1,8 @@
 #!/usr/bin/env bash 
 
-./node_modules/.bin/eslint frontend resources
-./node_modules/.bin/jscs frontend resources
+set -e
+
+./node_modules/.bin/eslint frontend resources/scripts
+./node_modules/.bin/jscs frontend resources/scripts
+find frontend -name *.ts | \
+  xargs ./node_modules/.bin/tslint -c tslint.json

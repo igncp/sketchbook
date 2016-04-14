@@ -1,3 +1,4 @@
+/* global diagrams */
 import { select } from "d3"
 
 import { bannerId } from "../constants"
@@ -40,7 +41,7 @@ const fill = (item, diagram) => {
     const bannerHtml = "<div id=\"diagrams-banner-cross\">&#x2715;</div>"
       + `${getFillHtmlOfItem({ diagram, item, receptorPrefix: BANNER_PREFIX })}`
 
-    bannerEl = diagrams.svg.insertInBodyBeforeSvg(`div`).attr({
+    bannerEl = diagrams.svg.insertInBodyBeforeSvg("div").attr({
       id: bannerId,
     }).html(bannerHtml)
   })

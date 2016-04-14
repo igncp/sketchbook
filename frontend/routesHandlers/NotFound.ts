@@ -9,10 +9,11 @@ const createContent = (renderer: Renderer, route: Route): Selection => {
 }
 
 export default class NotFound implements RouteHandler {
-  constructor(private common, private app) {}
+  constructor(private common: any, private app: any) { }
+
   handleRoute(route: Route): void {
     const { defaultLayout } = this.common.layouts
-    const { renderer, router }: { renderer: Renderer, router: Router } = this.app
+    const { renderer }: { renderer: Renderer, router: Router } = this.app
 
     defaultLayout.onRouteChange()
     renderer.setLayout(defaultLayout)

@@ -9,10 +9,12 @@ const validatePath = (path: string) => {
 
 export default class File implements fFile {
   constructor(private path: string) {}
+
   load(): Promise {
     validatePath(this.path)
     return <any>promise(resolve => get(this.path, resolve))
   }
+
   loadScript(): Promise {
     validatePath(this.path)
     return <any>promise((resolve) => {

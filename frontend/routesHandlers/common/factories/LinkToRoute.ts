@@ -1,10 +1,9 @@
-import d3 = require("d3")
-import f = require("frontend")
+import {Router, Renderer, LinkToRoute as fLinkToRoute, Selection} from "frontend"
 
-export default class LinkToRoute implements f.LinkToRoute {
-  constructor(private renderer: any, private router: f.Router) { }
+export default class LinkToRoute implements fLinkToRoute {
+  constructor(private renderer: Renderer, private router: Router) { }
 
-  create(text: string, path: string) {
+  create(text: string, path: string): Selection {
     const trigger = this.renderer.createTrigger(() => {
       this.router.goTo(path)
     })

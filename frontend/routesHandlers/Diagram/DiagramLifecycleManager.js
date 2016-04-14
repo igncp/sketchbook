@@ -3,7 +3,7 @@ import { forEach } from "ramda"
 import configPanel from "./addons/config/panel"
 import { getCurrentValueOfMultivalueConfig, setDefaultOfMultivalueConfig }
   from "./addons/config/helpers"
-import { configs, diagramsWrapperSelector } from "./addons/constants"
+import { configs, diagramsWrapperSelector } from "./addons/constants" // eslint-disable-line no-unused-vars, max-len
 
 import banner from "./addons/receptors/banner"
 import modal from "./addons/receptors/modal"

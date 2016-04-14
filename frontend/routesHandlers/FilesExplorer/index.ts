@@ -60,11 +60,12 @@ const createContent = ({ common, renderer, route, router }) => {
 }
 
 export default class FilesExplorer implements RouteHandler {
-  constructor(private common, private app) {}
+  constructor(private common: any, private app: any) { }
+
   shouldHandleRoute(route: Route): boolean {
     return route.type === "directory"
   }
-  handleRoute(route: Route) {
+  handleRoute(route: Route): void {
     const { defaultLayout } = this.common.layouts
     const { renderer, router }: {renderer: Renderer, router: Router} = this.app
 
