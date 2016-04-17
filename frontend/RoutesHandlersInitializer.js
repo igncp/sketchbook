@@ -7,7 +7,7 @@ import NotFound from "./routesHandlers/NotFound"
 export default class RoutesHandlersInitializer {
   constructor({ app }) {
     const { renderer, router } = app
-    const common = new Common({ renderer, router })
+    const common = new Common(renderer, router)
 
     const filesExplorer = new FilesExplorer(common, app)
     const diagram = new Diagram(common, app)

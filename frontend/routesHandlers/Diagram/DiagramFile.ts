@@ -1,11 +1,15 @@
 import { any, append } from "ramda"
 
+import {Route, PathResolver, Promise, File as fFile} from "frontend"
+
 import File from "../../File"
 import FileCollection from "../../FileCollection"
 
 const isSharedFile = item => item.type === "file" && item.name === "shared.js"
 
-const getSharedPaths = (sharedPaths, route, currentPath) => {
+function getSharedPaths(
+  sharedPaths: Array<string>, route: Route, currentPath: string
+): Array<string> {
   if (route.parent) {
     const parentPath = currentPath.split("/").slice(0, -1).join("/")
     const newSharedPaths = any(isSharedFile, route.parent.children)
@@ -18,18 +22,21 @@ const getSharedPaths = (sharedPaths, route, currentPath) => {
   return sharedPaths
 }
 
-export default class DiagramFile {
-  constructor({ path, route, pathResolver }) {
+export default class DiagramFile implements fFile {
+  public file: File
+  constructor(private path: string, private route: Route, pathResolver: PathResolver) {
     this.path = pathResolver.resolve(`/projects${path}`, { withRoot: true })
     this.file = new File(this.path)
-    this.route = route
   }
-  load() {
+  load(): Promise {
     const sharedPaths = getSharedPaths([], this.route, this.path)
     const fileCollection = new FileCollection(sharedPaths)
 
     return fileCollection.loadScriptsInSeries().then(() => {
       return this.file.loadScript()
     })
+  }
+  loadScript(): Promise {
+    return this.file.loadScript()
   }
 }

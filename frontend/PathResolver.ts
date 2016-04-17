@@ -1,8 +1,11 @@
 import { ifElse, compose, replace, prepend, join, equals, head, identity, split } from "ramda"
+
+import {PathResolver as fPathResolver} from "frontend"
+
 const prependSlash = compose(join(""), prepend("/"), split(""))
 const firstIsSlash = compose(equals("/"), head)
 
-export default class PathResolver {
+export default class PathResolver implements fPathResolver {
   private isDev: boolean
   private prefix: string
   private root: string

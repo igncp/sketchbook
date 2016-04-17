@@ -54,6 +54,8 @@ declare module "frontend" {
   export interface Route {
     type: string
     name: string
+    parent: this
+    children: Array<this>
   }
 
   export interface RouteHandler {
@@ -63,5 +65,15 @@ declare module "frontend" {
 
   export interface WebPathRetriever {
     retrieve(): string
+  }
+
+  export interface PathResolver {
+    isAbsolutePath(path: string): boolean
+    resolve(pathStr: string, opts: any): string
+    joinWithCurrentPath(currentPath: string, path: string): string
+    resolveRelativePath(currentPath: string, path: string, opts: any): string
+    buildResolvedPath(path: string, opts: any): string
+    resolveDirPath(pathStr: string, opts: any): string
+    unresolveCurrentPath(): string
   }
 }
