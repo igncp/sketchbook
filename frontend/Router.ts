@@ -2,45 +2,45 @@ import { assoc, find } from "ramda"
 
 import {Router as fRouter, Route, RouteHandler} from "frontend"
 
-const getPathRecursively = (remainingSegments, routes) => {
-  const segment = remainingSegments[0]
-  const matchingChildren = find(
+function getRouteRecursively(remainingSegments: Array<string>, route: Route): Route {
+  const segment: string = remainingSegments[0]
+  const matchingChildren: Route = find(
     (routeChild: any) => routeChild.name === segment,
-    routes.children
+    route.children
   )
-  const child = matchingChildren || { type: "unknown", children: [] }
+  const child: Route = matchingChildren || { type: "unknown", children: [], name: "unknown" }
 
   if (remainingSegments.length === 1) {
     return child
   } else {
-    return getPathRecursively(remainingSegments.slice(1), child)
+    return getRouteRecursively(remainingSegments.slice(1), child)
   }
 }
 
-function getRouteOfPath(path: string, routes: Array<Route>): Route {
-  const segments = path.split("/").slice(1)
+function getRouteOfPath(path: string, routes: Route): Route {
+  const segments: Array<string> = path.split("/").slice(1)
 
   if (segments.length === 1 && segments[0] === "") {
     return assoc("path", path, routes)
-  } else {
-    return getPathRecursively(segments, routes)
   }
+
+  return getRouteRecursively(segments, routes)
 }
 
 export default class Router implements fRouter {
   public routesHandlers: Array<RouteHandler> = []
 
-  constructor(public routes: Array<Route>, public  pathResolver: any) { }
+  constructor(public routes: Route, public pathResolver: any) { }
 
   goTo(path: string): void {
-    const usedPath = this.pathResolver.resolve(path)
-    const routeOfPath = getRouteOfPath(usedPath, this.routes)
+    const usedPath: string = this.pathResolver.resolve(path)
+    const routeOfPath: Route = getRouteOfPath(usedPath, this.routes)
 
-    for (let i = 0; i < this.routesHandlers.length; i++) {
-      const shouldHandleRoute = this.routesHandlers[i].shouldHandleRoute(routeOfPath)
+    for (let i: number = 0; i < this.routesHandlers.length; i++) {
+      const shouldHandleRoute: boolean = this.routesHandlers[i].shouldHandleRoute(routeOfPath)
 
       if (shouldHandleRoute) {
-        const historyPath = this.pathResolver
+        const historyPath: string = this.pathResolver
           .resolve(usedPath, { withPrefix: true, withRoot: true })
 
         window.history.pushState(null, null, historyPath)
@@ -59,10 +59,10 @@ export default class Router implements fRouter {
     return this.pathResolver.joinWithCurrentPath(...args)
   }
   getDisplayedNameOfPath(absolutePath: string, route: Route = null): string {
-    const segment = absolutePath.split("/").slice(-1)[0]
+    const segment: string = absolutePath.split("/").slice(-1)[0]
 
     if (segment.slice(-3) === ".js") {
-      const routeOfPath = route ? route : getRouteOfPath(absolutePath, this.routes)
+      const routeOfPath: Route = route ? route : getRouteOfPath(absolutePath, this.routes)
 
       if (routeOfPath.type === "file") return segment.slice(0, -3)
     }
@@ -70,7 +70,7 @@ export default class Router implements fRouter {
     return segment
   }
   bootstrap(): void {
-    const currentPath = this.getCurrentPath()
+    const currentPath: string = this.getCurrentPath()
 
     this.goTo(currentPath)
   }

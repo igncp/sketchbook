@@ -16,7 +16,7 @@ export default class Common {
   public layouts: CommonLayouts
 
   constructor(renderer: Renderer, router: Router) {
-    const factories = this.factories = <CommonFactories>{}
+    const factories: CommonFactories = this.factories = <CommonFactories>{}
 
     factories.linkToRoute = new LinkToRoute(renderer, router)
     this.layouts = <CommonLayouts>{

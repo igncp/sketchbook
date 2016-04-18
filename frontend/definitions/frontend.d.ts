@@ -28,7 +28,7 @@ declare module "frontend" {
   }
 
   export interface Router {
-    routes: any
+    routes: Route
     pathResolver: any
     bootstrap(): void
     getCurrentPath(): string
@@ -53,8 +53,9 @@ declare module "frontend" {
 
   export interface Route {
     type: string
-    name: string
-    parent: this
+    name?: string
+    path?: string
+    parent?: this
     children: Array<this>
   }
 

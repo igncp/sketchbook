@@ -1,10 +1,10 @@
 import { assoc, map, curry } from "ramda"
-import {Promise} from "frontend"
+import {Promise, Route} from "frontend"
 
 import File from "./File"
 
-const parseRoutes = curry((parent, routes: any) => {
-  const usedRoutes = assoc("parent", parent, routes)
+const parseRoutes: (x: any) => any = curry((parent, routes: any) => {
+  const usedRoutes: Route = assoc("parent", parent, routes)
 
   return (routes.children)
     ? assoc("children", map(parseRoutes(usedRoutes), usedRoutes.children), usedRoutes)

@@ -5,14 +5,15 @@ import {Route, PathResolver, Promise, File as fFile} from "frontend"
 import File from "../../File"
 import FileCollection from "../../FileCollection"
 
-const isSharedFile = item => item.type === "file" && item.name === "shared.js"
+const isSharedFile: (x: Route) => boolean
+  = route => route.type === "file" && route.name === "shared.js"
 
 function getSharedPaths(
   sharedPaths: Array<string>, route: Route, currentPath: string
 ): Array<string> {
   if (route.parent) {
-    const parentPath = currentPath.split("/").slice(0, -1).join("/")
-    const newSharedPaths = any(isSharedFile, route.parent.children)
+    const parentPath: string = currentPath.split("/").slice(0, -1).join("/")
+    const newSharedPaths: Array<string> = any(isSharedFile, route.parent.children)
       ? append(`${parentPath}/shared.js`, sharedPaths)
       : sharedPaths
 
@@ -29,8 +30,8 @@ export default class DiagramFile implements fFile {
     this.file = new File(this.path)
   }
   load(): Promise {
-    const sharedPaths = getSharedPaths([], this.route, this.path)
-    const fileCollection = new FileCollection(sharedPaths)
+    const sharedPaths: Array<string> = getSharedPaths([], this.route, this.path)
+    const fileCollection: FileCollection = new FileCollection(sharedPaths)
 
     return fileCollection.loadScriptsInSeries().then(() => {
       return this.file.loadScript()

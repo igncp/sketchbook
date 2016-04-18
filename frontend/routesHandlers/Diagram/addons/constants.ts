@@ -1,17 +1,17 @@
-export const bannerId = "diagrams-banner"
+export const bannerId: string = "diagrams-banner"
 
-export const diagramsWrapperId = "diagram-wrapper"
+export const diagramsWrapperId: string = "diagram-wrapper"
 
-export const diagramsWrapperSelector = `#${diagramsWrapperId}`
+export const diagramsWrapperSelector: string = `#${diagramsWrapperId}`
 
-export const configs = {
+export const configs: any = {
   CLICK_HANDLER: {
     BANNER: "Show a banner a the top",
     KEY: "How to show the info on click",
     MODAL: "Show a modal",
     NOTHING: "Don't show anything",
   },
-  // Mark Related
+  // mark related
   MR: {
     ALL: "Mark all related items",
     DEPENDANTS: "Mark just the dependants",

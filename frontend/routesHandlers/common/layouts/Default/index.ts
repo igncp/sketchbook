@@ -26,7 +26,8 @@ export default class DefaultLayout implements LayoutSelection {
   }
 
   createElement(): Selection {
-    const root = this.renderer.create("div")
+    const root: Selection = this.renderer.create("div")
+
     root.attr("id", "layout-default")
     this.renderer.appendSelectionInSelection(this.header.element, root)
     this.renderer.appendSelectionInSelection(this.breadcrumb.element, root)

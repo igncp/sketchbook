@@ -2,8 +2,8 @@ import { ifElse, compose, replace, prepend, join, equals, head, identity, split 
 
 import {PathResolver as fPathResolver} from "frontend"
 
-const prependSlash = compose(join(""), prepend("/"), split(""))
-const firstIsSlash = compose(equals("/"), head)
+const prependSlash: (x: string) => string = compose(join(""), prepend("/"), split(""))
+const firstIsSlash: (x: Array<string>) => boolean = compose(equals("/"), head)
 
 export default class PathResolver implements fPathResolver {
   private isDev: boolean
@@ -11,7 +11,7 @@ export default class PathResolver implements fPathResolver {
   private root: string
 
   constructor(private pathRetriever: any) {
-    const fullPath = pathRetriever.retrieve()
+    const fullPath: string = pathRetriever.retrieve()
 
     this.isDev = !!/dev\.html/.exec(fullPath)
     this.prefix = this.isDev ? "dev.html" : ""
@@ -24,7 +24,7 @@ export default class PathResolver implements fPathResolver {
 
   resolve(pathStr: string, opts: any): string {
     const { withPrefix, withRoot }: {withPrefix: boolean, withRoot: boolean} = (opts || {})
-    const isAbsolutePath = this.isAbsolutePath(pathStr)
+    const isAbsolutePath: boolean = this.isAbsolutePath(pathStr)
 
     return isAbsolutePath
       ? this.buildResolvedPath(pathStr, { withPrefix, withRoot })
@@ -32,28 +32,28 @@ export default class PathResolver implements fPathResolver {
   }
 
   joinWithCurrentPath(currentPath: string, path: string): string {
-    const currentPathUsed = currentPath === "/" ? "" : currentPath
+    const currentPathUsed: string = currentPath === "/" ? "" : currentPath
 
     return `${currentPathUsed}/${path}`
   }
 
   resolveRelativePath(currentPath: string, path: string, opts: any): string {
     const { withPrefix, withRoot }: { withPrefix: boolean, withRoot: boolean } = (opts || {})
-    const fullPath = this.joinWithCurrentPath(currentPath, path)
+    const fullPath: string = this.joinWithCurrentPath(currentPath, path)
 
     return this.buildResolvedPath(fullPath, { withPrefix, withRoot })
   }
 
   buildResolvedPath(path: string, opts: any): string {
     const { withPrefix, withRoot }: { withPrefix: boolean, withRoot: boolean } = (opts || {})
-    const prefix = withPrefix ? `${this.prefix}#` : ""
-    const root = withRoot ? this.root : ""
+    const prefix: string = withPrefix ? `${this.prefix}#` : ""
+    const root: string = withRoot ? this.root : ""
 
     return `${root}${prefix}${path}`
   }
 
   resolveDirPath(pathStr: string, opts: any): string {
-    const newPathStr = prependSlash(pathStr)
+    const newPathStr: string = prependSlash(pathStr)
     return this.resolve(newPathStr, opts)
   }
 

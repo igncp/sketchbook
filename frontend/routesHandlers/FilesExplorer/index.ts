@@ -2,19 +2,22 @@ import "./style.css"
 
 import { compose, forEach, sortBy, prop, filter, any } from "ramda"
 import {
-  RouteHandler, Route, Router, Renderer, Selection
+  RouteHandler, Route, Router, Renderer, Selection, LinkToRoute
 } from "frontend"
 
-const sortByType = sortBy(prop("type"))
+const sortByType: (x: Array<any>) => Array<any> = sortBy(prop("type"))
 
-const loopAddingLinks = ({ content, linkToRoute, renderer, isRootRoute, router }) => {
+function loopAddingLinks(
+  content: Selection, linkToRoute: LinkToRoute,
+  renderer: Renderer, isRootRoute: boolean, router: Router
+): (x: any) => void {
   const currentPath: string = router.getCurrentPath()
 
   return forEach((childRoute: Route) => {
-    const childPath = router.joinWithCurrentPath(currentPath, childRoute.name)
-    const p = content.append("p")
-    const name = router.getDisplayedNameOfPath(childPath, childRoute)
-    const a = linkToRoute.create(name, childPath)
+    const childPath: string = router.joinWithCurrentPath(currentPath, childRoute.name)
+    const p: Selection = content.append("p")
+    const name: string = router.getDisplayedNameOfPath(childPath, childRoute)
+    const a: Selection = linkToRoute.create(name, childPath)
 
     if (childRoute.type === "directory" && !isRootRoute) {
       a.attr("class", "directory")
@@ -25,7 +28,7 @@ const loopAddingLinks = ({ content, linkToRoute, renderer, isRootRoute, router }
   })
 }
 
-const isMoreThanShared = (item) => {
+function isMoreThanShared(item: Route): boolean {
   if (item.type === "file" && item.name === "shared.js") return false
 
   if (item.type === "directory") {
@@ -37,12 +40,12 @@ const isMoreThanShared = (item) => {
   return true
 }
 
-const filterOutShared = filter(isMoreThanShared)
+const filterOutShared: (x: any) => any = filter(isMoreThanShared)
 
-const createContent = ({ common, renderer, route, router }) => {
-  const { linkToRoute } = common.factories
-  const content = renderer.create("div")
-  const isRootRoute = route.path === "/"
+function getContent(common: any, renderer: Renderer, route: Route, router: Router): Selection {
+  const linkToRoute: LinkToRoute = common.factories.linkToRoute
+  const content: Selection = renderer.create("div")
+  const isRootRoute: boolean = route.path === "/"
 
   content.attr("id", "files-explorer").attr("class", "col-lg10 col-lgoffset-1")
 
@@ -51,7 +54,7 @@ const createContent = ({ common, renderer, route, router }) => {
   }
 
   compose(
-    loopAddingLinks({ content, linkToRoute, renderer, isRootRoute, router }),
+    loopAddingLinks(content, linkToRoute, renderer, isRootRoute, router),
     sortByType,
     filterOutShared
   )(route.children)
@@ -66,13 +69,13 @@ export default class FilesExplorer implements RouteHandler {
     return route.type === "directory"
   }
   handleRoute(route: Route): void {
-    const { defaultLayout } = this.common.layouts
+    const defaultLayout: any = this.common.layouts.defaultLayout
     const { renderer, router }: {renderer: Renderer, router: Router} = this.app
 
     defaultLayout.onRouteChange()
     renderer.setLayout(defaultLayout)
 
-    const content: Selection = createContent({ renderer, route, common: this.common, router })
+    const content: Selection = getContent(this.common, renderer, route, router)
 
     renderer.renderInLayout(content)
   }

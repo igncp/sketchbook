@@ -11,7 +11,8 @@ export default class FileCollection {
   loadScriptsInSeries(): Promise {
     const loadScriptArr: Array<Promise> = map(
       function (path: string): Promise {
-        const file = new File(path)
+        const file: File = new File(path)
+
         return file.loadScript.bind(file)
       },
       this.paths

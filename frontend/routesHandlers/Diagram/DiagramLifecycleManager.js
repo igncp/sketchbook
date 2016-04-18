@@ -7,7 +7,7 @@ import { configs, diagramsWrapperSelector } from "./addons/constants" // eslint-
 
 import banner from "./addons/receptors/banner"
 import modal from "./addons/receptors/modal"
-import tooltip from "./addons/receptors/tooltip"
+import Tooltip from "./addons/receptors/Tooltip"
 // import boxSearchBar from "./react-components/box-search-bar"
 import fullScreen from "./addons/full-screen"
 
@@ -40,6 +40,8 @@ const setDefaultConfiguration = (diagram) => {
   })([MR, CLICK_HANDLER])
 }
 
+const tooltip = new Tooltip()
+
 const diagramsCallbacks = {
   itemclick: (diagram) => (item) => {
     if (item.data.fullText) {
@@ -58,11 +60,11 @@ const diagramsCallbacks = {
     })
   },
   mouseenter: (diagram) => (item) => {
-    if (diagram.config(SHOW_TOOLTIP)) tooltip.onMouseEnterListenerFn(item.el, item.data.fullText)
+    if (diagram.config(SHOW_TOOLTIP)) tooltip.show(item.el, item.data.fullText)
     handleMarkRelatedItems(diagram, item)
   },
   mouseleave: (diagram) => () => {
-    tooltip.onMouseLeaveListenerFn()
+    tooltip.hide()
     if (diagram.unmarkAllItems && diagram.config(MR.KEY)) diagram.unmarkAllItems()
   },
 }
