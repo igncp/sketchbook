@@ -8,8 +8,8 @@ import { configs, diagramsWrapperSelector } from "./addons/constants" // eslint-
 import banner from "./addons/receptors/banner"
 import modal from "./addons/receptors/modal"
 import Tooltip from "./addons/receptors/Tooltip"
+import FullScreen from "./addons/FullScreen"
 // import boxSearchBar from "./react-components/box-search-bar"
-import fullScreen from "./addons/full-screen"
 
 const { CLICK_HANDLER, MR, SHOW_TOOLTIP } = configs
 
@@ -41,6 +41,7 @@ const setDefaultConfiguration = (diagram) => {
 }
 
 const tooltip = new Tooltip()
+const fullScreen = new FullScreen()
 
 const diagramsCallbacks = {
   itemclick: (diagram) => (item) => {
@@ -77,7 +78,7 @@ export default class DiagramLifecycleManager {
     this.diagrams.events.listen("diagram-created", (diagram) => {
       setDefaultConfiguration(diagram)
       configPanel(diagram)
-      fullScreen(diagram)
+      fullScreen.trigger(diagram)
 
       forEach((diagramEvent) => {
         return diagram.listen(diagramEvent, diagramsCallbacks[diagramEvent](diagram))
