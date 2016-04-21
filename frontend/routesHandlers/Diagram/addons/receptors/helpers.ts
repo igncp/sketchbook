@@ -1,21 +1,22 @@
 /* global diagrams */
 
-import d3, { select } from "d3"
+import { select } from "d3"
+import d3 = require("d3")
 import { forEach, isArrayLike, pluck, addIndex } from "ramda"
 
-const each = addIndex(forEach)
+const each: any = addIndex(forEach)
 
-const { formatShortDescription } = diagrams.utils
+const { formatShortDescription }: { formatShortDescription: any } = (<any>window).diagrams.utils
 
-const getSelectorPrefix = (receptorPrefix) => `diagrams-${receptorPrefix}`
-const getGeneralAndReceptorClasses = (prefix, suffix) => {
-  const generalPrefix = getSelectorPrefix("general-receptor")
+const getSelectorPrefix: (x: string) => string = (receptorPrefix) => `diagrams-${receptorPrefix}`
+const getGeneralAndReceptorClasses: (x: string, y: string) => string = (prefix, suffix) => {
+  const generalPrefix: string = getSelectorPrefix("general-receptor")
 
   return `${generalPrefix}-${suffix} ${prefix}-${suffix}`
 }
-const gGARC = getGeneralAndReceptorClasses
+const gGARC: (x: string, y: string) => string = getGeneralAndReceptorClasses
 
-const MAX_BREADCRUMB_LENGTH = 15
+const MAX_BREADCRUMB_LENGTH: number = 15
 const shortenIfNecessary = (text) => {
   const parsedText = formatShortDescription(text)
 
@@ -39,22 +40,17 @@ const getBreadcrumbHtml = ({ prefix, relatedItems }) => {
   return breadcrumbHtml
 }
 
-const getNextSiblingIntro = (nextSibling) => getIntro(nextSibling.data.fullText)
-
-const getFirstDependantIntro = (item) => {
-  return getIntro(item.data.relationships.dependants[0].data.fullText)
-}
-
-const getIntro = function(fullText) {
-  const removeTags = function(text, tag) {
-    const replaceText = function(regexp) {
+const getIntro = function(fullText: string): string {
+  const removeTags = function(text: string, tag: string | Array<string>): string {
+    const replaceText = function(regexp: string): void {
       text = text.replace(new RegExp(regexp, "ig"), "")
     }
 
-    if (isArrayLike(tag)) forEach((tagItem) => {
-      text = removeTags(text, tagItem)
-    })(tag)
-    else {
+    if (isArrayLike(tag)) {
+      forEach((tagItem: any) => {
+        text = removeTags(text, tagItem)
+      })(<any>tag)
+    } else {
       replaceText(`<${tag}>`)
       replaceText(`</${tag}>`)
     }
@@ -66,19 +62,26 @@ const getIntro = function(fullText) {
   return (intro.length > 20) ? `${intro.substr(0, 20)}...` : intro
 }
 
-const getSiblingsAndNextSibling = function(item) {
-  const rv = {}
+const getNextSiblingIntro = (nextSibling) => getIntro(nextSibling.data.fullText)
+
+const getFirstDependantIntro = (item) => {
+  return getIntro(item.data.relationships.dependants[0].data.fullText)
+}
+
+const getSiblingsAndNextSibling = function(item: any): any {
+  const rv: any = {}
 
   if (item.data.relationships && item.data.relationships.dependencies.length > 0) {
     rv.siblings = []
 
-    forEach((dependency) => {
+    forEach((dependency: any) => {
       rv.siblings = dependency.data.relationships
         ? rv.siblings.concat(dependency.data.relationships.dependants) : rv.siblings
     })(item.data.relationships.dependencies)
 
-    if (rv.siblings.length === 1) rv.siblings = null
-    else {
+    if (rv.siblings.length === 1) {
+      rv.siblings = null
+    } else {
       const siblingDatas = pluck("data")(rv.siblings)
       const siblingsFullTexts = pluck("fullText")(siblingDatas)
       // indexOf of the object is not detecting it
@@ -110,7 +113,7 @@ export const getFillHtmlOfItem = ({ diagram, item, receptorPrefix }) => {
     fillHtml += `<div class="${gGARC(prefix, "breadcrumb")}">`
     fillHtml += `${getBreadcrumbHtml({ prefix, relatedItems })}</div>`
   }
-  fillHtml += diagrams.utils.formatTextFragment(content)
+  fillHtml += (<any>window).diagrams.utils.formatTextFragment(content)
   fillHtml += `<div class="${gGARC(prefix, "footer")}">`
   fillHtml += `<strong class="${gGARC(prefix, "footer-scroll")}">Scroll</strong> `
 
@@ -150,7 +153,7 @@ export const addListenersToContentElLinks = ({
       currentScroll = (window.pageYOffset || document.documentElement.scrollTop)
         - (document.documentElement.clientTop || 0)
 
-      if (d3.event) d3.event.stopPropagation()
+      if (d3.event) (<any>d3.event).stopPropagation()
       scrollElTop = item.el[0][0].getBoundingClientRect().top
       window.scrollTo(0, scrollElTop + currentScroll)
     })
