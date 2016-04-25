@@ -1,5 +1,7 @@
 import { is, isArrayLike, addIndex, forEach } from "ramda"
-import d3, { select } from "d3"
+import { event as d3Event, select } from "d3"
+
+import {Event} from "frontend"
 
 const each = addIndex(forEach)
 
@@ -12,7 +14,10 @@ const hidePanel = (trigger, panel) => {
 }
 
 const buildPanel = ({ diagram, panel }) => {
-  const buildFormItem = function(configKey) {
+  panel.text("")
+  const formEl = panel.append("form")
+
+  const buildFormItem = function(configKey: any): void {
     const optionEl = formEl.append("div").attr("class", "col-lg-6 text-center")
     const configValue = diagram.config(configKey)
     const elId = configKey.replace(/ /g, "-").toLowerCase()
@@ -62,31 +67,32 @@ const buildPanel = ({ diagram, panel }) => {
 
   }
 
-  panel.text("")
-  const formEl = panel.append("form")
-
   for (const configKey in diagram.config()) {
     buildFormItem(configKey)
   }
 }
 
-const configPanel = function(diagram) {
-  const panel = select("#diagram-configuration-panel")
-  const trigger = select("#diagram-configuration-trigger")
-  const showPanel = function() {
-    trigger.html("Hide configuration &#x2191;")
-    panel.style("display", "block")
+export default class ConfigPanel {
+  build(diagram: any): void {
+    const panel = select("#diagram-configuration-panel")
+    const trigger = select("#diagram-configuration-trigger")
+    const showPanel = function(): void {
+      trigger.html("Hide configuration &#x2191;")
+      panel.style("display", "block")
+    }
+    let panelIsHidden
+
+    buildPanel({ diagram, panel })
+    trigger.on("click", () => {
+      const event: Event = <Event><any>d3Event
+      event.preventDefault()
+      panelIsHidden = (panel.style("display") === "none")
+      if (panelIsHidden) {
+        showPanel()
+      } else {
+        hidePanel(trigger, panel)
+      }
+    })
+    hidePanel(trigger, panel)
   }
-  let panelIsHidden
-
-  buildPanel({ diagram, panel })
-  trigger.on("click", () => {
-    d3.event.preventDefault()
-    panelIsHidden = (panel.style("display") === "none")
-    if (panelIsHidden) showPanel()
-    else hidePanel(trigger, panel)
-  })
-  hidePanel(trigger, panel)
 }
-
-export default configPanel

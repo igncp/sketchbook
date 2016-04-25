@@ -1,6 +1,6 @@
 import { forEach } from "ramda"
 
-import configPanel from "./addons/config/panel"
+import ConfigPanel from "./addons/config/Panel"
 import { getCurrentValueOfMultivalueConfig, setDefaultOfMultivalueConfig }
   from "./addons/config/helpers"
 import { configs, diagramsWrapperSelector } from "./addons/constants" // eslint-disable-line no-unused-vars, max-len
@@ -42,6 +42,7 @@ const setDefaultConfiguration = (diagram) => {
 
 const tooltip = new Tooltip()
 const fullScreen = new FullScreen()
+const configPanel = new ConfigPanel()
 
 const diagramsCallbacks = {
   itemclick: (diagram) => (item) => {
@@ -77,7 +78,7 @@ export default class DiagramLifecycleManager {
   addListeners() {
     this.diagrams.events.listen("diagram-created", (diagram) => {
       setDefaultConfiguration(diagram)
-      configPanel(diagram)
+      configPanel.build(diagram)
       fullScreen.trigger(diagram)
 
       forEach((diagramEvent) => {

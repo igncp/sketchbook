@@ -11,7 +11,6 @@
       "check-lowercase"
     ],
     "eofline": true,
-    "forin": true,
     "indent": [true, "spaces", 2],
     "jsdoc-format": true,
     "label-position": true,
