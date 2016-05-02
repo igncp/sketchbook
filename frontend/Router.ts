@@ -30,9 +30,13 @@ function getRouteOfPath(path: string, routes: Route): Route {
 export default class Router implements fRouter {
   public routesHandlers: Array<RouteHandler> = []
 
-  constructor(public routes: Route, public pathResolver: any) { }
+  constructor(public routes: Route, public pathResolver: any) {
+    window.onpopstate = (event: any): void => {
+      this.goToCurrentPath(false)
+    }
+  }
 
-  goTo(path: string): void {
+  goTo(path: string, shouldUpdateHistory: boolean = true): void {
     const usedPath: string = this.pathResolver.resolve(path)
     const routeOfPath: Route = getRouteOfPath(usedPath, this.routes)
 
@@ -40,10 +44,12 @@ export default class Router implements fRouter {
       const shouldHandleRoute: boolean = this.routesHandlers[i].shouldHandleRoute(routeOfPath)
 
       if (shouldHandleRoute) {
-        const historyPath: string = this.pathResolver
-          .resolve(usedPath, { withPrefix: true, withRoot: true })
+        if (shouldUpdateHistory) {
+          const historyPath: string = this.pathResolver
+            .resolve(usedPath, { withPrefix: true, withRoot: true })
 
-        window.history.pushState(null, null, historyPath)
+          window.history.pushState(null, null, historyPath)
+        }
         this.routesHandlers[i].handleRoute(routeOfPath)
         break
       }
@@ -70,8 +76,11 @@ export default class Router implements fRouter {
     return segment
   }
   bootstrap(): void {
+    this.goToCurrentPath()
+  }
+  private goToCurrentPath(shouldUpdateHistory: boolean = true): void {
     const currentPath: string = this.getCurrentPath()
 
-    this.goTo(currentPath)
+    this.goTo(currentPath, shouldUpdateHistory)
   }
 }
