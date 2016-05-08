@@ -39,9 +39,7 @@ export default class Diagram {
     this.diagramLifecycleManager = new DiagramLifecycleManager({ diagramsLib: window.diagrams })
   }
   shouldHandleRoute(route) {
-    if (route.type === "file") {
-      return true
-    }
+    return route.type === "file"
   }
   handleRoute(route) {
     const { defaultLayout } = this.common.layouts

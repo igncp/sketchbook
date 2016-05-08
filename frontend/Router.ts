@@ -67,10 +67,15 @@ export default class Router implements fRouter {
   getDisplayedNameOfPath(absolutePath: string, route: Route = null): string {
     const segment: string = absolutePath.split("/").slice(-1)[0]
 
+    let extension
     if (segment.slice(-3) === ".js") {
+      extension = ".js"
+    } else if (segment.slice(-5) === ".json") extension = ".json"
+
+    if (extension) {
       const routeOfPath: Route = route ? route : getRouteOfPath(absolutePath, this.routes)
 
-      if (routeOfPath.type === "file") return segment.slice(0, -3)
+      if (routeOfPath.type === "file") return segment.slice(0, -extension.length)
     }
 
     return segment

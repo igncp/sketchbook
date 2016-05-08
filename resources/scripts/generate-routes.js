@@ -1,6 +1,6 @@
 import fs from "fs"
 import {
-  ifElse, assoc, compose, map, omit, filter, isEmpty,
+  ifElse, assoc, compose, map, omit, filter, isEmpty, curry,
   partial, flip, contains, not, identity, always, prop,
 } from "ramda"
 import { directoryTree } from "directory-tree"
@@ -16,10 +16,14 @@ const getParsedRoutesTreeOfChildren = item => (item.children)
   ? assoc("children", map(getParsedRoutesTree, item.children), item)
   : item
 
-const isOmitedFile = (fileName) => {
-  if (fileName.substr(-3) !== ".js") return true
+const endsWith = curry((end, str) => str.substr(-end.length) !== end)
+const isJSFile = endsWith(".js")
+const isJSONFile = endsWith(".json")
 
-  return false
+const isOmitedFile = (fileName) => {
+  if (isJSFile(fileName) || isJSONFile(fileName)) return false
+
+  return true
 }
 const nullifyOmitedFiles = item => (item.type === "file" && isOmitedFile(item.name))
   ? null: item
