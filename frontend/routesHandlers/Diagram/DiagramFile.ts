@@ -1,11 +1,47 @@
-import { any, append, keys } from "ramda"
+import { any, append, keys, curry } from "ramda"
 
 import {Route, Promise} from "frontend"
 
 import ProjectsFile from "../../ProjectsFile"
 import FileCollection from "../../FileCollection"
 
-const isJsonFile = (name: String) => name.substr(-4) === "json"
+// https://davidwalsh.name/convert-xml-json
+function xmlToJson(xml: any): any {
+  let obj = {};
+
+  if (xml.nodeType === 1) {
+    if (xml.attributes.length > 0) {
+      obj["@attributes"] = {};
+      for (const j = 0; j < xml.attributes.length; j++) {
+        const attribute = xml.attributes.item(j);
+        obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+      }
+    }
+  } else if (xml.nodeType === 3) {
+    obj = xml.nodeValue;
+  }
+
+  if (xml.hasChildNodes()) {
+    for (const i = 0; i < xml.childNodes.length; i++) {
+      const item = xml.childNodes.item(i);
+      const nodeName = item.nodeName;
+      if (typeof (obj[nodeName]) === "undefined") {
+        obj[nodeName] = xmlToJson(item);
+      } else {
+        if (typeof (obj[nodeName].push) === "undefined") {
+          const old = obj[nodeName];
+          obj[nodeName] = [];
+          obj[nodeName].push(old);
+        }
+        obj[nodeName].push(xmlToJson(item));
+      }
+    }
+  }
+  return obj;
+};
+
+const endsWith = curry((end, str: string) => str.substr(-end.length) === end)
+const isGraphMLFile = endsWith("graphml")
 const isSharedFile: (x: Route) => boolean
   = route => route.type === "file" && route.name === "shared.js"
 
@@ -56,7 +92,7 @@ function transformData(data: any): any {
     })
   })
 
-  // The links come repeated, so it splits it in half
+  // the links come repeated, so it splits it in half
   keys(links).forEach((linksKey) => {
     links[linksKey] = links[linksKey].slice(0, links[linksKey].length / 2)
   })
@@ -77,8 +113,8 @@ function generateGraph(data: any): any {
     }
     return n(node.title, arr)
   })
-  console.log('transformedData', transformedData)
-  setTimeout(function (argument) {
+
+  setTimeout(() => {
     (<any>window).diagrams.graph(graphData)
   }, 1000)
 }
@@ -89,8 +125,8 @@ export default class DiagramFile extends ProjectsFile {
     const fileCollection: FileCollection = new FileCollection(sharedPaths)
 
     return fileCollection.loadScriptsInSeries().then(() => {
-      if (isJsonFile(this.path)) {
-        return super.load().then((result) => {
+      if (isGraphMLFile(this.path)) {
+        return super.loadXML().then((result) => {
           generateGraph(result.data)
         })
       } else {

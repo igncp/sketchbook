@@ -19,9 +19,10 @@ const getParsedRoutesTreeOfChildren = item => (item.children)
 const endsWith = curry((end, str) => str.substr(-end.length) !== end)
 const isJSFile = endsWith(".js")
 const isJSONFile = endsWith(".json")
+const isGraphMLFile = endsWith(".graphml")
 
 const isOmitedFile = (fileName) => {
-  if (isJSFile(fileName) || isJSONFile(fileName)) return false
+  if (isJSFile(fileName) || isJSONFile(fileName) || isGraphMLFile(fileName)) return false
 
   return true
 }

@@ -1,4 +1,4 @@
-import {get} from "zepto"
+import {get, ajax} from "zepto"
 import {promise} from "when"
 
 import {Promise, File as fFile} from "frontend"

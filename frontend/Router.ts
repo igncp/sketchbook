@@ -1,4 +1,4 @@
-import { assoc, find } from "ramda"
+import { assoc, find, reduce } from "ramda"
 
 import {Router as fRouter, Route, RouteHandler} from "frontend"
 
@@ -67,10 +67,11 @@ export default class Router implements fRouter {
   getDisplayedNameOfPath(absolutePath: string, route: Route = null): string {
     const segment: string = absolutePath.split("/").slice(-1)[0]
 
-    let extension
-    if (segment.slice(-3) === ".js") {
-      extension = ".js"
-    } else if (segment.slice(-5) === ".json") extension = ".json"
+    const extension = reduce(function (acc: string, possibleExt: string): string {
+      if (acc) return acc
+      if (segment.slice(-possibleExt.length) === possibleExt) return possibleExt
+      return null
+    }, null, [".js", ".json", ".graphml"])
 
     if (extension) {
       const routeOfPath: Route = route ? route : getRouteOfPath(absolutePath, this.routes)
