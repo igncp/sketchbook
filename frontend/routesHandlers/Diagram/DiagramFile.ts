@@ -1,44 +1,9 @@
-import { any, append, keys, curry } from "ramda"
+import { any, append, curry, keys, find } from "ramda"
 
 import {Route, Promise} from "frontend"
 
 import ProjectsFile from "../../ProjectsFile"
 import FileCollection from "../../FileCollection"
-
-// https://davidwalsh.name/convert-xml-json
-function xmlToJson(xml: any): any {
-  let obj = {};
-
-  if (xml.nodeType === 1) {
-    if (xml.attributes.length > 0) {
-      obj["@attributes"] = {};
-      for (const j = 0; j < xml.attributes.length; j++) {
-        const attribute = xml.attributes.item(j);
-        obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
-      }
-    }
-  } else if (xml.nodeType === 3) {
-    obj = xml.nodeValue;
-  }
-
-  if (xml.hasChildNodes()) {
-    for (const i = 0; i < xml.childNodes.length; i++) {
-      const item = xml.childNodes.item(i);
-      const nodeName = item.nodeName;
-      if (typeof (obj[nodeName]) === "undefined") {
-        obj[nodeName] = xmlToJson(item);
-      } else {
-        if (typeof (obj[nodeName].push) === "undefined") {
-          const old = obj[nodeName];
-          obj[nodeName] = [];
-          obj[nodeName].push(old);
-        }
-        obj[nodeName].push(xmlToJson(item));
-      }
-    }
-  }
-  return obj;
-};
 
 const endsWith = curry((end, str: string) => str.substr(-end.length) === end)
 const isGraphMLFile = endsWith("graphml")
@@ -60,62 +25,85 @@ function getSharedPaths(
   return sharedPaths
 }
 
-function getIdIndex(a: any, id: any): any {
-  for (let i = 0; i < a.length; i++) {
-     if (a[i].id === id) return i
+const isDataOfKey = curry((key: string, nodeDataItem: any): boolean => {
+  return nodeDataItem && nodeDataItem["@attributes"]
+    && nodeDataItem["@attributes"].key === key
+})
+
+function getValueOfKey(key: string, nodeData: any): any {
+  const isDataOfKeyPredicate = isDataOfKey(key)
+  let valueOfKey
+
+  if (nodeData) {
+    if (nodeData.length) {
+      valueOfKey = find(isDataOfKeyPredicate, nodeData)
+    } else {
+      valueOfKey = isDataOfKeyPredicate(nodeData) ? nodeData : null
+    }
   }
 
-  return null
+  return valueOfKey ? valueOfKey["#text"] : ""
 }
 
-function transformData(data: any): any {
-  let nodes = []
-  let links = {}
-
-  data.forEach((row) => {
-    row.graph.nodes.forEach((n) => {
-      if (getIdIndex(nodes, n.id) == null) {
-        nodes.push({
-          id: n.id,
-          label: n.labels[0],
-          title: n.properties.name
-        })
-      }
-    })
-
-    row.graph.relationships.forEach((r) => {
-      const sourceId = r.startNode
-      const linkObj = { source: r.startNode, target: r.endNode, type: r.type, value: 1 }
-      if (links[sourceId]) {
-        links[sourceId].push(linkObj)
-      } else links[sourceId] = [linkObj]
-    })
-  })
-
-  // the links come repeated, so it splits it in half
-  keys(links).forEach((linksKey) => {
-    links[linksKey] = links[linksKey].slice(0, links[linksKey].length / 2)
-  })
-
-  return { nodes, links }
-}
-
-function generateGraph(data: any): any {
-  const transformedData = transformData(data)
+function generateDiagramData(originalData: any): any {
   const n = (<any>window).diagrams.graph.generateNode
   const ct = (<any>window).diagrams.graph.generateConnectionWithText
-  const graphData = transformedData.nodes.map((node) => {
-    const arr = [Number(node.id)]
-    if (transformedData.links[node.id]) {
-      transformedData.links[node.id].forEach((r) => {
-        return arr.push(ct(Number(r.target), r.type))
+
+  const nodes = {}
+  const links = {}
+
+  const parseNode = (node, nodeIdx) => {
+    nodes[node["@attributes"].id] = {
+      id: nodeIdx,
+      title: getValueOfKey("title", node.data),
+      description: getValueOfKey("description", node.data)
+    }
+  }
+
+  const parseLink = (edge) => {
+    const {source} = edge["@attributes"]
+    const link = {
+      target: edge["@attributes"].target,
+      text: edge["@attributes"].label || undefined
+    }
+    if (links[source]) {
+      links[source].push(link)
+    } else {
+      links[source] = [link]
+    }
+  }
+
+  if (originalData.node && originalData.node.length) {
+    originalData.node.forEach(parseNode)
+  } else if (originalData.node) {
+    parseNode(originalData.node, 0)
+  }
+  if (originalData.edge && originalData.edge.length) {
+    originalData.edge.forEach(parseLink)
+  } else if (originalData.edge) {
+    parseLink(originalData.edge)
+  }
+
+  const diagramData = keys(nodes).map((nodeName) => {
+    const node = nodes[nodeName]
+    const arr = [node.id]
+    if (links[nodeName]) {
+      links[nodeName].forEach((r) => {
+        const targetId = nodes[r.target].id
+        return arr.push(ct(targetId, r.text))
       })
     }
-    return n(node.title, arr)
+    return n(node.title, arr, node.description)
   })
 
+  return diagramData
+}
+
+function generateGraphML(data: any): any {
+  const diagramData = generateDiagramData(data.graphml.graph)
+
   setTimeout(() => {
-    (<any>window).diagrams.graph(graphData)
+    (<any>window).diagrams.graph(diagramData)
   }, 1000)
 }
 
@@ -126,9 +114,7 @@ export default class DiagramFile extends ProjectsFile {
 
     return fileCollection.loadScriptsInSeries().then(() => {
       if (isGraphMLFile(this.path)) {
-        return super.loadXML().then((result) => {
-          generateGraph(result.data)
-        })
+        return super.loadXML().then(generateGraphML)
       } else {
         return super.loadScript()
       }

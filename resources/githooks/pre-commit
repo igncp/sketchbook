@@ -7,3 +7,6 @@ npm run generate-html-files
 npm run generate-routes-prod
 
 npm run build-prod
+
+git add dist/routes.json
+git add index.html
