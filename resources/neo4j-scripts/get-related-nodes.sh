@@ -1,0 +1,1 @@
+neo4j-shell -c "START n=node(*) MATCH (n)-[r]->(m) RETURN ID(n),n.title,r,ID(m),m.title;"

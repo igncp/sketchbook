@@ -16,7 +16,7 @@ const getParsedRoutesTreeOfChildren = item => (item.children)
   ? assoc("children", map(getParsedRoutesTree, item.children), item)
   : item
 
-const endsWith = curry((end, str) => str.substr(-end.length) !== end)
+const endsWith = curry((end, str) => str.substr(-end.length) === end)
 const isJSFile = endsWith(".js")
 const isJSONFile = endsWith(".json")
 const isGraphMLFile = endsWith(".graphml")

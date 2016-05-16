@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+<graph id="G" edgedefault="directed">
+<node id="n1"><data key="title">generators</data><data key="description">All generators</data></node>
+<node id="n6"><data key="title">app</data><data key="description">A standard node app</data></node>
+<node id="n7"><data key="title">boilerplate</data><data key="description">Adds the entry point of app and tests</data></node>
+<node id="n8"><data key="title">cli</data><data key="description">Adds the cli entry point</data></node>
+<node id="n10"><data key="description">Adds the editorconfig file</data><data key="title">editorconfig</data></node>
+<node id="n11"><data key="title">eslint</data><data key="description">Extends the package.json with the dependencies</data></node>
+<node id="n12"><data key="title">git</data><data key="description">Setups git and adds gitignore and gitattributes files</data></node>
+<node id="n13"><data key="description">Adds a gulpfile and a babelrc</data><data key="title">gulp</data></node>
+<node id="n14"><data key="description">Adds a readme file</data><data key="title">readme</data></node>
+<edge id="e4" source="n1" target="n6" label="has"><data key="label">has</data></edge>
+<edge id="e5" source="n1" target="n7" label="has"><data key="label">has</data></edge>
+<edge id="e6" source="n1" target="n8" label="has"><data key="label">has</data></edge>
+<edge id="e8" source="n1" target="n10" label="has"><data key="label">has</data></edge>
+<edge id="e9" source="n1" target="n11" label="has"><data key="label">has</data></edge>
+<edge id="e10" source="n1" target="n12" label="has"><data key="label">has</data></edge>
+<edge id="e12" source="n1" target="n13" label="has"><data key="label">has</data></edge>
+<edge id="e13" source="n1" target="n14" label="has"><data key="label">has</data></edge>
+</graph>
+</graphml>
